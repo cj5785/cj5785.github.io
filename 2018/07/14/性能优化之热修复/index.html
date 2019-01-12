@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="性能优化,热修复,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Android的新技术在不断更迭，各种bug修复也如火如荼，增量更新，插件化开发，热修复等等，数不胜数，这一节，就来盘点盘点热修复的来龙去脉">
+<meta name="keywords" content="性能优化,热修复">
+<meta property="og:type" content="article">
+<meta property="og:title" content="性能优化之热修复">
+<meta property="og:url" content="https://cj5785.com/2018/07/14/性能优化之热修复/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="Android的新技术在不断更迭，各种bug修复也如火如荼，增量更新，插件化开发，热修复等等，数不胜数，这一节，就来盘点盘点热修复的来龙去脉">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif">
+<meta property="og:updated_time" content="2018-09-11T07:06:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="性能优化之热修复">
+<meta name="twitter:description" content="Android的新技术在不断更迭，各种bug修复也如火如荼，增量更新，插件化开发，热修复等等，数不胜数，这一节，就来盘点盘点热修复的来龙去脉">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/07/14/性能优化之热修复/">
+
+
+
+
+
+  <title>性能优化之热修复 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/07/14/性能优化之热修复/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">性能优化之热修复</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-14T20:35:53+08:00">
+                2018-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/性能优化/" itemprop="url" rel="index">
+                    <span itemprop="name">性能优化</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/14/性能优化之热修复/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/07/14/性能优化之热修复/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Android的新技术在不断更迭，各种bug修复也如火如荼，增量更新，插件化开发，热修复等等，数不胜数，这一节，就来盘点盘点热修复的来龙去脉<br><a id="more"></a></p>
+<h3 id="热修复说明"><a href="#热修复说明" class="headerlink" title="热修复说明"></a>热修复说明</h3><p>目前在热修复发面，国内众多公司都提出了解决方案，比较出名的例如阿里的Andfix，现在更新到到第三代，新名字叫做Sophix，腾讯的Tinker，饿了么的Amigo，美团的Robust等等，这里先做阿里和腾讯的例子，因为这两个热修复方案比较典型，一个是从底层C出发，一个是从Java层出发，接下来我们就来看看Tinker的方案是怎么实现热修复的</p>
+<h3 id="仿腾讯热修复"><a href="#仿腾讯热修复" class="headerlink" title="仿腾讯热修复"></a>仿腾讯热修复</h3><p>腾讯的热修复是基于Android加载class来实现热修复的，那么知道这个原理以后，我们也来自己做一个热修复工具，要知道怎么实现这个功能的，就需要先了解Android的类加载机制</p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>众所周知，其实Android的apk就是一个压缩包，在这个安装包里面放了资源文件(res)，资源描述文件(rasc)，类文件集合(dex)，在这些文件里面，代码编译生成的字节码文件被打包到了dex中，那么Android在使用类的时候会去加载这个dex文件，而加载这个类则是通过PathClassLoader这个类去加载的，那么这个类里面做了些什么事情呢？</p>
+<p>我们查看其源代码，由于这是一个系统级的类，Google在SDK中并没有将其提供出来，那么要查看这个类要么通过下载源代码，要么在线查看，这里推荐一个国内的地址，可以在线查看源代码：<a href="http://androidxref.com/" target="_blank" rel="noopener">androidxref</a>还有<a href="https://www.androidos.net.cn/" target="_blank" rel="noopener">androidos</a></p>
+<p>鉴于PathClassLoader的代码并不多，这里贴出源代码，在源代码里面有这样一句话<code>JAR/ZIP/APK files, possibly containing a &quot;classes.dex&quot; file as well as arbitrary resources. Raw &quot;.dex&quot; files (not inside a zip file)</code>，也就是说其可以加载JAR，ZIP，APK格式的压缩包，但在里面必须有classes.dex文件，这里仅仅是两个构造方法，那在父类里面又做了什么呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> dalvik.system;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PathClassLoader</span> <span class="keyword">extends</span> <span class="title">BaseDexClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">PathClassLoader</span><span class="params">(String dexPath, ClassLoader parent)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(dexPath, <span class="keyword">null</span>, <span class="keyword">null</span>, parent);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">PathClassLoader</span><span class="params">(String dexPath, String librarySearchPath, ClassLoader parent)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(dexPath, <span class="keyword">null</span>, librarySearchPath, parent);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>查看源代码，我们得知其继承了BaseDexClassLoader，那么在这个父类里面又做了啥，这里就不细细展开来讲了，这里只关注我们需要的东西，我们注意到，<code>DexPathList</code>这个类里面就是一系列的集合，最需要注意的就是<code>private Element[] dexElements;</code>这个属性，这个属性，这里就是dex的集合，我们的类方法就是从这个获取到的，使用<code>DexPathList</code>的<code>findClass()</code>方法查找类，从而获取到类的，这就是Android类的加载过程，那么我们的想法就可以得以实现。也就是说通过反射得到<code>PathClassLoader</code>这个类就可以调用方法去查找我们的类了，当然也可以调用<code>BaseDexClassLoader</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">···</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> DexPathList pathList;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BaseDexClassLoader</span><span class="params">(String dexPath, File optimizedDirectory,</span></span></span><br><span class="line"><span class="function"><span class="params">        String librarySearchPath, ClassLoader parent)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(parent);</span><br><span class="line">    <span class="keyword">this</span>.pathList = <span class="keyword">new</span> DexPathList(<span class="keyword">this</span>, dexPath, librarySearchPath, optimizedDirectory);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    List&lt;Throwable&gt; suppressedExceptions = <span class="keyword">new</span> ArrayList&lt;Throwable&gt;();</span><br><span class="line">    Class c = pathList.findClass(name, suppressedExceptions);</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">        ClassNotFoundException cnfe = <span class="keyword">new</span> ClassNotFoundException(<span class="string">"Didn't find class \""</span> + name + <span class="string">"\" on path: "</span> + pathList);</span><br><span class="line">        <span class="keyword">for</span> (Throwable t : suppressedExceptions) &#123;</span><br><span class="line">            cnfe.addSuppressed(t);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> cnfe;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br><span class="line">···</span><br></pre></td></tr></table></figure></p>
+<p>上面得到的Class这个方法是怎么实现的呢，浏览<code>DexPathList</code>源代码发现，是通过类的名字获取到类的<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Class <span class="title">findClass</span><span class="params">(String name, List&lt;Throwable&gt; suppressed)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (Element element : dexElements) &#123;</span><br><span class="line">        DexFile dex = element.dexFile;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (dex != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Class clazz = dex.loadClassBinaryName(name, definingContext, suppressed);</span><br><span class="line">            <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> clazz;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (dexElementsSuppressedExceptions != <span class="keyword">null</span>) &#123;</span><br><span class="line">        suppressed.addAll(Arrays.asList(dexElementsSuppressedExceptions));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里的关键地方在于DexFile的loadClassBinaryName()方法，那么这个方法是怎么查找类的，再继续查看DexFile的源代码，这里直接调到Native方法里面去了，为了一探究竟，我们再去Native方法一探究竟<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Class <span class="title">loadClassBinaryName</span><span class="params">(String name, ClassLoader loader, List&lt;Throwable&gt; suppressed)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> defineClass(name, loader, mCookie, <span class="keyword">this</span>, suppressed);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Class <span class="title">defineClass</span><span class="params">(String name, ClassLoader loader, Object cookie,</span></span></span><br><span class="line"><span class="function"><span class="params">                                 DexFile dexFile, List&lt;Throwable&gt; suppressed)</span> </span>&#123;</span><br><span class="line">    Class result = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        result = defineClassNative(name, loader, cookie, dexFile);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoClassDefFoundError e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (suppressed != <span class="keyword">null</span>) &#123;</span><br><span class="line">            suppressed.add(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (suppressed != <span class="keyword">null</span>) &#123;</span><br><span class="line">            suppressed.add(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line">···</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> Class <span class="title">defineClassNative</span><span class="params">(String name, ClassLoader loader, Object cookie, DexFile dexFile)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> ClassNotFoundException, NoClassDefFoundError</span>;</span><br></pre></td></tr></table></figure></p>
+<p><code>defineClassNative()</code>这个方法的实现位于<code>../art/runtime/native/dalvik_system_DexFile.cc</code>，仔细观察，我们在这里的重心在于找到类是怎么被找到的，我们会发现在将jstring做了一系列转化以后，又调用了<code>FindClassDef()</code>方法，在这个方法里面才真实的去查找类<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> jclass <span class="title">DexFile_defineClassNative</span><span class="params">(JNIEnv* env,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        jclass,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        jstring javaName,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        jobject javaLoader,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        jobject cookie,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        jobject dexFile)</span> </span>&#123;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">const</span> DexFile*&gt; dex_files;</span><br><span class="line">  <span class="keyword">const</span> OatFile* oat_file;</span><br><span class="line">  <span class="keyword">if</span> (!ConvertJavaArrayToDexFiles(env, cookie, <span class="comment">/*out*/</span> dex_files, <span class="comment">/*out*/</span> oat_file)) &#123;</span><br><span class="line">    VLOG(class_linker) &lt;&lt; <span class="string">"Failed to find dex_file"</span>;</span><br><span class="line">    DCHECK(env-&gt;ExceptionCheck());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function">ScopedUtfChars <span class="title">class_name</span><span class="params">(env, javaName)</span></span>;</span><br><span class="line">  <span class="keyword">if</span> (class_name.c_str() == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">    VLOG(class_linker) &lt;&lt; <span class="string">"Failed to find class_name"</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">descriptor</span><span class="params">(DotToDescriptor(class_name.c_str()))</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">const</span> size_t <span class="title">hash</span><span class="params">(ComputeModifiedUtf8Hash(descriptor.c_str()))</span></span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; dex_file : dex_files) &#123;</span><br><span class="line">    <span class="keyword">const</span> DexFile::ClassDef* dex_class_def = dex_file-&gt;FindClassDef(descriptor.c_str(), hash);</span><br><span class="line">    <span class="keyword">if</span> (dex_class_def != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">      <span class="function">ScopedObjectAccess <span class="title">soa</span><span class="params">(env)</span></span>;</span><br><span class="line">      ClassLinker* class_linker = Runtime::Current()-&gt;GetClassLinker();</span><br><span class="line">      StackHandleScope&lt;<span class="number">1</span>&gt; hs(soa.Self());</span><br><span class="line">      Handle&lt;mirror::ClassLoader&gt; class_loader(</span><br><span class="line">          hs.NewHandle(soa.Decode&lt;mirror::ClassLoader*&gt;(javaLoader)));</span><br><span class="line">      class_linker-&gt;RegisterDexFile(*dex_file, class_loader.Get());</span><br><span class="line">      mirror::Class* result = class_linker-&gt;DefineClass(soa.Self(),</span><br><span class="line">                                                        descriptor.c_str(),</span><br><span class="line">                                                        hash,</span><br><span class="line">                                                        class_loader,</span><br><span class="line">                                                        *dex_file,</span><br><span class="line">                                                        *dex_class_def);</span><br><span class="line">      <span class="comment">// Add the used dex file. This only required for the DexFile.loadClass API since normal</span></span><br><span class="line">      <span class="comment">// class loaders already keep their dex files live.</span></span><br><span class="line">      class_linker-&gt;InsertDexFileInToClassLoader(soa.Decode&lt;mirror::Object*&gt;(dexFile),</span><br><span class="line">                                                 class_loader.Get());</span><br><span class="line">      <span class="keyword">if</span> (result != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        VLOG(class_linker) &lt;&lt; <span class="string">"DexFile_defineClassNative returning "</span> &lt;&lt; result</span><br><span class="line">                           &lt;&lt; <span class="string">" for "</span> &lt;&lt; class_name.c_str();</span><br><span class="line">        <span class="keyword">return</span> soa.AddLocalReference&lt;jclass&gt;(result);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  VLOG(class_linker) &lt;&lt; <span class="string">"Failed to find dex_class_def "</span> &lt;&lt; class_name.c_str();</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么顺理成章的，我们应该去查找这个FindClassDef()是怎么实现的，在<code>../art/runtime/dex_file.cc</code>终于找到了我们想要的答案，在这里，我们看到了在Native层，其处理就是通过遍历dex，查找到符合的类名就返回，这一点对于我们猜想的实现十分重要<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> DexFile::ClassDef* DexFile::FindClassDef(<span class="keyword">const</span> <span class="keyword">char</span>* descriptor, <span class="keyword">size_t</span> hash) <span class="keyword">const</span> &#123;</span><br><span class="line">  DCHECK_EQ(ComputeModifiedUtf8Hash(descriptor), hash);</span><br><span class="line">  <span class="keyword">if</span> (LIKELY(lookup_table_ != <span class="literal">nullptr</span>)) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">uint32_t</span> class_def_idx = lookup_table_-&gt;Lookup(descriptor, hash);</span><br><span class="line">    <span class="keyword">return</span> (class_def_idx != DexFile::kDexNoIndex) ? &amp;GetClassDef(class_def_idx) : <span class="literal">nullptr</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Fast path for rate no class defs case.</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">uint32_t</span> num_class_defs = NumClassDefs();</span><br><span class="line">  <span class="keyword">if</span> (num_class_defs == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> TypeId* type_id = FindTypeId(descriptor);</span><br><span class="line">  <span class="keyword">if</span> (type_id != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">    <span class="keyword">uint16_t</span> type_idx = GetIndexForTypeId(*type_id);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; num_class_defs; ++i) &#123;</span><br><span class="line">      <span class="keyword">const</span> ClassDef&amp; class_def = GetClassDef(i);</span><br><span class="line">      <span class="keyword">if</span> (class_def.class_idx_ == type_idx) &#123;</span><br><span class="line">        <span class="keyword">return</span> &amp;class_def; <span class="comment">//通过一系列计算，找到就返回</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么我们在回来看看Java层的代码还有啥可以榨取的，通过对同级目录的观察，发现另外一类<code>DexClassLoader</code>，这个类用途在于加载dex文件，这里是不是和<code>PathClassLoader</code>类似，这就对了，这两者的区别就在于继承父类时候初始化的方式不同，<code>PathClassLoader</code>没有传递<code>optimizedDirectory</code>参数，也就是说其默认了路径，这个路径就是<code>/data/data/{应用包名}</code>，而<code>DexClassLoader</code>可以加载任意目录的dex文件，而<code>PathClassLoader</code>只可以加载指定目录下的dex文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> dalvik.system;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DexClassLoader</span> <span class="keyword">extends</span> <span class="title">BaseDexClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DexClassLoader</span><span class="params">(String dexPath, String optimizedDirectory,</span></span></span><br><span class="line"><span class="function"><span class="params">            String librarySearchPath, ClassLoader parent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(dexPath, <span class="keyword">new</span> File(optimizedDirectory), librarySearchPath, parent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>经过上述的分析，我们已经知道怎么Android是怎么实现类的加载的，简单来说就是先加载dex，然后遍历dex里面的类，有符合的类名就返回，不在继续向下查找。基于此，我们可以在这里搞点事情，既然他是从头到尾去遍历类名，那么我将有修复好的类搞到dex里面去，并且放在最前面，那是不是要使用有bug那个类的时候，先找到的是我搞上去的类，然后不再向下查找，那基于Java层的修复不就可以搞定了么，至此，Java层修复的原理已经介绍完毕，接下来便是去实现这个想法了</p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>要实现这个大胆的想法，我们先要有dex的加载器，选择上面提到的三者都可以，这里选择<code>DexClassLoader</code>，因为这个可以从任何目录加载dex，在没有root权限的时候也很方便做实验，由于这里的初始化需要一个参数，那就选择没有过的<code>PathClassLoader</code>好了，思路有了，也规划好了，那么就开始码代码吧，首先模拟出一个bug，这里就编写一个带有除零操作的类好了</p>
+<p>首先我们是要用到一个工具，这个工具就是<code>multidex</code>，这个工具的作用就是每个类生成单独的<code>.class</code>字节码文件<br>使用<code>multidex</code>就需要先配置gradle，先是要引入依赖<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">dependencies</span> &#123;</span><br><span class="line">	<span class="attribute">implementation</span> <span class="string">'com.android.support:multidex:1.0.3'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>并在gradle中激活<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">android </span>&#123;</span><br><span class="line">    ···</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        ···</span><br><span class="line">        <span class="keyword">multiDexEnabled </span>true</span><br><span class="line">		···</span><br><span class="line">    &#125;</span><br><span class="line">	···</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Application中使用<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">MyApplition</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line">	···</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> void attachBaseContext(<span class="type">Context</span> base) &#123;</span><br><span class="line">        <span class="keyword">super</span>.attachBaseContext(base);</span><br><span class="line">		···</span><br><span class="line">        <span class="type">MultiDex</span>.install(base);</span><br><span class="line">		···</span><br><span class="line">    &#125;</span><br><span class="line">	···</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>记得在AndroidManifest里面的application标签中引入Application<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">application</span></span><br><span class="line">    ···</span><br><span class="line">    android:<span class="built_in">name</span>=<span class="string">".MyApplition"</span></span><br><span class="line">    ··· &gt;</span><br><span class="line">	···</span><br><span class="line">&lt;/<span class="built_in">application</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<p>然后还要记得关闭<code>Instant run</code>，因为这个功能会影响我们的实验，这个功能也是类似热修复的<br><code>Settings</code> -&gt; <code>Build,Exection,Deployment</code> -&gt; <code>Instant run</code>，在这里关闭这个功能<br>热修复的实验环境搭建完毕，接下来就可以开始做实验</p>
+<h3 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h3><p>首先我们来模拟一个bug的出现，就用一个带有除零错误的类为例，这个类里面就一个方法，这个方法除零了，产生了bug<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HotFixTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">div</span><span class="params">(Context context)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line">        <span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">        Toast.makeText(context, a + <span class="string">" / "</span> + b + <span class="string">" = "</span> + (a / b), Toast.LENGTH_SHORT).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先构建出必要的布局，由于这里是热修复测试，这里就简单的两个按键，一个代表出错方法的调用，一个代表热修复<br>布局<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"有除零bug"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">"onTouch"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"修复bug"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">"onHotFix"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>主活动代码，在这里<code>hotFix()</code>方法只是移动了dex文件，其具体实现在热修复工具类里面<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTouch</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        HotFixTest hotFixTest = <span class="keyword">new</span> HotFixTest();</span><br><span class="line">        hotFixTest.div(getApplicationContext());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onHotFix</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        hotFix();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">hotFix</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//目标目录：/data/data/packageName/odex</span></span><br><span class="line">        File fileDir = getDir(Constants.DEX_DIR, Context.MODE_PRIVATE);</span><br><span class="line">        String name = <span class="string">"classes2.dex"</span>;</span><br><span class="line">        String filePath = fileDir.getAbsolutePath() + File.separator + name;</span><br><span class="line">        File file = <span class="keyword">new</span> File(filePath);</span><br><span class="line">        <span class="keyword">if</span> (file.exists()) &#123;</span><br><span class="line">            file.delete();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将修复好的classes2.dex移动到目标目录</span></span><br><span class="line">        InputStream is = <span class="keyword">null</span>;</span><br><span class="line">        FileOutputStream os = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            is = <span class="keyword">new</span> FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + name);</span><br><span class="line">            os = <span class="keyword">new</span> FileOutputStream(filePath);</span><br><span class="line">            <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">            <span class="keyword">while</span> ((len = is.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                os.write(buffer, <span class="number">0</span>, len);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (file.exists()) &#123;</span><br><span class="line">                Toast.makeText(<span class="keyword">this</span>, <span class="string">"bug修复完成"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//热修复</span></span><br><span class="line">            HotFixUtils.loadFixedDex(<span class="keyword">this</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>热修复工具类，在代码中有详细注释，这里就不赘述了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HotFixUtils</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> HashSet&lt;File&gt; loadedDex = <span class="keyword">new</span> HashSet&lt;File&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadFixedDex</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (context == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        File fileDir = context.getDir(Constants.DEX_DIR, Context.MODE_PRIVATE);</span><br><span class="line">        File[] listFiles = fileDir.listFiles();</span><br><span class="line">        loadedDex.clear();</span><br><span class="line">        <span class="comment">//遍历所有的dex，有的应用可能有多个dex，然后存入集合</span></span><br><span class="line">        <span class="keyword">for</span> (File file : listFiles) &#123;</span><br><span class="line">            <span class="keyword">if</span> (file.getName().startsWith(<span class="string">"classes"</span>) &amp;&amp; file.getName().endsWith(<span class="string">".dex"</span>)) &#123;</span><br><span class="line">                loadedDex.add(file);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        doDexInject(context, fileDir, loadedDex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//将新的dex合并到旧的dex</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">doDexInject</span><span class="params">(<span class="keyword">final</span> Context context, File filesDir, HashSet&lt;File&gt; loadedDex)</span> </span>&#123;</span><br><span class="line">        String optimizeDir = filesDir.getAbsolutePath() + File.separator + <span class="string">"opt_dex"</span>;</span><br><span class="line">        File fopt = <span class="keyword">new</span> File(optimizeDir);</span><br><span class="line">        <span class="keyword">if</span> (!fopt.exists()) &#123;</span><br><span class="line">            fopt.mkdirs();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//加载当前应用程序的dex，此时加载的是/data/data/&#123;包名&#125;下的dex</span></span><br><span class="line">            PathClassLoader pathLoader = (PathClassLoader) context.getClassLoader();</span><br><span class="line">            <span class="comment">//这里采用的是每个dex都写入新的类，如果知道在哪个dex里面的类有bug，也可以直接加在里面</span></span><br><span class="line">            <span class="keyword">for</span> (File dex : loadedDex) &#123;</span><br><span class="line">                <span class="comment">//加载指定的修复的dex文件。</span></span><br><span class="line">                DexClassLoader classLoader = <span class="keyword">new</span> DexClassLoader(dex.getAbsolutePath(),</span><br><span class="line">                        fopt.getAbsolutePath(), <span class="keyword">null</span>, pathLoader);</span><br><span class="line">                <span class="comment">//通过反射得到ElementsList</span></span><br><span class="line">                Object oldDexObj = getPathList(classLoader);</span><br><span class="line">                Object newDexObj = getPathList(pathLoader);</span><br><span class="line">                Object oldDexElementsList = getDexElements(oldDexObj);</span><br><span class="line">                Object newDexElementsList = getDexElements(newDexObj);</span><br><span class="line">                <span class="comment">//合并新旧dex，将class添加至头部</span></span><br><span class="line">                Object dexElements = combineArray(oldDexElementsList, newDexElementsList);</span><br><span class="line">                <span class="comment">//重写给dexElements赋值</span></span><br><span class="line">                Object pathList = getPathList(pathLoader);</span><br><span class="line">                setField(pathList, pathList.getClass(), <span class="string">"dexElements"</span>, dexElements);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取pathList属性值</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getPathList</span><span class="params">(Object baseDexClassLoader)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getField(baseDexClassLoader, Class.forName(<span class="string">"dalvik.system.BaseDexClassLoader"</span>), <span class="string">"pathList"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取dexElements属性值</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getDexElements</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getField(obj, obj.getClass(), <span class="string">"dexElements"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//属性获取</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getField</span><span class="params">(Object obj, Class&lt;?&gt; clazz, String field)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> NoSuchFieldException, IllegalArgumentException, IllegalAccessException </span>&#123;</span><br><span class="line">        Field localField = clazz.getDeclaredField(field);</span><br><span class="line">        localField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">return</span> localField.get(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//属性赋值</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setField</span><span class="params">(Object obj, Class&lt;?&gt; cl, String field, Object value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Field localField = cl.getDeclaredField(field);</span><br><span class="line">        localField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        localField.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//数组合并，其实就是将新加入的class写到以前的dex最前面</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">combineArray</span><span class="params">(Object arrayOld, Object arrayNew)</span> </span>&#123;</span><br><span class="line">        Class&lt;?&gt; localClass = arrayOld.getClass().getComponentType();</span><br><span class="line">        <span class="keyword">int</span> i = Array.getLength(arrayOld);</span><br><span class="line">        <span class="keyword">int</span> j = Array.getLength(arrayNew);</span><br><span class="line">        <span class="keyword">int</span> sum = i + j;</span><br><span class="line">        Object result = Array.newInstance(localClass, sum);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; sum; k++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (k &lt; i) &#123;</span><br><span class="line">                Array.set(result, k, Array.get(arrayOld, k));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                Array.set(result, k, Array.get(arrayNew, k - i));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面又到了一个常量类，这个类里面就一个静态属性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Constants</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEX_DIR = <span class="string">"odex"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里，我们的测试就搭建完毕了，此时我们执行除法运算的时候，会直接crash掉，修改源代码，编译生成<code>.class</code>文件<br>这里我简单地修改一下除法里面的b的值，将其修改为2，在编译项目，记得不要运行，不然就覆盖了原来的apk了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HotFixTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">div</span><span class="params">(Context context)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line">        <span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">        Toast.makeText(context, a + <span class="string">" / "</span> + b + <span class="string">" = "</span> + (a / b), Toast.LENGTH_SHORT).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译完成以后，在当前项目的<code>build</code>-&gt;<code>intermediates</code>-&gt;<code>classes</code>-&gt;<code>debug</code>-&gt;<code>{包名}</code>下面会有生成的class文件，将有问题的class文件复制出来，记得连同文件夹包名文件夹一起，例如我的包名是<code>com.cj5785.hotfixtest</code>，那么我复制出来的文件夹结构图如下<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">└─dex</span><br><span class="line">	└─com</span><br><span class="line">	    └─cj5785</span><br><span class="line">	        └─hotfixtest</span><br><span class="line">	                HotFixTest.<span class="built_in">class</span></span><br></pre></td></tr></table></figure></p>
+<p>使用sdk里面的一个工具将这个文件打包成dex文件，这个文件夹里面可以有多个class文件，也可以有多个目录，但是其相对位置一定要正确<br>这个工具在<code>build-tool</code> -&gt; <code>{版本号}</code>下面，<code>dx.bat</code>就是我们要使用的工具<br>然后在命令函中输入参数，由于我这里直接把这个工具所在路径加到环境变量中了，这里就直接使用了<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dx --dex --output=E:\temp\classes2.dex E:\temp\dex</span><br></pre></td></tr></table></figure></p>
+<p><code>--output</code>的参数就是输出目录，后面接的就是我们刚才复制出来的文件根目录<br>根据我们上面写的代码，这里我们将生成的<code>classes2.dex</code>文件放入根目录，启动软件进行验证<br>以下是我的验证效果，说明这这种方案的可行性还是有的<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/07/14/性能优化之热修复/" title="性能优化之热修复">https://cj5785.com/2018/07/14/性能优化之热修复/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/性能优化/" rel="tag"># 性能优化</a>
+          
+            <a href="/tags/热修复/" rel="tag"># 热修复</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/13/性能优化之多线程优化/" rel="next" title="性能优化之多线程优化">
+                <i class="fa fa-chevron-left"></i> 性能优化之多线程优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/15/性能优化之service进程防杀/" rel="prev" title="性能优化之service进程防杀">
+                性能优化之service进程防杀 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#热修复说明"><span class="nav-number">1.</span> <span class="nav-text">热修复说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#仿腾讯热修复"><span class="nav-number">2.</span> <span class="nav-text">仿腾讯热修复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">3.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">4.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现过程"><span class="nav-number">5.</span> <span class="nav-text">实现过程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/07/14/性能优化之热修复/';
+          this.page.identifier = '2018/07/14/性能优化之热修复/';
+          this.page.title = '性能优化之热修复';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

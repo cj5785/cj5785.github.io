@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="高级UI,画笔,Paint,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在UI这一块，谈到自定义，就离不开画笔和画布的使用话题，在自定义控件的时候，为了做出炫酷的效果，我们往往会使用画笔和画布，那么这里我们就先来看看画笔的使用吧">
+<meta name="keywords" content="高级UI,画笔,Paint">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级UI之画笔Paint">
+<meta property="og:url" content="https://cj5785.com/2018/08/30/高级UI之画笔Paint/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="在UI这一块，谈到自定义，就离不开画笔和画布的使用话题，在自定义控件的时候，为了做出炫酷的效果，我们往往会使用画笔和画布，那么这里我们就先来看看画笔的使用吧">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E7%94%BB%E7%AC%94Paint-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8.jpg">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E7%94%BB%E7%AC%94Paint-%E5%9F%BA%E5%87%86%E7%BA%BF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E7%94%BB%E7%AC%94Paint-progressbar.gif">
+<meta property="og:updated_time" content="2018-09-11T07:17:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高级UI之画笔Paint">
+<meta name="twitter:description" content="在UI这一块，谈到自定义，就离不开画笔和画布的使用话题，在自定义控件的时候，为了做出炫酷的效果，我们往往会使用画笔和画布，那么这里我们就先来看看画笔的使用吧">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E7%94%BB%E7%AC%94Paint-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/08/30/高级UI之画笔Paint/">
+
+
+
+
+
+  <title>高级UI之画笔Paint | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/08/30/高级UI之画笔Paint/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">高级UI之画笔Paint</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-30T16:35:07+08:00">
+                2018-08-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/高级UI/" itemprop="url" rel="index">
+                    <span itemprop="name">高级UI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/30/高级UI之画笔Paint/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/08/30/高级UI之画笔Paint/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在UI这一块，谈到自定义，就离不开画笔和画布的使用话题，在自定义控件的时候，为了做出炫酷的效果，我们往往会使用画笔和画布，那么这里我们就先来看看画笔的使用吧<br><a id="more"></a></p>
+<h3 id="简单使用例子"><a href="#简单使用例子" class="headerlink" title="简单使用例子"></a>简单使用例子</h3><p>自定义一个View<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PaintView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Paint mPaint;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PaintView</span><span class="params">(Context context, @Nullable AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">        mPaint = <span class="keyword">new</span> Paint();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">        <span class="comment">//重置</span></span><br><span class="line">        mPaint.reset();</span><br><span class="line">        <span class="comment">//画笔设置</span></span><br><span class="line">        mPaint.setColor(Color.RED);</span><br><span class="line">        mPaint.setAlpha(<span class="number">255</span>);</span><br><span class="line">        <span class="comment">//样式设置</span></span><br><span class="line"><span class="comment">//        mPaint.setStyle(Paint.Style.FILL);//填充</span></span><br><span class="line">        mPaint.setStyle(Paint.Style.STROKE);<span class="comment">//描边</span></span><br><span class="line"><span class="comment">//        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);//填充及描边</span></span><br><span class="line">        <span class="comment">//画笔宽度设置</span></span><br><span class="line">        mPaint.setStrokeWidth(<span class="number">20</span>);</span><br><span class="line">        <span class="comment">//线帽设置</span></span><br><span class="line">        mPaint.setStrokeCap(Paint.Cap.BUTT);<span class="comment">//无</span></span><br><span class="line"><span class="comment">//        mPaint.setStrokeCap(Paint.Cap.ROUND);//圆形</span></span><br><span class="line"><span class="comment">//        mPaint.setStrokeCap(Paint.Cap.SQUARE);//方形</span></span><br><span class="line">        <span class="comment">//线条交叉处</span></span><br><span class="line"><span class="comment">//        mPaint.setStrokeJoin(Paint.Join.BEVEL);//直角</span></span><br><span class="line"><span class="comment">//        mPaint.setStrokeJoin(Paint.Join.ROUND);//圆角</span></span><br><span class="line"><span class="comment">//        mPaint.setStrokeJoin(Paint.Join.MITER);//锐角</span></span><br><span class="line"></span><br><span class="line">        Path path = <span class="keyword">new</span> Path();</span><br><span class="line">        path.moveTo(<span class="number">100</span>,<span class="number">100</span>);</span><br><span class="line">        path.lineTo(<span class="number">300</span>,<span class="number">100</span>);</span><br><span class="line">        path.lineTo(<span class="number">500</span>,<span class="number">300</span>);</span><br><span class="line">        mPaint.setStrokeJoin(Paint.Join.BEVEL);</span><br><span class="line">        canvas.drawPath(path,mPaint);</span><br><span class="line"></span><br><span class="line">        path.moveTo(<span class="number">100</span>,<span class="number">400</span>);</span><br><span class="line">        path.lineTo(<span class="number">300</span>,<span class="number">400</span>);</span><br><span class="line">        path.lineTo(<span class="number">500</span>,<span class="number">700</span>);</span><br><span class="line">        mPaint.setStrokeJoin(Paint.Join.MITER);</span><br><span class="line">        canvas.drawPath(path,mPaint);</span><br><span class="line"></span><br><span class="line">        path.moveTo(<span class="number">100</span>,<span class="number">800</span>);</span><br><span class="line">        path.lineTo(<span class="number">300</span>,<span class="number">800</span>);</span><br><span class="line">        path.lineTo(<span class="number">500</span>,<span class="number">1100</span>);</span><br><span class="line">        mPaint.setStrokeJoin(Paint.Join.ROUND);</span><br><span class="line">        canvas.drawPath(path,mPaint);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>画了三条线<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E7%94%BB%E7%AC%94Paint-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8.jpg" alt=""></p>
+<h3 id="Paint的使用说明"><a href="#Paint的使用说明" class="headerlink" title="Paint的使用说明"></a>Paint的使用说明</h3><p>Paint在是使用的时候，一般会有两个类参与，一个负责图形绘制，一个负责文字绘制<br>在使用前一般重置Paint，调用<code>reset()</code><br>设置方法一般都对应着获取方法</p>
+<h4 id="图形绘制相关方法"><a href="#图形绘制相关方法" class="headerlink" title="图形绘制相关方法"></a>图形绘制相关方法</h4><ul>
+<li><p>设置颜色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setColor(Color.RED);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置透明度0~255</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setAlpha(<span class="number">255</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置画笔的样式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setStyle(Paint.Style.FILL);<span class="comment">//填充</span></span><br><span class="line"><span class="comment">//mPaint.setStyle(Paint.Style.STROKE);//描边</span></span><br><span class="line"><span class="comment">//mPaint.setStyle(Paint.Style.FILL_AND_STROKE);//填充及描边</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置画笔的宽度</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setStrokeWidth(<span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置线帽</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setStrokeCap(Paint.Cap.BUTT);<span class="comment">//无</span></span><br><span class="line"><span class="comment">//mPaint.setStrokeCap(Paint.Cap.ROUND);//圆形</span></span><br><span class="line"><span class="comment">//mPaint.setStrokeCap(Paint.Cap.SQUARE);//方形</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置线条交叉处样式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setStrokeJoin(Paint.Join.BEVEL);<span class="comment">//直角</span></span><br><span class="line"><span class="comment">//mPaint.setStrokeJoin(Paint.Join.ROUND);//圆角</span></span><br><span class="line"><span class="comment">//mPaint.setStrokeJoin(Paint.Join.MITER);//锐角</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置防锯齿</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setAntiAlias(<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置图像抖动处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setDither(<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="文字绘制相关方法"><a href="#文字绘制相关方法" class="headerlink" title="文字绘制相关方法"></a>文字绘制相关方法</h4><ul>
+<li><p>设置字符行间距</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setFontSpacing(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置字符之间的间距</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.getLetterSpacing(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置文本删除线</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setStrikeThruText(<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置下划线</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setUnderlineText(<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置文本大小</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setTextSize(textSize);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置字体类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setTypeface(Typeface.BOLD);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载自定义字体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Typeface.create(familyName, style);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置文字倾斜,默认0，官方推荐的<code>-0.25f</code>是斜体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setTextSkewX(-<span class="number">0.25f</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置文本对齐方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mPaint.setTextAlign(Align.LEFT);</span><br><span class="line">mPaint.setTextAlign(Align.CENTER);</span><br><span class="line">mPaint.setTextAlign(Align.RIGHT);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>计算制定长度的字符串（字符长度、字符个数、显示的时候真实的长度）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> breadText = mPaint.breakText(text, measureForwards, maxWidth, measuredWidth);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取文本的矩形区域（宽高）Rect bounds</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mPaint.getTextBounds(text, index, count, bounds)</span><br><span class="line">mPaint.getTextBounds(text, start, end, bounds)</span><br><span class="line">```		</span><br><span class="line">- 获取文本的宽度，比较粗略</span><br><span class="line">```java</span><br><span class="line"><span class="keyword">float</span> measureText = mPaint.measureText(str);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取文本的宽度，比较精准</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> textWidths = mPaint.getTextWidths(str, measuredWidth);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="文本的基线问题"><a href="#文本的基线问题" class="headerlink" title="文本的基线问题"></a>文本的基线问题</h3><p>在绘制文本的时候，事宜基准线为准的，但有时我们在绘制的时候又不以基准线稳准，那么就需要通过计算去获得位置了<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E7%94%BB%E7%AC%94Paint-%E5%9F%BA%E5%87%86%E7%BA%BF.png" alt=""><br><code>canvas.drawText(x,y)</code>这个y并不是text的左上角，而是以baseline为基准的<br>通过获得相对于基准线的位置，从而计算出需要的位置，负值表示在基准线上方，正值表示在基准线下方<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FontMetrics fontMetrics = mPaint.getFontMetrics();</span><br><span class="line">fontMetrics.top;</span><br><span class="line">fontMetrics.ascent;</span><br><span class="line">fontMetrics.descent;</span><br><span class="line">fontMetrics.bottom;</span><br></pre></td></tr></table></figure></p>
+<h3 id="自定义ProgressBar实现"><a href="#自定义ProgressBar实现" class="headerlink" title="自定义ProgressBar实现"></a>自定义ProgressBar实现</h3><p>定义自定义属性<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"CustomProgressBar"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"roundProgressColor"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"roundColor"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"roundWidth"</span> <span class="attr">format</span>=<span class="string">"dimension"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"textSize"</span> <span class="attr">format</span>=<span class="string">"dimension"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"textColor"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"max"</span> <span class="attr">format</span>=<span class="string">"integer"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"min"</span> <span class="attr">format</span>=<span class="string">"integer"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"textShow"</span> <span class="attr">format</span>=<span class="string">"boolean"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"style"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">enum</span> <span class="attr">name</span>=<span class="string">"STROKE"</span> <span class="attr">value</span>=<span class="string">"0"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">enum</span> <span class="attr">name</span>=<span class="string">"FILL"</span> <span class="attr">value</span>=<span class="string">"1"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>自定义ProgressBar<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomProgressBar</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STROKE = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> min;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> roundColor;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> roundProgressColor;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> roundWidth;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> style;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> textColor;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> textShow;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> textSize;</span><br><span class="line">    <span class="keyword">private</span> Paint paint;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> max;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> progress;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomProgressBar</span><span class="params">(Context context, @Nullable AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">        <span class="comment">//定义画笔</span></span><br><span class="line">        paint = <span class="keyword">new</span> Paint();</span><br><span class="line">        <span class="comment">//获得自定义属性</span></span><br><span class="line">        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomProgressBar);</span><br><span class="line">        max = typedArray.getInteger(R.styleable.CustomProgressBar_max, <span class="number">100</span>);</span><br><span class="line">        min = typedArray.getInteger(R.styleable.CustomProgressBar_min, <span class="number">80</span>);</span><br><span class="line">        roundColor = typedArray.getColor(R.styleable.CustomProgressBar_roundColor, Color.RED);</span><br><span class="line">        roundProgressColor = typedArray.getColor(R.styleable.CustomProgressBar_roundProgressColor, Color.GRAY);</span><br><span class="line">        roundWidth = typedArray.getDimension(R.styleable.CustomProgressBar_roundWidth, <span class="number">10</span>);</span><br><span class="line">        style = typedArray.getInt(R.styleable.CustomProgressBar_style, <span class="number">0</span>);</span><br><span class="line">        textColor = typedArray.getColor(R.styleable.CustomProgressBar_textColor, Color.GREEN);</span><br><span class="line">        textShow = typedArray.getBoolean(R.styleable.CustomProgressBar_textShow, <span class="keyword">true</span>);</span><br><span class="line">        textSize = typedArray.getDimension(R.styleable.CustomProgressBar_textSize, <span class="number">15</span>);</span><br><span class="line">        typedArray.recycle();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">        <span class="comment">//画默认的外层圆环</span></span><br><span class="line">        <span class="keyword">int</span> center = getWidth() / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">float</span> radius = center - roundWidth / <span class="number">2</span>;</span><br><span class="line">        paint.setColor(roundColor);</span><br><span class="line">        paint.setStyle(Paint.Style.STROKE);</span><br><span class="line">        paint.setStrokeWidth(roundWidth);</span><br><span class="line">        paint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">        canvas.drawCircle(center, center, radius, paint);</span><br><span class="line">        <span class="comment">//画进度百分比</span></span><br><span class="line">        paint.setColor(textColor);</span><br><span class="line">        paint.setStrokeWidth(<span class="number">0</span>);</span><br><span class="line">        paint.setTextSize(textSize);</span><br><span class="line">        paint.setTypeface(Typeface.DEFAULT_BOLD);</span><br><span class="line">        <span class="keyword">int</span> precent = (<span class="keyword">int</span>) (progress / (<span class="keyword">float</span>) max * <span class="number">100</span>);</span><br><span class="line">        <span class="keyword">if</span> (textShow &amp;&amp; style == STROKE) &#123;</span><br><span class="line">            canvas.drawText(precent + <span class="string">"%"</span>, (getWidth() - paint.measureText(precent + <span class="string">"%s"</span>)) / <span class="number">2F</span>,</span><br><span class="line">                    (getHeight() - (paint.descent() + paint.ascent())) / <span class="number">2F</span>, paint);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//画圆弧</span></span><br><span class="line">        paint.setColor(roundProgressColor);</span><br><span class="line">        paint.setStrokeWidth(roundWidth);</span><br><span class="line">        RectF oval = <span class="keyword">new</span> RectF(center - radius, center - radius, center + radius, center + radius);</span><br><span class="line">        <span class="keyword">switch</span> (style) &#123;</span><br><span class="line">            <span class="keyword">case</span> STROKE:</span><br><span class="line">                paint.setStyle(Paint.Style.STROKE);</span><br><span class="line">                canvas.drawArc(oval, <span class="number">0</span>, <span class="number">360</span> * precent / <span class="number">100</span>, <span class="keyword">false</span>, paint);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> FILL:</span><br><span class="line">                paint.setStyle(Paint.Style.FILL_AND_STROKE);</span><br><span class="line">                canvas.drawArc(oval, <span class="number">0</span>, <span class="number">360</span> * precent / <span class="number">100</span>, <span class="keyword">true</span>, paint);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> min;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMin</span><span class="params">(<span class="keyword">int</span> min)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.min = min;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">getMax</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setMax</span><span class="params">(<span class="keyword">int</span> max)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (max &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"max不能小于0"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.max = max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">getProgress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> progress;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setProgress</span><span class="params">(<span class="keyword">int</span> progress)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (progress &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"progress不能小于0"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (progress &gt; max) &#123;</span><br><span class="line">            progress = max;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (progress &lt;= max) &#123;</span><br><span class="line">            <span class="keyword">this</span>.progress = progress;</span><br><span class="line">            <span class="comment">//更新</span></span><br><span class="line">            postInvalidate();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getRoundColor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> roundColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoundColor</span><span class="params">(<span class="keyword">int</span> roundColor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.roundColor = roundColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getRoundProgressColor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> roundProgressColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoundProgressColor</span><span class="params">(<span class="keyword">int</span> roundProgressColor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.roundProgressColor = roundProgressColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getRoundWidth</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> roundWidth;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoundWidth</span><span class="params">(<span class="keyword">float</span> roundWidth)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.roundWidth = roundWidth;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getStyle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> style;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStyle</span><span class="params">(<span class="keyword">int</span> style)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.style = style;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTextColor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> textColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTextColor</span><span class="params">(<span class="keyword">int</span> textColor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.textColor = textColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isTextShow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> textShow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTextShow</span><span class="params">(<span class="keyword">boolean</span> textShow)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.textShow = textShow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getTextSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> textSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTextSize</span><span class="params">(<span class="keyword">float</span> textSize)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.textSize = textSize;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编写布局<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">RelativeLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:myApp</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">com.cj5785.painttest.CustomProgressBar</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/custom_progress_bar"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_centerInParent</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"100dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">myApp:roundProgressColor</span>=<span class="string">"@android:color/holo_green_light"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">myApp:roundColor</span>=<span class="string">"@android:color/holo_blue_light"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">myApp:roundWidth</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">myApp:textColor</span>=<span class="string">"@android:color/holo_orange_light"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">myApp:textSize</span>=<span class="string">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_alignParentBottom</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">"start"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>测试<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProgressBarActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> CustomProgressBar progressBar;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> progess;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_progress_bar);</span><br><span class="line">        progressBar = findViewById(R.id.custom_progress_bar);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        progess += <span class="number">5</span>;</span><br><span class="line">        progressBar.setProgress(progess);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>效果如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E7%94%BB%E7%AC%94Paint-progressbar.gif" alt=""></p>
+<h3 id="附录-API"><a href="#附录-API" class="headerlink" title="附录 API"></a>附录 API</h3><p><code>public class Paint extends Object</code><br>java.lang.Object<br>​       ↳android.graphics.Paint</p>
+<p>The Paint class holds the style and color information about how to draw geometries, text and bitmaps.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Nested classes</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>enum</code></td>
+<td style="text-align:left"><code>Paint.Align</code> Align specifies how drawText aligns its text relative to the [x,y] coordinates.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>enum</code></td>
+<td style="text-align:left"><code>Paint.Cap</code> The Cap specifies the treatment for the beginning and ending of stroked lines and paths.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>class</code></td>
+<td style="text-align:left"><code>Paint.FontMetrics</code> Class that describes the various metrics for a font at a given text size.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>class</code></td>
+<td style="text-align:left"><code>Paint.FontMetricsInt</code> Convenience method for callers that want to have FontMetrics values as integers.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>enum</code></td>
+<td style="text-align:left"><code>Paint.Join</code> The Join specifies the treatment where lines and curve segments join on a stroked path.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>enum</code></td>
+<td style="text-align:left"><code>Paint.Style</code> The Style specifies if the primitive being drawn is filled, stroked, or both (in the same color).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Constants</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>ANTI_ALIAS_FLAG</code> Paint flag that enables antialiasing when drawing.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>DEV_KERN_TEXT_FLAG</code> Legacy Paint flag, no longer used.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>DITHER_FLAG</code> Paint flag that enables dithering when blitting.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>EMBEDDED_BITMAP_TEXT_FLAG</code> Paint flag that enables the use of bitmap fonts when drawing text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>FAKE_BOLD_TEXT_FLAG</code>Paint flag that applies a synthetic bolding effect to drawn text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>FILTER_BITMAP_FLAG</code> Paint flag that enables bilinear sampling on scaled bitmaps.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>HINTING_OFF</code> Font hinter option that disables font hinting.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>HINTING_ON</code> Font hinter option that enables font hinting.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>LINEAR_TEXT_FLAG</code> Paint flag that enables smooth linear scaling of text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>STRIKE_THRU_TEXT_FLAG</code> Paint flag that applies a strike-through decoration to drawn text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>SUBPIXEL_TEXT_FLAG</code> Paint flag that enables subpixel positioning of text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td style="text-align:left"><code>UNDERLINE_TEXT_FLAG</code> Paint flag that applies an underline decoration to drawn text.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Public constructors</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Paint()</code> Create a new paint with default settings.</td>
+</tr>
+<tr>
+<td><code>Paint(int flags)</code> Create a new paint with the specified flags.</td>
+</tr>
+<tr>
+<td><code>Paint(Paint paint)</code> Create a new paint, initialized with the attributes in the specified paint parameter.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Public methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>ascent()</code> Return the distance above (negative) the baseline (ascent) based on the current typeface and text size.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>breakText(char[] text, int index, int count, float maxWidth, float[] measuredWidth)</code> Measure the text, stopping early if the measured width exceeds maxWidth.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>breakText(String text, boolean measureForwards, float maxWidth,float[] measuredWidth)</code> Measure the text, stopping early if the measured width exceeds maxWidth.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>breakText(CharSequence text, int start, int end, boolean measureForwards, float maxWidth, float[] measuredWidth)</code> Measure the text, stopping early if the measured width exceeds maxWidth.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>clearShadowLayer()</code> Clear the shadow layer.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>descent()</code> Return the distance below (positive) the baseline (descent) based on the current typeface and text size.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>boolean</code></td>
+<td><code>equalsForTextMeasurement(Paint other)</code>Returns true of the passed <code>Paint</code> will have the same effect on text measurement</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getAlpha()</code>Helper to getColor() that just returns the color’s alpha value.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getColor()</code>Return the paint’s color.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ColorFilter</code></td>
+<td><code>getColorFilter()</code>Get the paint’s colorfilter (maybe be null).</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>boolean</code></td>
+<td><code>getFillPath(Path src, Path dst)</code>Applies any/all effects (patheffect, stroking) to src, returning the result in dst.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getFlags()</code>Return the paint’s flags.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>String</code></td>
+<td><code>getFontFeatureSettings()</code>Returns the font feature settings.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getFontMetrics(Paint.FontMetrics metrics)</code>Return the font’s recommended interline spacing, given the Paint’s settings for typeface, textSize, etc.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Paint.FontMetrics</code></td>
+<td><code>getFontMetrics()</code>Allocates a new FontMetrics object, and then calls getFontMetrics(fm) with it, returning the object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getFontMetricsInt(Paint.FontMetricsInt fmi)</code>Return the font’s interline spacing, given the Paint’s settings for typeface, textSize, etc.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Paint.FontMetricsInt</code></td>
+<td><code>getFontMetricsInt()</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getFontSpacing()</code>Return the recommend line spacing based on the current typeface and text size.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>String</code></td>
+<td><code>getFontVariationSettings()</code>Returns the font variation settings.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getHinting()</code>Return the paint’s hinting mode.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getLetterSpacing()</code>Return the paint’s letter-spacing for text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>MaskFilter</code></td>
+<td><code>getMaskFilter()</code>Get the paint’s maskfilter object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getOffsetForAdvance(char[] text, int start, int end, int contextStart,int contextEnd, boolean isRtl, float advance)</code>Get the character offset within the string whose position is closest to the specified horizontal position.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getOffsetForAdvance(CharSequence text, int start, int end, int contextStart, int contextEnd, boolean isRtl, float advance)</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>PathEffect</code></td>
+<td><code>getPathEffect()</code>Get the paint’s patheffect object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getRunAdvance(char[] text, int start, int end, int contextStart, int contextEnd, boolean isRtl, int offset)</code>Measure cursor position within a run of text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getRunAdvance(CharSequence text, int start, int end, int contextStart,int contextEnd, boolean isRtl, int offset)</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Shader</code></td>
+<td><code>getShader()</code>Get the paint’s shader object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Paint.Cap</code></td>
+<td><code>getStrokeCap()</code>Return the paint’s Cap, controlling how the start and end of stroked lines and paths are treated.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Paint.Join</code></td>
+<td><code>getStrokeJoin()</code>Return the paint’s stroke join type.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getStrokeMiter()</code>Return the paint’s stroke miter value.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getStrokeWidth()</code>Return the width for stroking.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Paint.Style</code></td>
+<td><code>getStyle()</code>Return the paint’s style, used for controlling how primitives’ geometries are interpreted (except for drawBitmap, which always assumes FILL_STYLE).</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Paint.Align</code></td>
+<td><code>getTextAlign()</code>Return the paint’s Align value for drawing text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>getTextBounds(String text, int start, int end, Rect bounds)</code>Return in bounds (allocated by the caller) the smallest rectangle that encloses all of the characters, with an implied origin at (0,0).</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>getTextBounds(char[] text, int index, int count, Rect bounds)</code>Return in bounds (allocated by the caller) the smallest rectangle that encloses all of the characters, with an implied origin at (0,0).</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Locale</code></td>
+<td><code>getTextLocale()</code>Get the text’s primary Locale.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>LocaleList</code></td>
+<td><code>getTextLocales()</code>Get the text locale list.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>getTextPath(char[] text, int index, int count, float x, float y, Pathpath)</code>Return the path (outline) for the specified text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>getTextPath(String text, int start, int end, float x, float y, Pathpath)</code>Return the path (outline) for the specified text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getTextScaleX()</code>Return the paint’s horizontal scale factor for text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getTextSize()</code>Return the paint’s text size.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>getTextSkewX()</code>Return the paint’s horizontal skew factor for text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getTextWidths(char[] text, int index, int count, float[] widths)</code>Return the advance widths for the characters in the string.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getTextWidths(String text, float[] widths)</code>Return the advance widths for the characters in the string.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getTextWidths(String text, int start, int end, float[] widths)</code>Return the advance widths for the characters in the string.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int</code></td>
+<td><code>getTextWidths(CharSequence text, int start, int end, float[] widths)</code>Return the advance widths for the characters in the string.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Typeface</code></td>
+<td><code>getTypeface()</code>Get the paint’s typeface object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Xfermode</code></td>
+<td><code>getXfermode()</code>Get the paint’s transfer mode object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>boolean</code></td>
+<td><code>hasGlyph(String string)</code>Determine whether the typeface set on the paint has a glyph supporting the string.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>final boolean</code></td>
+<td><code>isAntiAlias()</code>Helper for getFlags(), returning true if ANTI_ALIAS_FLAG bit is set AntiAliasing smooths out the edges of what is being drawn, but is has no impact on the interior of the shape.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>final boolean</code></td>
+<td><code>isDither()</code>Helper for getFlags(), returning true if DITHER_FLAG bit is set Dithering affects how colors that are higher precision than the device are down-sampled.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>boolean</code></td>
+<td><code>isElegantTextHeight()</code>Get the elegant metrics flag.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>final boolean</code></td>
+<td><code>isFakeBoldText()</code>Helper for getFlags(), returning true if FAKE_BOLD_TEXT_FLAG bit is set</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>final boolean</code></td>
+<td><code>isFilterBitmap()</code>Whether or not the bitmap filter is activated.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>final boolean</code></td>
+<td><code>isLinearText()</code>Helper for getFlags(), returning true if LINEAR_TEXT_FLAG bit is set</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>final boolean</code></td>
+<td><code>isStrikeThruText()</code>Helper for getFlags(), returning true if STRIKE_THRU_TEXT_FLAG bit is set</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>final boolean</code></td>
+<td><code>isSubpixelText()</code>Helper for getFlags(), returning true if SUBPIXEL_TEXT_FLAG bit is set</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>final boolean</code></td>
+<td><code>isUnderlineText()</code>Helper for getFlags(), returning true if UNDERLINE_TEXT_FLAG bit is set</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>measureText(char[] text, int index, int count)</code>Return the width of the text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>measureText(CharSequence text, int start, int end)</code>Return the width of the text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>measureText(String text, int start, int end)</code>Return the width of the text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>float</code></td>
+<td><code>measureText(String text)</code>Return the width of the text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>reset()</code>Restores the paint to its default settings.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>set(Paint src)</code>Copy the fields from src into this paint.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setARGB(int a, int r, int g, int b)</code>Helper to setColor(), that takes a,r,g,b and constructs the color int</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setAlpha(int a)</code>Helper to setColor(), that only assigns the color’s alpha value, leaving its r,g,b values unchanged.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setAntiAlias(boolean aa)</code>Helper for setFlags(), setting or clearing the ANTI_ALIAS_FLAG bit AntiAliasing smooths out the edges of what is being drawn, but is has no impact on the interior of the shape.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setColor(int color)</code>Set the paint’s color.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ColorFilter</code></td>
+<td><code>setColorFilter(ColorFilter filter)</code>Set or clear the paint’s colorfilter, returning the parameter.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setDither(boolean dither)</code>Helper for setFlags(), setting or clearing the DITHER_FLAG bit Dithering affects how colors that are higher precision than the device are down-sampled.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setElegantTextHeight(boolean elegant)</code>Set the paint’s elegant height metrics flag.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setFakeBoldText(boolean fakeBoldText)</code>Helper for setFlags(), setting or clearing the FAKE_BOLD_TEXT_FLAG bit</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setFilterBitmap(boolean filter)</code>Helper for setFlags(), setting or clearing the FILTER_BITMAP_FLAG bit.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setFlags(int flags)</code>Set the paint’s flags.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setFontFeatureSettings(String settings)</code>Set font feature settings.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>boolean</code></td>
+<td><code>setFontVariationSettings(String fontVariationSettings)</code>Sets TrueType or OpenType font variation settings.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setHinting(int mode)</code>Set the paint’s hinting mode.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setLetterSpacing(float letterSpacing)</code>Set the paint’s letter-spacing for text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setLinearText(boolean linearText)</code>Helper for setFlags(), setting or clearing the LINEAR_TEXT_FLAG bit</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>MaskFilter</code></td>
+<td><code>setMaskFilter(MaskFilter maskfilter)</code>Set or clear the maskfilter object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>PathEffect</code></td>
+<td><code>setPathEffect(PathEffect effect)</code>Set or clear the patheffect object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Shader</code></td>
+<td><code>setShader(Shader shader)</code>Set or clear the shader object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setShadowLayer(float radius, float dx, float dy, int shadowColor)</code>This draws a shadow layer below the main layer, with the specified offset and color, and blur radius.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setStrikeThruText(boolean strikeThruText)</code>Helper for setFlags(), setting or clearing the STRIKE_THRU_TEXT_FLAG bit</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setStrokeCap(Paint.Cap cap)</code>Set the paint’s Cap.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setStrokeJoin(Paint.Join join)</code>Set the paint’s Join.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setStrokeMiter(float miter)</code>Set the paint’s stroke miter value.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setStrokeWidth(float width)</code>Set the width for stroking.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setStyle(Paint.Style style)</code>Set the paint’s style, used for controlling how primitives’ geometries are interpreted (except for drawBitmap, which always assumes Fill).</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setSubpixelText(boolean subpixelText)</code>Helper for setFlags(), setting or clearing the SUBPIXEL_TEXT_FLAG bit</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setTextAlign(Paint.Align align)</code>Set the paint’s text alignment.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setTextLocale(Locale locale)</code>Set the text locale list to a one-member list consisting of just the locale.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setTextLocales(LocaleList locales)</code>Set the text locale list.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setTextScaleX(float scaleX)</code>Set the paint’s horizontal scale factor for text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setTextSize(float textSize)</code>Set the paint’s text size.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setTextSkewX(float skewX)</code>Set the paint’s horizontal skew factor for text.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Typeface</code></td>
+<td><code>setTypeface(Typeface typeface)</code>Set or clear the typeface object.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>void</code></td>
+<td><code>setUnderlineText(boolean underlineText)</code>Helper for setFlags(), setting or clearing the UNDERLINE_TEXT_FLAG bit</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Xfermode</code></td>
+<td><code>setXfermode(Xfermode xfermode)</code>Set or clear the transfer mode object.</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/08/30/高级UI之画笔Paint/" title="高级UI之画笔Paint">https://cj5785.com/2018/08/30/高级UI之画笔Paint/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/高级UI/" rel="tag"># 高级UI</a>
+          
+            <a href="/tags/画笔/" rel="tag"># 画笔</a>
+          
+            <a href="/tags/Paint/" rel="tag"># Paint</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/29/高级UI之自定义控件/" rel="next" title="高级UI之自定义控件">
+                <i class="fa fa-chevron-left"></i> 高级UI之自定义控件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/31/高级UI之高级渲染/" rel="prev" title="高级UI之高级渲染">
+                高级UI之高级渲染 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单使用例子"><span class="nav-number">1.</span> <span class="nav-text">简单使用例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paint的使用说明"><span class="nav-number">2.</span> <span class="nav-text">Paint的使用说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#图形绘制相关方法"><span class="nav-number">2.1.</span> <span class="nav-text">图形绘制相关方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文字绘制相关方法"><span class="nav-number">2.2.</span> <span class="nav-text">文字绘制相关方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文本的基线问题"><span class="nav-number">3.</span> <span class="nav-text">文本的基线问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义ProgressBar实现"><span class="nav-number">4.</span> <span class="nav-text">自定义ProgressBar实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附录-API"><span class="nav-number">5.</span> <span class="nav-text">附录 API</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/08/30/高级UI之画笔Paint/';
+          this.page.identifier = '2018/08/30/高级UI之画笔Paint/';
+          this.page.title = '高级UI之画笔Paint';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

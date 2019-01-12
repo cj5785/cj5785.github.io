@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="VPS,shadowsocks,kcptun,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="背景​    在购买搬砖工VPS以后，需要搭建一个Shadowsocks客户端，采用kcptun加速。">
+<meta name="keywords" content="VPS,shadowsocks,kcptun">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搬砖工VPS配置Shadowsocks以及使用kcptun加速">
+<meta property="og:url" content="https://cj5785.com/2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="背景​    在购买搬砖工VPS以后，需要搭建一个Shadowsocks客户端，采用kcptun加速。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-service%E7%95%8C%E9%9D%A2.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-kiwiVM%E7%95%8C%E9%9D%A2.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F%E7%95%8C%E9%9D%A2.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-xshell1.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-xshell2.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-xshell3.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-xshell4.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-Shadowsocks_server.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-%E8%A1%A8%E6%A0%BC.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-success.png">
+<meta property="og:image" content="https://blog.kuoruan.com/wp-content/uploads/2016/08/Kcptun_GUI_config.png">
+<meta property="og:updated_time" content="2018-06-08T09:15:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搬砖工VPS配置Shadowsocks以及使用kcptun加速">
+<meta name="twitter:description" content="背景​    在购买搬砖工VPS以后，需要搭建一个Shadowsocks客户端，采用kcptun加速。">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-service%E7%95%8C%E9%9D%A2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/">
+
+
+
+
+
+  <title>搬砖工VPS配置Shadowsocks以及使用kcptun加速 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">搬砖工VPS配置Shadowsocks以及使用kcptun加速</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-04T14:37:10+08:00">
+                2018-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/VPS/" itemprop="url" rel="index">
+                    <span itemprop="name">VPS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>​    在购买<a href="https://bandwagonhost.com/" target="_blank" rel="noopener">搬砖工VPS</a>以后，需要搭建一个Shadowsocks客户端，采用kcptun加速。</p>
+<a id="more"></a>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ol>
+<li>配置VPS</li>
+<li>搭建Shadowsocks</li>
+<li>使用kcptun加速</li>
+</ol>
+<h3 id="配置VPS"><a href="#配置VPS" class="headerlink" title="配置VPS"></a>配置VPS</h3><p>购买搬砖工VPS以后，进入管理界面，按步骤进行：</p>
+<ol>
+<li>进入kiwiVM控制台，在在左下角会有IP地址，这个记下来，连接ssh时候要用到。</li>
+</ol>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-service%E7%95%8C%E9%9D%A2.png" alt="VPS管理界面"></p>
+<ol start="2">
+<li>在现在的搬砖工控制台中，并没有Shadowsocks安装一项，需要在隐藏界面中打开。原本我的VPS安装的是centos 6.9，但由于centos6的原因，docker安装不成功，故将系统换为centos7。在左侧Install new OS中可更换系统。</li>
+</ol>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-kiwiVM%E7%95%8C%E9%9D%A2.png" alt="kiwiVM控制台界面"></p>
+<ol start="3">
+<li>选择安装centos7带bbr加速版本，同意抹除数据，安装系统（在安装系统前记得关闭系统，安装几分钟就好了）。</li>
+</ol>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F%E7%95%8C%E9%9D%A2.png" alt="安装centos7"></p>
+<ol start="4">
+<li>安装完成后会给出一个root账户密码和ssh端口号，通过ssh连接工具就可以连接到VPS了。此处我用的是Xshell。</li>
+</ol>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90.png" alt="系统安装完成"></p>
+<ol start="5">
+<li>使用Xshell连接VPS（其他连接工具原理类似），步骤如下所示：</li>
+</ol>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-xshell1.png" alt="xshell1"></p>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-xshell2.png" alt="xshell2"></p>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-xshell3.png" alt="xshell3"></p>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-xshell4.png" alt="xshell4"></p>
+<ol start="6">
+<li><p>在首次连接VPS时候需要做一些安全性的配置，主要是ssh的配置，防火墙的配置等。</p>
+<ol>
+<li><p>首次连接VPS，记得先更新：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y update <span class="comment">#更新系统</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用户密码（设置原则）</p>
+<ul>
+<li>密码不要过于简单，至少要8位以上，且同时拥有大小写字母+数字+特殊字符。</li>
+<li>密码不要使用统一密码，网站密码一个、VPS密码一个。</li>
+<li>不要使用生日、电话等个人信息作为密码。</li>
+<li>定期更换您的密码。</li>
+<li>不要把您的密码记录在任何别人能够看到的地方，最好记在心里。 </li>
+</ul>
+</li>
+<li><p>删除不使用的用户和用户组</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">userdel adm</span><br><span class="line">userdel lp</span><br><span class="line">userdel sync</span><br><span class="line">userdel shutdown</span><br><span class="line">userdel halt</span><br><span class="line">userdel news</span><br><span class="line">userdel uucp</span><br><span class="line">userdel operator</span><br><span class="line">userdel games</span><br><span class="line">userdel gopher</span><br><span class="line">userdel ftp <span class="comment">#若您需要使用匿名FTP请保留此用户，否则删除</span></span><br><span class="line">groupdel adm</span><br><span class="line">groupdel lp</span><br><span class="line">groupdel news</span><br><span class="line">groupdel uucp</span><br><span class="line">groupdel games</span><br><span class="line">groupdel dip</span><br><span class="line">groupdel pppusers</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>禁用root用户登录，添加一个用户来管理VPS</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd -m chen <span class="comment">#添加一个chen用户</span></span><br><span class="line">passwd chen <span class="comment">#设置chen用户密码</span></span><br></pre></td></tr></table></figure>
+<p>当看到<code>passwd: all authentication tokens updated successfully.</code>时，表示密码修改成功。</p>
+</li>
+<li><p>修改root用户密码，方便使用su时候输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd root</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更改SSH端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Port xxxxx <span class="comment">#SSH尽量设置大一点，不超过65535</span></span><br><span class="line">PermitRootLogin no <span class="comment">#禁止root登录</span></span><br><span class="line">X11Forwarding no <span class="comment">#禁止X11转发</span></span><br><span class="line">PermitEmptyPasswords no <span class="comment">#禁止空密码登录</span></span><br><span class="line">AllowUsers chen <span class="comment">#设置刚才创建的chen允许登陆</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart <span class="comment">#centos 6</span></span><br><span class="line">systemctl restart sshd <span class="comment">#centos 7</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>限制su命令的使用</p>
+<ul>
+<li>centos 6</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/pam.d/su</span><br></pre></td></tr></table></figure>
+<p>添加如下两行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">auth sufficient /lib/security/pam_rootok.so debug</span><br><span class="line">auth required /lib/security/pam_wheel.so group=isd</span><br></pre></td></tr></table></figure>
+<p>执行生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod -G10 chen</span><br></pre></td></tr></table></figure>
+<ul>
+<li>centos 7</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod -v u+w /etc/sudoers <span class="comment">#增加sudoers文件的写的权限，默认为只读</span></span><br><span class="line">vi /etc/sudoers <span class="comment">#修改sudoers</span></span><br></pre></td></tr></table></figure>
+<p>在sudoers中添加</p>
+<p><code>chen  ALL=(ALL)  ALL</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod -v u-w /etc/sudoers <span class="comment">#删除 sudoers 的写的权限</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>禁止ping（这样一来自己也没法ping了）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1 &gt; /proc/sys/net/ipv4/icmp_echo_ignore_all</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用防火墙</p>
+<p><strong>说明：</strong>centos7使用的是firewalld，centos6使用的是iptables 。在配置防火墙略有差别，详情可参考以下文章(<a href="https://blog.csdn.net/xlgen157387/article/details/52672988" target="_blank" rel="noopener">CentOS 7中firewall防火墙详解和配置以及切换为iptables防火墙</a>)，在这里将firewalld切换为iptables，按如下操作完成，再进行以下步骤。若为centos6，则直接使用而不用作如下处理。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service firewalld stop <span class="comment">#关闭firewall</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service <span class="comment">#禁止firewall开机启动</span></span><br><span class="line">yum install iptables-services <span class="comment">#安装iptables防火墙</span></span><br></pre></td></tr></table></figure>
+<p>清空防火墙原来的规则：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iptables -F</span><br><span class="line">iptables -X</span><br><span class="line">iptables -Z</span><br></pre></td></tr></table></figure>
+<p>设置防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iptables -A INPUT -p tcp -m multiport --dport xxxx,80,21,22 -j ACCEPT <span class="comment">#允许SSH端口xxxx、WEB端口80、FTP端口21、22开放</span></span><br><span class="line">/etc/init.d/iptables save <span class="comment">#保存配置规则</span></span><br><span class="line">service iptables restart <span class="comment">#重启防火墙</span></span><br></pre></td></tr></table></figure>
+<p>若要用firewalld则应该这样处理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld <span class="comment">#查看状态</span></span><br><span class="line">systemctl start firewalld <span class="comment">#启动</span></span><br><span class="line">systemctl <span class="built_in">enable</span> firewalld.service <span class="comment">#设置开机启动</span></span><br><span class="line">firewall-cmd --zone=public --add-port=80/tcp --permanent <span class="comment">#添加端口，--permanent永久生效，没有此参数重启后失效</span></span><br><span class="line">firewall-cmd --reload <span class="comment">#重新载入</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置完成以后，重启服务器（reboot），用设置的用户名和密码登陆。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="搭建Shadowsocks"><a href="#搭建Shadowsocks" class="headerlink" title="搭建Shadowsocks"></a>搭建Shadowsocks</h3><p>​    在kiwiVM控制面板中已经没有Shadowsocks的安装了，其实这里是隐藏起来了。</p>
+<ul>
+<li>如果是centos6，打开以下网址（<a href="https://kiwivm.64clouds.com/main-exec.php?mode=extras_shadowsocks" target="_blank" rel="noopener">Shadowsocks服务端安装</a>）便可进入Shadowsocks的安装界面了，安装完成就直接进入Shadowsocks服务端的配置界面，完全是图形化的造作，这里不再一一赘述。</li>
+</ul>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-Shadowsocks_server.png" alt="Shadowsocks——server"></p>
+<ul>
+<li><p>如果是centos7，那么选择命令行安装（python版的网上一堆教程，这里选择安装C语言版本）</p>
+<ol>
+<li><p>通过yum源安装相关软件 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release -y</span><br><span class="line">yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel -y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过yum安装shadowsocks-libev需要单独的仓库 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo</span><br></pre></td></tr></table></figure>
+<p>以上下载的是一个repo文件，如果下载不成功，新建文件，直接选择粘贴以下内容，修改权限为644。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[librehat-shadowsocks]</span><br><span class="line">name=Copr repo <span class="keyword">for</span> shadowsocks owned by librehat</span><br><span class="line">baseurl=https://copr-be.cloud.fedoraproject.org/results/librehat/shadowsocks/epel-7-<span class="variable">$basearch</span>/</span><br><span class="line"><span class="built_in">type</span>=rpm-md</span><br><span class="line">skip_if_unavailable=True</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://copr-be.cloud.fedoraproject.org/results/librehat/shadowsocks/pubkey.gpg</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">enabled_metadata=1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>把文件放到<code>/etc/yum.repos.d/</code>目录下 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp librehat-shadowsocks-epel-7.repo /etc/yum.repos.d/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br><span class="line">yum install shadowsocks-libev</span><br></pre></td></tr></table></figure>
+<p>如果在安装shadowsocks-libev依赖包的时候出现如下的提示信息，应该是epel源已经安装，但是被禁用了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">No package udns-devel available.</span><br><span class="line">No package mbedtls-devel available.</span><br></pre></td></tr></table></figure>
+<p>如果被禁用就执行如下命令启用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y install yum-utils</span><br><span class="line">yum-config-manager --<span class="built_in">enable</span> epel</span><br><span class="line">yum update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/shadowsocks-libev/config.json</span><br></pre></td></tr></table></figure>
+<p>打开后格式如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:8388,</span><br><span class="line">    <span class="string">"local_port"</span>:1080,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"barfoo!"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:60,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"chacha20-ietf-poly1305"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-%E8%A1%A8%E6%A0%BC.png" alt="表格"></p>
+<p>以下是我的配置：(IP和端口用xxx隐藏了，密码用*隐藏了，加密方式采用aes-256-cfb)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"xxx.xxx.xxx.xxx"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:xxxxx,</span><br><span class="line">    <span class="string">"local_port"</span>:1080,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"**********"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:60,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果使用aes-256-cfb加密，需要安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install rng-tools -y</span><br><span class="line">rngd -r /dev/urandom</span><br></pre></td></tr></table></figure>
+<p>注册为开机启动并启动软件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start shadowsocks-libev</span><br><span class="line">systemctl <span class="built_in">enable</span> shadowsocks-libev</span><br></pre></td></tr></table></figure>
+<p>此时，Shadowsocks就运行起来了，但依旧不可用。主要是因为前面设置了防火墙，这里要把加入的端口打开。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8388/tcp --permanent</span><br><span class="line"><span class="comment">#刷新防火墙，不然可能不生效</span></span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<p>可以通过Shadowsocks客户端检测是否安装成功。</p>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%90%AC%E7%A0%96%E5%B7%A5VPS%E9%85%8D%E7%BD%AEShadowsocks%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8kcptun%E5%8A%A0%E9%80%9F-success.png" alt="success"></p>
+<p>如图所示，已经搞定。这样就成功在外了。</p>
+<p>Welcome to out！</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="使用kcptun加速"><a href="#使用kcptun加速" class="headerlink" title="使用kcptun加速"></a>使用kcptun加速</h3><p>​    直接使用Shadowsocks会慢速和不稳定，于是就有了kcptun加速。安装kcptun也有两种方式，这里讲述GUI的方式安装，直观方便，这里贴上原作者的博客链接：<a href="https://blog.kuoruan.com/110.html" target="_blank" rel="noopener">Kcptun服务端一键安装脚本</a>。</p>
+<ol>
+<li><p>服务端安装（xxxxx为Shadowsocks设置的端口号）：</p>
+<p>执行以下命令，得到加速IP和加速端口号。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ss -nl | grep xxxxx</span><br></pre></td></tr></table></figure>
+<p>得到的是下面一种情况（xxx.xxx.xxx.xxx为服务器地址）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">udp    UNCONN     0      0      xxx.xxx.xxx.xxx:xxxxx                 *:*                 </span><br><span class="line">tcp    LISTEN     0      128    xxx.xxx.xxx.xxx:xxxxx                 *:*</span><br></pre></td></tr></table></figure>
+<p>此时为作者所说的情况4，也就是服务器IP+端口号，此时的加速IP为xxx.xxx.xxx.xxx，加速端口xxxxx，其他情况分别为:::xxxxx，0.0.0.0：xxxxx，127.0.0.1:xxxxx，这三种情况的加速IP为127.0.0.1，加速端口为xxxxx。</p>
+<p>使用方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://github.com/kuoruan/shell-scripts/raw/master/kcptun/kcptun.sh</span><br><span class="line">chmod +x ./kcptun.sh</span><br><span class="line">./kcptun.sh</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>设置 Kcptun 的服务端端口（为占用的端口，给kcptun使用，此端口需要在firewall中添加）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请输入 Kcptun Server 端口 [1-65535]:</span><br><span class="line">(默认: 29900):</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置加速的 IP （上面得到的加速IP）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请输入需要加速的地址:</span><br><span class="line">(默认: 127.0.0.1):</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置需要加速的端口（上面得到的加速端口）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请输入需要加速的端口 [1-65535]:</span><br><span class="line">(默认: 12948):</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置 Kcptun 密码 （直接回车则设置为<code>it&#39;s a secrect</code>，这个密码和Shadowsocks无关）</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请输入 <span class="selector-tag">Kcptun</span> 密码:</span><br><span class="line">(如果不想使用密码请留空):</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>禁用压缩 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">是否禁用数据压缩?</span><br><span class="line">(默认: 不禁用) [y/n]:</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上仅列出一些关键步骤，具体步骤会在设置中体现。enjoy it.</p>
+<p>安装成功会输出如下信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">恭喜, Kcptun 服务端配置完毕！</span><br><span class="line"> </span><br><span class="line">正在获取当前安装的 Kcptun 版本...</span><br><span class="line"> </span><br><span class="line">服务器IP:  10.10.10.10</span><br><span class="line">端口:  29900</span><br><span class="line">加速地址: 127.0.0.1:8388</span><br><span class="line">密码: 123456</span><br><span class="line">加密方式 Crypt:  salsa20</span><br><span class="line"> </span><br><span class="line">当前安装的 Kcptun 版本为: v20160922</span><br><span class="line"> </span><br><span class="line">推荐的客户端配置为: </span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"localaddr"</span>: <span class="string">":8388"</span>,</span><br><span class="line">  <span class="string">"remoteaddr"</span>: <span class="string">"10.10.10.10:29900"</span>,</span><br><span class="line">  <span class="string">"key"</span>: <span class="string">"123456"</span>,</span><br><span class="line">  <span class="string">"crypt"</span>: <span class="string">"salsa20"</span>,</span><br><span class="line">  <span class="string">"mode"</span>: <span class="string">"fast"</span>,</span><br><span class="line">  <span class="string">"mtu"</span>: 1350,</span><br><span class="line">  <span class="string">"sndwnd"</span>: 1024,</span><br><span class="line">  <span class="string">"rcvwnd"</span>: 1024,</span><br><span class="line">  <span class="string">"datashard"</span>: 10,</span><br><span class="line">  <span class="string">"parityshard"</span>: 3,</span><br><span class="line">  <span class="string">"dscp"</span>: 0,</span><br><span class="line">  <span class="string">"conn"</span>: 1,</span><br><span class="line">  <span class="string">"autoexpire"</span>: 60,</span><br><span class="line">  <span class="string">"nocomp"</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">手机端参数可以使用：</span><br><span class="line">  *******</span><br><span class="line"> </span><br><span class="line">其他参数请自行计算或设置, 详细信息可以查看: https://github.com/xtaci/kcptun</span><br><span class="line"> </span><br><span class="line">Kcptun 安装目录: /usr/share/kcptun</span><br><span class="line">Kcptun 日志文件目录: /var/<span class="built_in">log</span>/kcptun/</span><br></pre></td></tr></table></figure>
+<p>以上大括号里面的信息很重要，复制下来。在本地建立一个json文件，将其内容添加进去。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"localaddr"</span>: <span class="string">":8388"</span>,</span><br><span class="line">  <span class="string">"remoteaddr"</span>: <span class="string">"10.10.10.10:29900"</span>,</span><br><span class="line">  <span class="string">"key"</span>: <span class="string">"123456"</span>,</span><br><span class="line">  <span class="string">"crypt"</span>: <span class="string">"salsa20"</span>,</span><br><span class="line">  <span class="string">"mode"</span>: <span class="string">"fast"</span>,</span><br><span class="line">  <span class="string">"mtu"</span>: 1350,</span><br><span class="line">  <span class="string">"sndwnd"</span>: 1024,</span><br><span class="line">  <span class="string">"rcvwnd"</span>: 1024,</span><br><span class="line">  <span class="string">"datashard"</span>: 10,</span><br><span class="line">  <span class="string">"parityshard"</span>: 3,</span><br><span class="line">  <span class="string">"dscp"</span>: 0,</span><br><span class="line">  <span class="string">"conn"</span>: 1,</span><br><span class="line">  <span class="string">"autoexpire"</span>: 60,</span><br><span class="line">  <span class="string">"nocomp"</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong>服务端的 sndwnd 对应的是客户端的 recwnd，所以请不要问我为什么输出的客户端参数和你配置的服务端参数是反的。</p>
+<p>安装之后，Kcptun 服务交由 Supervisor 管理。</p>
+<p>Supervisor 相关命令：</p>
+<p>centos6：<code>service supervisord {start|stop|restart|status}</code></p>
+<p>centos7：<code>systemctl {start|stop|restart|status} supervisord.service</code></p>
+<p>Kcptun 相关命令：</p>
+<p><code>supervisorctl {start|stop|restart|status} kcptun</code></p>
+<p>Supervisor 启动的时候会同时启动 Kcptun，运行 kcptun 相关命令时先确保 Supervisor 已启动。</p>
+<p>以上就完成服务端的配置了。接下来完成客户端的配置。</p>
+</li>
+<li><p>客户端安装：</p>
+<ul>
+<li><p>先到下载一个启动 Kcptun 的工具。请注意，这只是用来启动 Kcptun 的工具，而不是 Kcptun 客户端。</p>
+<p><a href="https://github.com/dfdragon/kcptun_gclient/releases" target="_blank" rel="noopener">下载链接</a> </p>
+</li>
+<li><p>然后下载服务端对应版本的 Kcptun（保存下来的提示信息里有）： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当前安装的 Kcptun 版本为: v20160922</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/xtaci/kcptun/releases" target="_blank" rel="noopener">下载链接</a></p>
+</li>
+<li><p>将下载的两个压缩包解压，放在同一目录下。再把之前的json文件拿过来一起。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kcptun_gclient.exe <span class="comment">#Kcptun 启动工具</span></span><br><span class="line">client_windows_amd64.exe <span class="comment">#Kcptun 客户端程序</span></span><br><span class="line">server_windows_amd64.exe <span class="comment">#Kcptun 服务端程序</span></span><br><span class="line">client.json <span class="comment">#服务器信息文件</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打开 Kcptun 启动工具（可将程序以管理员身份运行,添加开机启动），界面如下，请按序号操作 </p>
+<p><img src="https://blog.kuoruan.com/wp-content/uploads/2016/08/Kcptun_GUI_config.png" alt="步骤"></p>
+</li>
+</ul>
+</li>
+<li><p>Shadowsocks 配置</p>
+<ul>
+<li><p>在 Shadowsocks 客户端中添加一个选项，服务器IP固定填写 127.0.0.1，服务器端口填写 Kcptun 启动工具中配置的“本地监听端口”（即这里的 xxxxx），密码和加密配置的是 Shadowsocks 的密码和加密。</p>
+</li>
+<li><p>将代理切换到新建的选项上，尝试访问。查看 Kcptun 启动工具中的日志区，会有大量的stream  opened和stream  closed 输出。</p>
+</li>
+<li><p>再用 shelll 看看服务端日志，如果有相同的信息输出，说明配置正确，并能正常使用。查看服务端日志使用 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kcptun.sh <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<p>kcptun加速到此完成。这样就能非常愉快的玩耍了。</p>
+<p>实测YouTube 1080HD完全不卡顿，流畅的一笔~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/" title="搬砖工VPS配置Shadowsocks以及使用kcptun加速">https://cj5785.com/2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/VPS/" rel="tag"># VPS</a>
+          
+            <a href="/tags/shadowsocks/" rel="tag"># shadowsocks</a>
+          
+            <a href="/tags/kcptun/" rel="tag"># kcptun</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/25/shell之常用命令，重定向和文件包含/" rel="next" title="shell之常用命令，函数，重定向和文件包含">
+                <i class="fa fa-chevron-left"></i> shell之常用命令，函数，重定向和文件包含
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/08/NDK开发之C语言/" rel="prev" title="NDK开发之C语言">
+                NDK开发之C语言 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置VPS"><span class="nav-number">3.</span> <span class="nav-text">配置VPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建Shadowsocks"><span class="nav-number">4.</span> <span class="nav-text">搭建Shadowsocks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用kcptun加速"><span class="nav-number">5.</span> <span class="nav-text">使用kcptun加速</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/';
+          this.page.identifier = '2018/06/04/搬砖工VPS配置Shadowsocks以及使用kcptun加速/';
+          this.page.title = '搬砖工VPS配置Shadowsocks以及使用kcptun加速';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,类库,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="java类库的基本介绍">
+<meta name="keywords" content="Java,类库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础类库">
+<meta property="og:url" content="https://cj5785.com/2017/10/03/java基础类库/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="java类库的基本介绍">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-08T12:51:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础类库">
+<meta name="twitter:description" content="java类库的基本介绍">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2017/10/03/java基础类库/">
+
+
+
+
+
+  <title>Java基础类库 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2017/10/03/java基础类库/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Java基础类库</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-03T20:19:32+08:00">
+                2017-10-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/03/java基础类库/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/10/03/java基础类库/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>java类库的基本介绍<br><a id="more"></a></p>
+<h3 id="与用户互动"><a href="#与用户互动" class="headerlink" title="与用户互动"></a>与用户互动</h3><h4 id="运行Java程序的参数"><a href="#运行Java程序的参数" class="headerlink" title="运行Java程序的参数"></a>运行Java程序的参数</h4><p>main()方法分析</p>
+<ul>
+<li><code>public</code>修饰符：Java类由JVM调用，为了让JVM可以自由调用这个main()方法，所以使用public修饰符把这个方法暴露出来</li>
+<li><code>static</code>修饰符：JVM调用这个主方法时，不会先创建该类的对象，然后通过对象来调用该主方法。JVM直接通过该类来调用主方法，因此用static修饰该主方法</li>
+<li><code>void</code>返回值：因为主方法被JVM调用，该方法的返回值将返回给JVM，这没有任何意义，因此main()方法没有返回值</li>
+</ul>
+<h4 id="使用Scanner获取键盘输入"><a href="#使用Scanner获取键盘输入" class="headerlink" title="使用Scanner获取键盘输入"></a>使用Scanner获取键盘输入</h4><ul>
+<li>Scanner类可以获取键盘输入，是一个基于正则表达式的文本扫描器，可以从文件、输入流、字符串中解析出基本类型值和字符串值</li>
+<li>Scanner主要提供以下两个方法来扫描输入：<ul>
+<li><code>hasNextXxx()</code>：是否还有下一个输入项（<code>hasNest()</code>）</li>
+<li><code>nextXxx()</code>：获取下一个输入项</li>
+</ul>
+</li>
+<li>在默认情况下，Scanner使用空白（包括键盘、Tab空白、回车）作为多个输入项之间的分隔符</li>
+<li>Scanner使用useDelimiter(String pattern)作为分隔符设置</li>
+<li><p>Scanner提供以下两个方法逐行读取：</p>
+<ul>
+<li><code>boolean hasNextLine()</code>：返回输入源中是否还有下一个行</li>
+<li><code>String nextLine()</code>：返回输入源中下一行的字符串<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	<span class="comment">// System.in代表标准输入，就是键盘输入</span></span><br><span class="line">	Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">	<span class="comment">// 增加下面一行将只把回车作为分隔符</span></span><br><span class="line">	<span class="comment">// sc.useDelimiter("\n");</span></span><br><span class="line">	<span class="comment">// 判断是否还有下一个输入项</span></span><br><span class="line">	<span class="keyword">while</span>(sc.hasNext())&#123;</span><br><span class="line">		<span class="comment">// 输出输入项</span></span><br><span class="line">		System.out.println(<span class="string">"键盘输入的内容是："</span> + sc.next());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>同时Scanner还可以读取文件输入，只需要传入File对象作为参数即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span><span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">	<span class="comment">// 将一个File对象作为Scanner的构造器参数，Scanner读取文件内容</span></span><br><span class="line">	Scanner sc = <span class="keyword">new</span> Scanner(<span class="keyword">new</span> File(<span class="string">"ScannerFileTest.java"</span>));</span><br><span class="line">	System.out.println(<span class="string">"ScannerFileTest.java文件内容如下："</span>);</span><br><span class="line">	<span class="comment">// 判断是否还有下一行</span></span><br><span class="line">	<span class="keyword">while</span>(sc.hasNextLine())&#123;</span><br><span class="line">		<span class="comment">// 输出文件中的下一行</span></span><br><span class="line">		System.out.println(sc.nextLine());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="系统相关"><a href="#系统相关" class="headerlink" title="系统相关"></a>系统相关</h3><h4 id="System类"><a href="#System类" class="headerlink" title="System类"></a>System类</h4><ul>
+<li><p>System类代表当前Java程序的运行平台，程序不能创建System类的对象，System类提供了一些类变量和类方法，允许直接通过System类来调用这些类变量和类方法。可以获取依稀系统相关信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">	<span class="comment">// 获取系统所有的环境变量</span></span><br><span class="line">	Map&lt;String,String&gt; env = System.getenv();</span><br><span class="line">	<span class="keyword">for</span> (String name : env.keySet())&#123;</span><br><span class="line">		System.out.println(name + <span class="string">" ---&gt; "</span> + env.get(name));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 获取指定环境变量的值</span></span><br><span class="line">	System.out.println(System.getenv(<span class="string">"JAVA_HOME"</span>));</span><br><span class="line">	<span class="comment">// 获取所有的系统属性</span></span><br><span class="line">	Properties props = System.getProperties();</span><br><span class="line">	<span class="comment">// 将所有系统属性保存到props.txt文件中</span></span><br><span class="line">	props.store(<span class="keyword">new</span> FileOutputStream(<span class="string">"props.txt"</span>), <span class="string">"System Properties"</span>);</span><br><span class="line">	<span class="comment">// 输出特定的系统属性</span></span><br><span class="line">	System.out.println(System.getProperty(<span class="string">"os.name"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>System的计时方法：<code>currentTimeMillis()</code>（毫秒）和<code>nanoTime()</code>（纳秒），相对于1970年</p>
+</li>
+<li>System的输入输出：<code>in</code>，<code>out</code>，<code>err</code>，提供了<code>setInt()</code>、<code>setOut()</code>、<code>setErr()</code>方法</li>
+<li>System类提供一个<code>identityHashCode(Object x)</code>，返回指定对象的精确hash Code值，根据对象地址的到，可以唯一标识一个对象<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	<span class="comment">// 下面程序中s1和s2是两个不同对象</span></span><br><span class="line">	String s1 = <span class="keyword">new</span> String(<span class="string">"Hello"</span>);</span><br><span class="line">	String s2 = <span class="keyword">new</span> String(<span class="string">"Hello"</span>);</span><br><span class="line">	<span class="comment">// String重写了hashCode()方法——改为根据字符序列计算hashCode值，</span></span><br><span class="line">	<span class="comment">// 因为s1和s2的字符序列相同，所以它们的hashCode方法返回值相同</span></span><br><span class="line">	System.out.println(s1.hashCode() + <span class="string">"----"</span> + s2.hashCode());</span><br><span class="line">	<span class="comment">// s1和s2是不同的字符串对象，所以它们的identityHashCode值不同</span></span><br><span class="line">	System.out.println(System.identityHashCode(s1) + <span class="string">"----"</span> + System.identityHashCode(s2));</span><br><span class="line">	String s3 = <span class="string">"Java"</span>;</span><br><span class="line">	String s4 = <span class="string">"Java"</span>;</span><br><span class="line">	<span class="comment">// s3和s4是相同的字符串对象，所以它们的identityHashCode值相同</span></span><br><span class="line">	System.out.println(System.identityHashCode(s3) + <span class="string">"----"</span> + System.identityHashCode(s4));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Runtime类"><a href="#Runtime类" class="headerlink" title="Runtime类"></a>Runtime类</h4><ul>
+<li>Runtime类代表Java程序的运行时环境，每个Java程序都有一个与之对应的Runtime实例。应用程序不能创建自己的Runtime实例，但是可以通过<code>getRuntime()</code>方法获取与之关联的Runtime对象</li>
+<li>与System类似，Runtime提供了<code>gc()</code>和<code>runFinalization()</code>，并提供了<code>load(String filename)</code>和<code>loadLibrary(String libname)</code>来加载文件和动态链接库</li>
+<li><p>Runtime可以访问JVM的相关信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	<span class="comment">// 获取Java程序关联的运行时对象</span></span><br><span class="line">	Runtime rt = Runtime.getRuntime();</span><br><span class="line">	System.out.println(<span class="string">"处理器数量："</span> + rt.availableProcessors());</span><br><span class="line">	System.out.println(<span class="string">"空闲内存数："</span> + rt.freeMemory());</span><br><span class="line">	System.out.println(<span class="string">"总内存数："</span> + rt.totalMemory());</span><br><span class="line">	System.out.println(<span class="string">"可用最大内存数："</span> + rt.maxMemory());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Runtime来可以直接单独启动一个进程来运行操作系统命令</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">	Runtime rt = Runtime.getRuntime();</span><br><span class="line">	<span class="comment">// 运行记事本程序</span></span><br><span class="line">	rt.exec(<span class="string">"notepad.exe"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="常用类"><a href="#常用类" class="headerlink" title="常用类"></a>常用类</h3><h4 id="Object类"><a href="#Object类" class="headerlink" title="Object类"></a>Object类</h4><ul>
+<li>Object是所有类，数组，枚举类的父类。也就是说Java允许把任何类型的变量赋给Object类型的变量</li>
+<li>Object提供了如下几个常用方法：<ul>
+<li><code>boolean equals(Object obj)</code>：判断指定对象与该对象是否相等</li>
+<li><code>protected void finalize()</code>：当系统中没有引用变量引用到该对象时，垃圾回收器调用此方法来清理该对象的资源</li>
+<li><code>Class&lt;?&gt; getClass()</code>：返回该对象的运行时类</li>
+<li><code>int hashCode()</code>：返回该对象的hashCode值</li>
+<li><code>String toString()</code>：返回该对象的字符串表示</li>
+<li><code>wait()</code>，<code>notify()</code>，<code>notifyAll()</code></li>
+</ul>
+</li>
+<li>Object还提供了protected修饰的clone()方法，用于得到一个当前对象的副本，而且二者之间完全隔离。实现“自我克隆”的步骤如下：<ul>
+<li>自定义类实现Coneable接口，此为标记行接口，里面没有定义任何方法</li>
+<li>自定义类实现自己的clone()方法</li>
+<li>实现clone()方法时通过<code>super.clone()</code>；调用Object实现的clone()方法来得到该对象的副本，并返回该副本<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Address</span></span>&#123;</span><br><span class="line">	String detail;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Address</span><span class="params">(String detail)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.detail = detail;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 实现Cloneable接口</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Cloneable</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> age;</span><br><span class="line">	Address address;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(<span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.age = age;</span><br><span class="line">		address = <span class="keyword">new</span> Address(<span class="string">"广州天河"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 通过调用super.clone()来实现clone()方法</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> User <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> (User)<span class="keyword">super</span>.clone();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CloneTest</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> CloneNotSupportedException</span>&#123;</span><br><span class="line">		User u1 = <span class="keyword">new</span> User(<span class="number">29</span>);</span><br><span class="line">		<span class="comment">// clone得到u1对象的副本。</span></span><br><span class="line">		User u2 = u1.clone();</span><br><span class="line">		<span class="comment">// 判断u1、u2是否相同</span></span><br><span class="line">		System.out.println(u1 == u2);      <span class="comment">//false</span></span><br><span class="line">		<span class="comment">// 判断u1、u2的address是否相同</span></span><br><span class="line">		System.out.println(u1.address == u2.address);     <span class="comment">//true</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Java7新增的Object类"><a href="#Java7新增的Object类" class="headerlink" title="Java7新增的Object类"></a>Java7新增的Object类</h4><ul>
+<li>若不确定一个对象是否为null就用<code>toString()</code>则可能引起空指针异常，而Object提供的<code>toString(Object o)</code>则不会，若为空，则返回<code>null</code>字符串<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个obj变量，它的默认值是null</span></span><br><span class="line"><span class="keyword">static</span> ObjectsTest obj;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// 输出一个null对象的hashCode值，输出0</span></span><br><span class="line">	System.out.println(Objects.hashCode(obj));</span><br><span class="line">	<span class="comment">// 输出一个null对象的toString，输出null</span></span><br><span class="line">	System.out.println(Objects.toString(obj));</span><br><span class="line">	<span class="comment">// 要求obj不能为null，如果obj为null则引发异常</span></span><br><span class="line">	System.out.println(Objects.requireNonNull(obj , <span class="string">"obj参数不能是null！"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="String、StringBuffer和StringBuilder类"><a href="#String、StringBuffer和StringBuilder类" class="headerlink" title="String、StringBuffer和StringBuilder类"></a>String、StringBuffer和StringBuilder类</h4><ul>
+<li>字符串就是一连串的字符序列</li>
+<li>String类是不可变类，即一旦一个String对象被创建以后，包含在这个对象的字符序列是不可改变的，直到这个对象销毁。</li>
+<li>StringBuffer对象代表一个字符序列可变的字符串，当一个StringBuffer被创建以后，通过StringBuffer提供的<code>append()</code>、<code>insert()</code>、<code>reverse()</code>、<code>setCharAt()</code>、<code>setLength()</code>等方法可以改变这个字符串对象的字符序列。一旦通过StringBuffer生成最终想要的字符串，就可以调用它的<code>toString()</code>方法将其转化成一个String对象</li>
+<li>StringBuilder从JDK1.5开始使用，与StringBuffer类似，不同的是StringBuffer是线程安全的，而StringBuilder没有线程安全，性能略高。通常考虑StringBuilder类</li>
+<li>String类提供的构造器<ul>
+<li><code>String()</code>:创建一个包含0个字符串序列的String对象（并不是返回null）</li>
+<li><code>String(byte[] bytes , Charset charset)</code>：使用指定的字符集将指定的byte[]数组解码成一个新的String对象</li>
+<li><code>String(byte[] bytes,int offset,int length)</code>：使用平台的默认字符集将指定的byte[]数组从offset开始，长度为length的子数组解码成一个新的String对象</li>
+<li><code>String(byte[] bytes,int offset,int length,String charsetName)</code>：使用指定的字符集将指定的byte[]数组从offset开始，长度为length的子数组解码成一个新的String对象</li>
+<li><code>String(byte[] bytes , String charsetName)</code>：使用指定的字符集将指定的byte[]数组解码成一个新的String对象</li>
+<li><code>String(char[] value)</code>:将字符数组转换成字符串 </li>
+<li><code>String(char[] value,int offset,int count)</code>:将指定的字符数组从offset开始、长度为count的字符元素连缀成字符串</li>
+<li><code>String(String original)</code>:根据字符串直接量来创建一个String对象。即新创建的String对象是该参数字符串的副本</li>
+<li><code>String(StringBuffer buffer)</code>：根据StringBuffer对象来创建对应的String对象</li>
+<li><code>String(StringBuilder builder)</code>：根据StringBuilder对象来创建对应的String对象</li>
+</ul>
+</li>
+<li>String类提供的字符串操作方法<ul>
+<li><code>char charAt(int index)</code>：获取字符串中指定位置的字符</li>
+<li><code>int compareTo(String anotherString)</code>：比较两个字符串的大小（大小差）</li>
+<li><code>String concat(String str)</code>：将该String对象与str连接在一起</li>
+<li><code>boolean contentEquals(StringBuffer sb)</code>：将该String对象与StringBuffer对象sb进行比较，当他们的字符序列相同时返回true</li>
+<li><code>static String copyValueOf(char[] data)</code>：将字符数组连缀成字符串</li>
+<li><code>static String copyValueOf(char[] data,int offset,int count)</code>：将char数组的子元素中的元素连缀成字符串</li>
+<li><code>boolean endsWith(String suffix)</code>：返回该String对象是否以suffix结尾</li>
+<li><code>boolean equals(Object anObject)</code>：将该字符串与指定对象对比，若二者包含的字符序列相等，则返回true</li>
+<li><code>boolean equalsIgnoreCase(String str)</code>：忽略大小写的比较</li>
+<li><code>byte[] getByte()</code>：将该String对象转化成byte数组</li>
+<li><code>void getChars(int srcBegin,int srcEnd,char[] dst,int dstBegin)</code>：该方法将字符串中从srcBegin开始到srcEnd结束的字符复制到dst字符数组中</li>
+<li><code>int indexOf(int ch)</code>：找出ch字符在该字符串中第一次出现的位置</li>
+<li><code>int indexOf(int ch,int fromIndex)</code>：找出ch字符串在该字符串中从fromIndex开始后第一次出现的位置。</li>
+<li><code>int indexOf(String str)</code>：找出str子字符串在该字符串中第一次出现的位置</li>
+<li><code>int indexOf(String str,int fromIndex)</code>：找出str子字符串在该字符串中从fromIndex开始后第一次出现的位置</li>
+<li><code>int lastIndexOf(int ch)</code>：找出ch字符在该字符串中最后一次出现的位置</li>
+<li><code>int lastIndexOf(int ch,int fromIndex)</code>：找出ch字符串在该字符串中从fromIndex开始后最后一次出现的位置。</li>
+<li><code>int lastIndexOf(String str)</code>：找出str子字符串在该字符串中最后一次出现的位置</li>
+<li><code>int lastIndexOf(String str,int fromIndex)</code>：找出str子字符串在该字符串中从fromIndex开始后最后一次出现的位置</li>
+<li><code>int length()</code>：返回当前字符串的长度</li>
+<li><code>String replace(char oldChar,char newChar)</code>：将字符串中的第一个oldChar替换成newChar</li>
+<li><code>boolean startWith(String prefix)</code>：该Strng对象是否以prefix开始</li>
+<li><code>boolean startWith(String prefix,int toffset)</code>：该String对象从toffset位置算起，是否以prefix开始</li>
+<li><code>String substring(int beginIndex)</code>：获取从beginIndex位置开始到结束的字串</li>
+<li><code>String substring(int beginIndex,int endIndex)</code>：获取从beginIndex开始到endIndex位置的字串</li>
+<li><code>char[] toCharArray()</code>：将该String对象转化成char数组</li>
+<li><code>String toLowerCase()</code>：将字符串转化成小写</li>
+<li><code>String toUpperCase()</code>：将字符串转化成小写</li>
+<li><code>static String valueOf(X x)</code>：一系列用于将基本数据类型转化成String对象的方法</li>
+</ul>
+</li>
+<li>StringBuffer、StringBuilder有两个属性：<code>length</code>和<code>capacity</code>。前者表示其包含的字符序列的长度。可用<code>length()</code>、<code>setLength()</code>访问修改。后者表示其容量，一般不用关心<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">	<span class="comment">// 追加字符串</span></span><br><span class="line">	sb.append(<span class="string">"java"</span>);<span class="comment">//sb = "java"</span></span><br><span class="line">	<span class="comment">// 插入</span></span><br><span class="line">	sb.insert(<span class="number">0</span> , <span class="string">"hello "</span>); <span class="comment">// sb="hello java"</span></span><br><span class="line">	<span class="comment">// 替换</span></span><br><span class="line">	sb.replace(<span class="number">5</span>, <span class="number">6</span>, <span class="string">","</span>); <span class="comment">// sb="hello, java"</span></span><br><span class="line">	<span class="comment">// 删除</span></span><br><span class="line">	sb.delete(<span class="number">5</span>, <span class="number">6</span>); <span class="comment">// sb="hellojava"</span></span><br><span class="line">	System.out.println(sb);</span><br><span class="line">	<span class="comment">// 反转</span></span><br><span class="line">	sb.reverse(); <span class="comment">// sb="avajolleh"</span></span><br><span class="line">	System.out.println(sb);</span><br><span class="line">	System.out.println(sb.length()); <span class="comment">// 输出9</span></span><br><span class="line">	System.out.println(sb.capacity()); <span class="comment">// 输出16</span></span><br><span class="line">	<span class="comment">// 改变StringBuilder的长度，将只保留前面部分</span></span><br><span class="line">	sb.setLength(<span class="number">5</span>); <span class="comment">// sb="avajo"</span></span><br><span class="line">	System.out.println(sb);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Math类"><a href="#Math类" class="headerlink" title="Math类"></a>Math类</h4><ul>
+<li>Java提供Math工具完成复杂的运算，Math是一个工具类，其构造器修饰符为private，因此无法创建对象。提供了大量静态方法和<code>PI</code>、<code>E</code><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	<span class="comment">/*---------下面是三角运算---------*/</span></span><br><span class="line">	<span class="comment">// 将弧度转换角度</span></span><br><span class="line">	System.out.println(<span class="string">"Math.toDegrees(1.57)："</span> + Math.toDegrees(<span class="number">1.57</span>));</span><br><span class="line">	<span class="comment">// 将角度转换为弧度</span></span><br><span class="line">	System.out.println(<span class="string">"Math.toRadians(90)："</span> + Math.toRadians(<span class="number">90</span>));</span><br><span class="line">	<span class="comment">// 计算反余弦，返回的角度范围在 0.0 到 pi 之间。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.acos(1.2)："</span> + Math.acos(<span class="number">1.2</span>));</span><br><span class="line">	<span class="comment">// 计算反正弦；返回的角度范围在 -pi/2 到 pi/2 之间。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.asin(0.8)："</span> + Math.asin(<span class="number">0.8</span>));</span><br><span class="line">	<span class="comment">// 计算反正切；返回的角度范围在 -pi/2 到 pi/2 之间。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.atan(2.3)："</span> + Math.atan(<span class="number">2.3</span>));</span><br><span class="line">	<span class="comment">// 计算三角余弦。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.cos(1.57)："</span> + Math.cos(<span class="number">1.57</span>));</span><br><span class="line">	<span class="comment">// 计算值的双曲余弦。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.cosh(1.2 )："</span> + Math.cosh(<span class="number">1.2</span> ));</span><br><span class="line">	<span class="comment">// 计算正弦</span></span><br><span class="line">	System.out.println(<span class="string">"Math.sin(1.57 )："</span> + Math.sin(<span class="number">1.57</span> ));</span><br><span class="line">	<span class="comment">// 计算双曲正弦</span></span><br><span class="line">	System.out.println(<span class="string">"Math.sinh(1.2 )："</span> + Math.sinh(<span class="number">1.2</span> ));</span><br><span class="line">	<span class="comment">// 计算三角正切</span></span><br><span class="line">	System.out.println(<span class="string">"Math.tan(0.8 )："</span> + Math.tan(<span class="number">0.8</span> ));</span><br><span class="line">	<span class="comment">// 计算双曲正切</span></span><br><span class="line">	System.out.println(<span class="string">"Math.tanh(2.1 )："</span> + Math.tanh(<span class="number">2.1</span> ));</span><br><span class="line">	<span class="comment">// 将矩形坐标 (x, y) 转换成极坐标 (r, thet));</span></span><br><span class="line">	System.out.println(<span class="string">"Math.atan2(0.1, 0.2)："</span> + Math.atan2(<span class="number">0.1</span>, <span class="number">0.2</span>));</span><br><span class="line">	<span class="comment">/*---------下面是取整运算---------*/</span></span><br><span class="line">	<span class="comment">// 取整，返回小于目标数的最大整数。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.floor(-1.2 )："</span> + Math.floor(-<span class="number">1.2</span> ));</span><br><span class="line">	<span class="comment">// 取整，返回大于目标数的最小整数。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.ceil(1.2)："</span> + Math.ceil(<span class="number">1.2</span>));</span><br><span class="line">	<span class="comment">// 四舍五入取整</span></span><br><span class="line">	System.out.println(<span class="string">"Math.round(2.3 )："</span> + Math.round(<span class="number">2.3</span> ));</span><br><span class="line">	<span class="comment">/*---------下面是乘方、开方、指数运算---------*/</span></span><br><span class="line">	<span class="comment">// 计算平方根。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.sqrt(2.3 )："</span> + Math.sqrt(<span class="number">2.3</span> ));</span><br><span class="line">	<span class="comment">// 计算立方根。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.cbrt(9)："</span> + Math.cbrt(<span class="number">9</span>));</span><br><span class="line">	<span class="comment">// 返回欧拉数 e 的n次幂。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.exp(2)："</span> + Math.exp(<span class="number">2</span>));</span><br><span class="line">	<span class="comment">// 返回 sqrt(x2 +y2)</span></span><br><span class="line">	System.out.println(<span class="string">"Math.hypot(4 , 4)："</span> + Math.hypot(<span class="number">4</span> , <span class="number">4</span>));</span><br><span class="line">	<span class="comment">// 按照 IEEE 754 标准的规定，对两个参数进行余数运算。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.IEEEremainder(5 , 2)："</span> + Math.IEEEremainder(<span class="number">5</span> , <span class="number">2</span>));</span><br><span class="line">	<span class="comment">// 计算乘方</span></span><br><span class="line">	System.out.println(<span class="string">"Math.pow(3, 2)："</span> + Math.pow(<span class="number">3</span>, <span class="number">2</span>));</span><br><span class="line">	<span class="comment">// 计算自然对数</span></span><br><span class="line">	System.out.println(<span class="string">"Math.log(12)："</span> + Math.log(<span class="number">12</span>));</span><br><span class="line">	<span class="comment">// 计算底数为 10 的对数。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.log10(9)："</span> + Math.log10(<span class="number">9</span>));</span><br><span class="line">	<span class="comment">// 返回参数与 1 之和的自然对数。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.log1p(9)："</span> + Math.log1p(<span class="number">9</span>));</span><br><span class="line">	<span class="comment">/*---------下面是符号相关的运算---------*/</span></span><br><span class="line">	<span class="comment">// 计算绝对值。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.abs(-4.5)："</span> + Math.abs(-<span class="number">4.5</span>));</span><br><span class="line">	<span class="comment">// 符号赋值，返回带有第二个浮点数符号的第一个浮点参数。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.copySign(1.2, -1.0)："</span> + Math.copySign(<span class="number">1.2</span>, -<span class="number">1.0</span>));</span><br><span class="line">	<span class="comment">// 符号函数；如果参数为 0，则返回 0；如果参数大于 0，</span></span><br><span class="line">	<span class="comment">// 则返回 1.0；如果参数小于 0，则返回 -1.0。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.signum(2.3)："</span> + Math.signum(<span class="number">2.3</span>));</span><br><span class="line">	<span class="comment">/*---------下面是大小相关的运算---------*/</span></span><br><span class="line">	<span class="comment">// 找出最大值</span></span><br><span class="line">	System.out.println(<span class="string">"Math.max(2.3 , 4.5)："</span> + Math.max(<span class="number">2.3</span> , <span class="number">4.5</span>));</span><br><span class="line">	<span class="comment">// 计算最小值</span></span><br><span class="line">	System.out.println(<span class="string">"Math.min(1.2 , 3.4)："</span> + Math.min(<span class="number">1.2</span> , <span class="number">3.4</span>));</span><br><span class="line">	<span class="comment">// 返回第一个参数和第二个参数之间与第一个参数相邻的浮点数。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.nextAfter(1.2, 1.0)："</span> + Math.nextAfter(<span class="number">1.2</span>, <span class="number">1.0</span>));</span><br><span class="line">	<span class="comment">// 返回比目标数略大的浮点数</span></span><br><span class="line">	System.out.println(<span class="string">"Math.nextUp(1.2 )："</span> + Math.nextUp(<span class="number">1.2</span> ));</span><br><span class="line">	<span class="comment">// 返回一个伪随机数，该值大于等于 0.0 且小于 1.0。</span></span><br><span class="line">	System.out.println(<span class="string">"Math.random()："</span> + Math.random());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Java7的ThreadLocalRandom与Random"><a href="#Java7的ThreadLocalRandom与Random" class="headerlink" title="Java7的ThreadLocalRandom与Random"></a>Java7的ThreadLocalRandom与Random</h4><ul>
+<li>Random类专门用于生成一个伪随机数，拥有两个构造器：一个构造器使用默认种子（以当前时间作为种子），另一个构造器显式传入一个long型整数的种子</li>
+<li>ThreadLocalRandom类是Java7新增的一个类，是Random的增强版。在并发访问的环境下，使用<code>ThreadLocalRandom</code>来代替Random可以减少线程资源竞争，最终保证系统具有更好的线程安全性。与Random用法类似。提供了一个静态的<code>current()</code>方法获取<code>ThreadLocalRandom</code>对象，获取到该对象之后即可调用各种<code>nextXxx()</code>方法来获取伪随机数</li>
+<li><p><code>ThreadLocalRandom</code>与Random都比Math的<code>random()</code>方法提供了更多的方式生成各种伪随机数，可以生成浮点类型的伪随机数，也可以生成整数类型的伪随机数，还可以指定生成随机数的范围</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">	System.out.println(<span class="string">"rand.nextBoolean()："</span> + rand.nextBoolean());</span><br><span class="line">	<span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">16</span>];</span><br><span class="line">	rand.nextBytes(buffer);</span><br><span class="line">	System.out.println(Arrays.toString(buffer));</span><br><span class="line">	<span class="comment">// 生成0.0~1.0之间的伪随机double数</span></span><br><span class="line">	System.out.println(<span class="string">"rand.nextDouble()："</span> + rand.nextDouble());</span><br><span class="line">	<span class="comment">// 生成0.0~1.0之间的伪随机float数</span></span><br><span class="line">	System.out.println(<span class="string">"rand.nextFloat()："</span> + rand.nextFloat());</span><br><span class="line">	<span class="comment">// 生成平均值是 0.0，标准差是 1.0的伪高斯数</span></span><br><span class="line">	System.out.println(<span class="string">"rand.nextGaussian()："</span> + rand.nextGaussian());</span><br><span class="line">	<span class="comment">// 生成一个处于int整数取值范围的伪随机整数</span></span><br><span class="line">	System.out.println(<span class="string">"rand.nextInt()："</span> + rand.nextInt());</span><br><span class="line">	<span class="comment">// 生成0~26之间的伪随机整数</span></span><br><span class="line">	System.out.println(<span class="string">"rand.nextInt(26)："</span> + rand.nextInt(<span class="number">26</span>));</span><br><span class="line">	<span class="comment">// 生成一个处于long整数取值范围的伪随机整数</span></span><br><span class="line">	System.out.println(<span class="string">"rand.nextLong()："</span> +  rand.nextLong());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一般使用时间作为种子<code>Random rand = new Random(System.currentTimeMillis());</code></p>
+</li>
+<li>ThreadLocalRandom用法实例：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocalRandom rand = ThreadLocalRandom.current();</span><br><span class="line"><span class="comment">//生成一4~20之间的伪随机数</span></span><br><span class="line"><span class="keyword">int</span> val1 = rand.nextInt(<span class="number">4</span>,<span class="number">20</span>);</span><br><span class="line"><span class="comment">//生成一个2.0~10.0的伪随机数</span></span><br><span class="line"><span class="keyword">int</span> val2 = rand.nextDouble(<span class="number">2.0</span>,<span class="number">10.0</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="BigDecimal类"><a href="#BigDecimal类" class="headerlink" title="BigDecimal类"></a>BigDecimal类</h4><ul>
+<li>浮点数的精确计算，使用String而不是double<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	BigDecimal f1 = <span class="keyword">new</span> BigDecimal(<span class="string">"0.05"</span>);</span><br><span class="line">	BigDecimal f2 = BigDecimal.valueOf(<span class="number">0.01</span>);</span><br><span class="line">	BigDecimal f3 = <span class="keyword">new</span> BigDecimal(<span class="number">0.05</span>);</span><br><span class="line">	System.out.println(<span class="string">"使用String作为BigDecimal构造器参数："</span>);</span><br><span class="line">	System.out.println(<span class="string">"0.05 + 0.01 = "</span> + f1.add(f2));</span><br><span class="line">	System.out.println(<span class="string">"0.05 - 0.01 = "</span> + f1.subtract(f2));</span><br><span class="line">	System.out.println(<span class="string">"0.05 * 0.01 = "</span> + f1.multiply(f2));</span><br><span class="line">	System.out.println(<span class="string">"0.05 / 0.01 = "</span> + f1.divide(f2));</span><br><span class="line">	System.out.println(<span class="string">"使用double作为BigDecimal构造器参数："</span>);</span><br><span class="line">	System.out.println(<span class="string">"0.05 + 0.01 = "</span> + f3.add(f2));</span><br><span class="line">	System.out.println(<span class="string">"0.05 - 0.01 = "</span> + f3.subtract(f2));</span><br><span class="line">	System.out.println(<span class="string">"0.05 * 0.01 = "</span> + f3.multiply(f2));</span><br><span class="line">	System.out.println(<span class="string">"0.05 / 0.01 = "</span> + f3.divide(f2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Arith</span></span>&#123;</span><br><span class="line">	<span class="comment">// 默认除法运算精度</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEF_DIV_SCALE = <span class="number">10</span>;</span><br><span class="line">	<span class="comment">// 构造器私有，让这个类不能实例化</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Arith</span><span class="params">()</span>	</span>&#123;&#125;</span><br><span class="line">	<span class="comment">// 提供精确的加法运算。</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">add</span><span class="params">(<span class="keyword">double</span> v1,<span class="keyword">double</span> v2)</span></span>&#123;</span><br><span class="line">		BigDecimal b1 = BigDecimal.valueOf(v1);</span><br><span class="line">		BigDecimal b2 = BigDecimal.valueOf(v2);</span><br><span class="line">		<span class="keyword">return</span> b1.add(b2).doubleValue();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 提供精确的减法运算。</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">sub</span><span class="params">(<span class="keyword">double</span> v1,<span class="keyword">double</span> v2)</span></span>&#123;</span><br><span class="line">		BigDecimal b1 = BigDecimal.valueOf(v1);</span><br><span class="line">		BigDecimal b2 = BigDecimal.valueOf(v2);</span><br><span class="line">		<span class="keyword">return</span> b1.subtract(b2).doubleValue();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 提供精确的乘法运算。</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">mul</span><span class="params">(<span class="keyword">double</span> v1,<span class="keyword">double</span> v2)</span></span>&#123;</span><br><span class="line">		BigDecimal b1 = BigDecimal.valueOf(v1);</span><br><span class="line">		BigDecimal b2 = BigDecimal.valueOf(v2);</span><br><span class="line">		<span class="keyword">return</span> b1.multiply(b2).doubleValue();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 提供（相对）精确的除法运算，当发生除不尽的情况时.</span></span><br><span class="line">	<span class="comment">// 精确到小数点以后10位的数字四舍五入。</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">div</span><span class="params">(<span class="keyword">double</span> v1,<span class="keyword">double</span> v2)</span></span>&#123;</span><br><span class="line">		BigDecimal b1 = BigDecimal.valueOf(v1);</span><br><span class="line">		BigDecimal b2 = BigDecimal.valueOf(v2);</span><br><span class="line">		<span class="keyword">return</span> b1.divide(b2 , DEF_DIV_SCALE, BigDecimal.ROUND_HALF_UP).doubleValue();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"0.05 + 0.01 = "</span> + Arith.add(<span class="number">0.05</span> , <span class="number">0.01</span>));</span><br><span class="line">		System.out.println(<span class="string">"1.0 - 0.42 = "</span> + Arith.sub(<span class="number">1.0</span> , <span class="number">0.42</span>));</span><br><span class="line">		System.out.println(<span class="string">"4.015 * 100 = "</span> + Arith.mul(<span class="number">4.015</span> , <span class="number">100</span>));</span><br><span class="line">		System.out.println(<span class="string">"123.3 / 100 = "</span> + Arith.div(<span class="number">123.3</span> , <span class="number">100</span>));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Java8的日期、时间表"><a href="#Java8的日期、时间表" class="headerlink" title="Java8的日期、时间表"></a>Java8的日期、时间表</h3><h4 id="Date类（尽量少用）"><a href="#Date类（尽量少用）" class="headerlink" title="Date类（尽量少用）"></a>Date类（尽量少用）</h4><ul>
+<li>Java提供了Date类来处理时间、日期，Date既包含日期也包含时间</li>
+<li>Date提供了了六个构造器，其中四个已经不再推荐使用，剩下两个如下：<ul>
+<li><code>Date()</code>：生成一个代表当前日期时间的Date对象，改构造器底层调用<code>System.currentTimeMillis()</code>获得long整数作为日期参数</li>
+<li><code>Date(long date)</code>：根据指定的long型整数来生成一个Date对象</li>
+</ul>
+</li>
+<li>Date的大部分方法也已经不再推荐使用<ul>
+<li><code>boolean after(Date when)</code>：测试该日期是否在指定日期when之后</li>
+<li><code>boolean before(Date when)</code>：测试该日期是否在指定日期when之前</li>
+<li><code>long getTime()</code>：返回该时间对应的long型整数</li>
+<li><code>void setTime(long time)</code>：设置该Date对象的时间<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	Date d1 = <span class="keyword">new</span> Date();</span><br><span class="line">	<span class="comment">// 获取当前时间之后100ms的时间</span></span><br><span class="line">	Date d2 = <span class="keyword">new</span> Date(System.currentTimeMillis() + <span class="number">100</span>);</span><br><span class="line">	System.out.println(d2);</span><br><span class="line">	System.out.println(d1.compareTo(d2));</span><br><span class="line">	System.out.println(d1.before(d2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Calendar类"><a href="#Calendar类" class="headerlink" title="Calendar类"></a>Calendar类</h4><ul>
+<li>为了弥补Date设计上的缺陷，Java提供了Calendar类</li>
+<li><p>Calendar是一个抽象类，所以不能用构造器来创建Calendar对象。但是提供了几个静态<code>getInstance()</code>方法来获取Calendar对象，这些方法根据TimeZone、Locale类来获取特定的Calender。如果不指定TimeZone、Locale，则使用默认的TimeZone、Locale来创建Calendar</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建一个默认的Calendar对象</span></span><br><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line"><span class="comment">//从Calendar对象中取出Date对象</span></span><br><span class="line">Date date = calendar.getTime();</span><br><span class="line"><span class="comment">//通过Date对象获得对应的Calendar对象</span></span><br><span class="line"><span class="comment">//因为Calendar/GregorianCalendar没有构造器方法可以接收Date对象</span></span><br><span class="line"><span class="comment">//所以必须先获得一个Calendar实例，然后再调用其setTime()方法</span></span><br><span class="line">Calendar calendar2 = Calendar.getInstance();</span><br><span class="line">calendar2.setTime(date);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Calendar提供了大量访问、修改日期时间的方法：</p>
+<ul>
+<li><code>void add(int field,int amount)</code>：根据日历的规则，为给定的日历字段添加或减去指定的时间量</li>
+<li><code>int get(int field)</code>：返回指定日历字段的值</li>
+<li><code>int getActualMaximum(int field)</code>：返回指定日历字段可能拥有的最大值</li>
+<li><code>int getActualMinimum(int field)</code>：返回指定日历字段可能拥有的最小值</li>
+<li><code>void roll(int field,int amount)</code>：与add()方法类似，区别在于加上amount后超过了该字段所能表示的最大范围时，也不会向上一个字段进位</li>
+<li><code>void set(int filed,int value)</code>：将给定的日历字段设置为给定值</li>
+<li><code>void set(int filed,int month,int date)</code>：设置Calenser对象的年、月、日三个字段的值</li>
+<li><code>void set(int year,int month,int date,int hourOfDay,int minute,int second)</code>：设置Calendar对象的年、月、日、时、分、秒6个字段的值<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	Calendar c = Calendar.getInstance();</span><br><span class="line">	<span class="comment">// 取出年</span></span><br><span class="line">	System.out.println(c.get(YEAR));</span><br><span class="line">	<span class="comment">// 取出月份</span></span><br><span class="line">	System.out.println(c.get(MONTH));</span><br><span class="line">	<span class="comment">// 取出日</span></span><br><span class="line">	System.out.println(c.get(DATE));</span><br><span class="line">	<span class="comment">// 分别设置年、月、日、小时、分钟、秒</span></span><br><span class="line">	c.set(<span class="number">2003</span> , <span class="number">10</span> , <span class="number">23</span> , <span class="number">12</span>, <span class="number">32</span>, <span class="number">23</span>); <span class="comment">//2003-11-23 12:32:23</span></span><br><span class="line">	System.out.println(c.getTime());</span><br><span class="line">	<span class="comment">// 将Calendar的年前推1年</span></span><br><span class="line">	c.add(YEAR , -<span class="number">1</span>); <span class="comment">//2002-11-23 12:32:23</span></span><br><span class="line">	System.out.println(c.getTime());</span><br><span class="line">	<span class="comment">// 将Calendar的月前推8个月</span></span><br><span class="line">	c.roll(MONTH , -<span class="number">8</span>); <span class="comment">//2002-03-23 12:32:23</span></span><br><span class="line">	System.out.println(c.getTime());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>add与roll的区别</p>
+<ul>
+<li><p><code>add(int field,int amount)</code>主要用于改变Calendar的特定字段的值。如果要增加，则amount为正数，减少则为负数</p>
+<ul>
+<li><p>当被修改的字段超出它的允许范围时，会发生进位，即上一级字段也会增大。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Calendar cal1 = Calendar.getInstance();</span><br><span class="line">cal1.set(<span class="number">2003</span>, <span class="number">7</span>, <span class="number">23</span>, <span class="number">0</span>, <span class="number">0</span> , <span class="number">0</span>); <span class="comment">// 2003-8-23</span></span><br><span class="line">cal1.add(MONTH, <span class="number">6</span>); <span class="comment">//2003-8-23 =&gt; 2004-2-23</span></span><br><span class="line">System.out.println(cal1.getTime());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果下一字段也需要改变，那么该字段会修正到变化最小的值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Calendar cal2 = Calendar.getInstance();</span><br><span class="line">cal2.set(<span class="number">2003</span>, <span class="number">7</span>, <span class="number">31</span>, <span class="number">0</span>, <span class="number">0</span> , <span class="number">0</span>); <span class="comment">// 2003-8-31</span></span><br><span class="line"><span class="comment">// 因为进位到后月份改为2月，2月没有31日，自动变成29日</span></span><br><span class="line">cal2.add(MONTH, <span class="number">6</span>); <span class="comment">// 2003-8-31 =&gt; 2004-2-29</span></span><br><span class="line">System.out.println(cal2.getTime());</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><code>roll()</code>规则与<code>add()</code>的处理规则不同：</p>
+<ul>
+<li><p>当被修改的字段超出它的允许范围时，上一级不会增大。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Calendar cal3 = Calendar.getInstance();</span><br><span class="line">cal3.set(<span class="number">2003</span>, <span class="number">7</span>, <span class="number">23</span>, <span class="number">0</span>, <span class="number">0</span> , <span class="number">0</span>); <span class="comment">//2003-8-23</span></span><br><span class="line"><span class="comment">// MONTH字段“进位”，但YEAR字段并不增加</span></span><br><span class="line">cal3.roll(MONTH, <span class="number">6</span>); <span class="comment">//2003-8-23 =&gt; 2003-2-23</span></span><br><span class="line">System.out.println(cal3.getTime());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下一级字段的处理规则与add()相似</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Calendar cal4 = Calendar.getInstance();</span><br><span class="line">cal4.set(<span class="number">2003</span>, <span class="number">7</span>, <span class="number">31</span>, <span class="number">0</span>, <span class="number">0</span> , <span class="number">0</span>); <span class="comment">//2003-8-31</span></span><br><span class="line"><span class="comment">// MONTH字段“进位”后变成2，2月没有31日，</span></span><br><span class="line"><span class="comment">// YEAR字段不会改变，2003年2月只有28天</span></span><br><span class="line">cal4.roll(MONTH, <span class="number">6</span>); <span class="comment">//2003-8-31 =&gt; 2003-2-28</span></span><br><span class="line">System.out.println(cal4.getTime());</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>设置Calendae的兼容性</p>
+<ul>
+<li>当传入一个非法的参数设置值的时候可以用<code>setLenient(false)</code>关闭容错性，让其进行严格的参数检查<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	Calendar cal = Calendar.getInstance();</span><br><span class="line">	<span class="comment">// 结果是YEAR字段加1，MONTH字段为1（二月）</span></span><br><span class="line">	cal.set(MONTH , <span class="number">13</span>);   <span class="comment">//①</span></span><br><span class="line">	System.out.println(cal.getTime());</span><br><span class="line">	<span class="comment">// 关闭容错性</span></span><br><span class="line">	cal.setLenient(<span class="keyword">false</span>);</span><br><span class="line">	<span class="comment">// 导致运行时异常</span></span><br><span class="line">	cal.set(MONTH , <span class="number">13</span>);   <span class="comment">//②</span></span><br><span class="line">	System.out.println(cal.getTime());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>set()方法延迟修改</p>
+<ul>
+<li><code>set(f,value)</code>方法将日历字段f改为value，此外还设置了一个内部成员变量，以指示日历字段f已经被更改。f的修改时立即更改的，但该Calendar所代表的时间却不会立即修改，知道下次调用<code>get()</code>、<code>getTime()</code>、<code>getTimeInMillis()</code>、<code>add()</code>或<code>roll()</code>时才会重新计算日历的时间。这称之为<code>set()</code>方法的延迟修改。也就不会因多次调用set()而产生多次计算<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	Calendar cal = Calendar.getInstance();</span><br><span class="line">	cal.set(<span class="number">2003</span> , <span class="number">7</span> , <span class="number">31</span>);  <span class="comment">//2003-8-31</span></span><br><span class="line">	<span class="comment">// 将月份设为9，但9月31日不存在。</span></span><br><span class="line">	<span class="comment">// 如果立即修改，系统将会把cal自动调整到10月1日。</span></span><br><span class="line">	cal.set(MONTH , <span class="number">8</span>);</span><br><span class="line">	<span class="comment">// 下面代码输出10月1日</span></span><br><span class="line">	<span class="comment">//System.out.println(cal.getTime());    //不使之生效</span></span><br><span class="line">	<span class="comment">// 设置DATE字段为5</span></span><br><span class="line">	cal.set(DATE , <span class="number">5</span>);    <span class="comment">//②</span></span><br><span class="line">	System.out.println(cal.getTime());    <span class="comment">//2003-9-5</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Java8新增的日期、时间包"><a href="#Java8新增的日期、时间包" class="headerlink" title="Java8新增的日期、时间包"></a>Java8新增的日期、时间包</h4><p>Java8专门新增了一个java.time包，该包包含了如下的常用类</p>
+<ul>
+<li><code>Clock</code>：用于获取指定时区的当前日期、时间</li>
+<li><code>Duration</code>：代表持续时间</li>
+<li><code>Instant</code>：代表一个精确时刻，可以精确到纳秒。静态方法<code>new()</code>,<code>new(Clock clock)</code>,<code>minusXxx()</code>,<code>plusXxx()</code></li>
+<li><code>LocalDate</code>：代表不带时区的日期。静态方法<code>new()</code>,<code>new(Clock clock)</code>,<code>minusXxx()</code>,<code>plusXxx()</code></li>
+<li><code>LocalTime</code>：代表不带时区的时间。静态方法<code>new()</code>,<code>new(Clock clock)</code>,<code>minusXxx()</code>,<code>plusXxx()</code></li>
+<li><code>LocalDateTime</code>：代表不带时区的日期、时间。静态方法<code>new()</code>,<code>new(Clock clock)</code>,<code>minusXxx()</code>,<code>plusXxx()</code></li>
+<li><code>MonthDay</code>：仅代表月日。静态方法<code>new()</code>,<code>new(Clock clock)</code></li>
+<li><code>Year</code>：仅代表年。静态方法<code>new()</code>,<code>new(Clock clock)</code>,<code>minusYears()</code>,<code>plusYears()</code></li>
+<li><code>YearMonth</code>：仅代表月年。静态方法<code>new()</code>,<code>new(Clock clock)</code>,<code>minusXxx()</code>,<code>plusXxx()</code></li>
+<li><code>ZonedDateTime</code>：代表一个时区化的日期、时间</li>
+<li><code>ZoneId</code>：代表一个时区</li>
+<li><code>DayOfWeek</code>：定义了周日到周六的枚举类</li>
+<li><code>Month</code>：定义了一月到十二月的枚举类<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">	<span class="comment">// -----下面是关于Clock的用法-----</span></span><br><span class="line">	<span class="comment">// 获取当前Clock</span></span><br><span class="line">	Clock clock = Clock.systemUTC();</span><br><span class="line">	<span class="comment">// 通过Clock获取当前时刻</span></span><br><span class="line">	System.out.println(<span class="string">"当前时刻为："</span> + clock.instant());</span><br><span class="line">	<span class="comment">// 获取clock对应的毫秒数，与System.currentTimeMillis()输出相同</span></span><br><span class="line">	System.out.println(clock.millis());</span><br><span class="line">	System.out.println(System.currentTimeMillis());</span><br><span class="line">	<span class="comment">// -----下面是关于Duration的用法-----</span></span><br><span class="line">	Duration d = Duration.ofSeconds(<span class="number">6000</span>);</span><br><span class="line">	System.out.println(<span class="string">"6000秒相当于"</span> + d.toMinutes() + <span class="string">"分"</span>);</span><br><span class="line">	System.out.println(<span class="string">"6000秒相当于"</span> + d.toHours() + <span class="string">"小时"</span>);</span><br><span class="line">	System.out.println(<span class="string">"6000秒相当于"</span> + d.toDays() + <span class="string">"天"</span>);</span><br><span class="line">	<span class="comment">// 在clock基础上增加6000秒，返回新的Clock</span></span><br><span class="line">	Clock clock2 = Clock.offset(clock, d);</span><br><span class="line">	<span class="comment">// 可看到clock2与clock1相差1小时40分</span></span><br><span class="line">	System.out.println(<span class="string">"当前时刻加6000秒为："</span> +clock2.instant());</span><br><span class="line">	<span class="comment">// -----下面是关于Instant的用法-----</span></span><br><span class="line">	<span class="comment">// 获取当前时间</span></span><br><span class="line">	Instant instant = Instant.now();</span><br><span class="line">	System.out.println(instant);</span><br><span class="line">	<span class="comment">// instant添加6000秒（即100分钟），返回新的Instant</span></span><br><span class="line">	Instant instant2 = instant.plusSeconds(<span class="number">6000</span>);</span><br><span class="line">	System.out.println(instant2);</span><br><span class="line">	<span class="comment">// 根据字符串中解析Instant对象</span></span><br><span class="line">	Instant instant3 = Instant.parse(<span class="string">"2014-02-23T10:12:35.342Z"</span>);</span><br><span class="line">	System.out.println(instant3);</span><br><span class="line">	<span class="comment">// 在instant3的基础上添加5小时4分钟</span></span><br><span class="line">	Instant instant4 = instant3.plus(Duration</span><br><span class="line">		.ofHours(<span class="number">5</span>).plusMinutes(<span class="number">4</span>));</span><br><span class="line">	System.out.println(instant4);</span><br><span class="line">	<span class="comment">// 获取instant4的5天以前的时刻</span></span><br><span class="line">	Instant instant5 = instant4.minus(Duration.ofDays(<span class="number">5</span>));</span><br><span class="line">	System.out.println(instant5);</span><br><span class="line">	<span class="comment">// -----下面是关于LocalDate的用法-----</span></span><br><span class="line">	LocalDate localDate = LocalDate.now();</span><br><span class="line">	System.out.println(localDate);</span><br><span class="line">	<span class="comment">// 获得2014年的第146天</span></span><br><span class="line">	localDate = LocalDate.ofYearDay(<span class="number">2014</span>, <span class="number">146</span>);</span><br><span class="line">	System.out.println(localDate); <span class="comment">// 2014-05-26</span></span><br><span class="line">	<span class="comment">// 设置为2014年5月21日</span></span><br><span class="line">	localDate = LocalDate.of(<span class="number">2014</span>, Month.MAY, <span class="number">21</span>);</span><br><span class="line">	System.out.println(localDate); <span class="comment">// 2014-05-21</span></span><br><span class="line">	<span class="comment">// -----下面是关于LocalTime的用法-----</span></span><br><span class="line">	<span class="comment">// 获取当前时间</span></span><br><span class="line">	LocalTime localTime = LocalTime.now();</span><br><span class="line">	<span class="comment">// 设置为22点33分</span></span><br><span class="line">	localTime = LocalTime.of(<span class="number">22</span>, <span class="number">33</span>);</span><br><span class="line">	System.out.println(localTime); <span class="comment">// 22:33</span></span><br><span class="line">	<span class="comment">// 返回一天中的第5503秒</span></span><br><span class="line">	localTime = LocalTime.ofSecondOfDay(<span class="number">5503</span>);</span><br><span class="line">	System.out.println(localTime); <span class="comment">// 01:31:43</span></span><br><span class="line">	<span class="comment">// -----下面是关于localDateTime的用法-----</span></span><br><span class="line">	<span class="comment">// 获取当前日期、时间</span></span><br><span class="line">	LocalDateTime localDateTime = LocalDateTime.now();</span><br><span class="line">	<span class="comment">// 当前日期、时间加上25小时３分钟</span></span><br><span class="line">	LocalDateTime future = localDateTime.plusHours(<span class="number">25</span>).plusMinutes(<span class="number">3</span>);</span><br><span class="line">	System.out.println(<span class="string">"当前日期、时间的25小时3分之后："</span> + future);</span><br><span class="line">	<span class="comment">// 下面是关于Year、YearMonth、MonthDay的用法示例-----</span></span><br><span class="line">	Year year = Year.now(); <span class="comment">// 获取当前的年份</span></span><br><span class="line">	System.out.println(<span class="string">"当前年份："</span> + year); <span class="comment">// 输出当前年份</span></span><br><span class="line">	year = year.plusYears(<span class="number">5</span>); <span class="comment">// 当前年份再加5年</span></span><br><span class="line">	System.out.println(<span class="string">"当前年份再过5年："</span> + year);</span><br><span class="line">	<span class="comment">// 根据指定月份获取YearMonth</span></span><br><span class="line">	YearMonth ym = year.atMonth(<span class="number">10</span>);</span><br><span class="line">	System.out.println(<span class="string">"year年10月："</span> + ym); <span class="comment">// 输出XXXX-10，XXXX代表当前年份</span></span><br><span class="line">	<span class="comment">// 当前年月再加5年，减3个月</span></span><br><span class="line">	ym = ym.plusYears(<span class="number">5</span>).minusMonths(<span class="number">3</span>);</span><br><span class="line">	System.out.println(<span class="string">"year年10月再加5年、减3个月："</span> + ym);</span><br><span class="line">	MonthDay md = MonthDay.now();</span><br><span class="line">	System.out.println(<span class="string">"当前月日："</span> + md); <span class="comment">// 输出--XX-XX，代表几月几日</span></span><br><span class="line">	<span class="comment">// 设置为5月23日</span></span><br><span class="line">	MonthDay md2 = md.with(Month.MAY).withDayOfMonth(<span class="number">23</span>);</span><br><span class="line">	System.out.println(<span class="string">"5月23日为："</span> + md2); <span class="comment">// 输出--05-23</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><p>正则表达式是一个强大的字符串处理工具，可以对字符串进行查找、提取、分割、替换等操作。String类里也提供了如下特殊方法：</p>
+<ul>
+<li><code>boolean matches(String regex)</code>：判断该字符串是否匹配指定的正则表达式</li>
+<li><code>String replaceAll(String regex,String replacement)</code>：将该字符串中所有匹配regex的子串替换成replacement</li>
+<li><code>String replaceFirst(String regex,String replacement)</code>：将该字符串中第一个匹配regex的子串替换成replacement</li>
+</ul>
+<h4 id="创建正则表达式"><a href="#创建正则表达式" class="headerlink" title="创建正则表达式"></a>创建正则表达式</h4><ul>
+<li>创建正则表达式实质上就是创建一个特殊的字符串。</li>
+<li>正则表达式支持的合法字符有如下几种,特殊字符也有一些</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td>字符<code>x</code>（<code>x</code>可代表任意合法字符）</td>
+</tr>
+<tr>
+<td><code>\0mnn</code></td>
+<td>八进制数<code>0mnn</code>所表示的字符</td>
+</tr>
+<tr>
+<td><code>\xhh</code></td>
+<td>十六进制值<code>0xhh</code>所表示的数</td>
+</tr>
+<tr>
+<td><code>\uhhhh</code></td>
+<td>十六进制值<code>0xhhhh</code>所表示的Unicode字符</td>
+</tr>
+<tr>
+<td><code>\t</code></td>
+<td>制表符（<code>&#39;\u0009&#39;</code>）</td>
+</tr>
+<tr>
+<td><code>\n</code></td>
+<td>新行（换行）符（<code>&#39;\u000A&#39;</code>）</td>
+</tr>
+<tr>
+<td><code>\r</code></td>
+<td>回车符（<code>&#39;\u000D&#39;</code>）</td>
+</tr>
+<tr>
+<td><code>\f</code></td>
+<td>换页符（<code>&#39;\u000C&#39;</code>）</td>
+</tr>
+<tr>
+<td><code>\a</code></td>
+<td>报警（bell）符（<code>&#39;\u0007&#39;</code>）</td>
+</tr>
+<tr>
+<td><code>\e</code></td>
+<td>Escape符（<code>&#39;\u001B&#39;</code>）</td>
+</tr>
+<tr>
+<td><code>\cx</code></td>
+<td>x对应的控制符（<code>e.g \cM 匹配Ctrl+M</code>）</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>特殊字符</th>
+<th>说明</th>
+<th>匹配本身</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$</code></td>
+<td>匹配一行的结尾</td>
+<td><code>\$</code></td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>匹配一行的开头</td>
+<td><code>\^</code></td>
+</tr>
+<tr>
+<td><code>(&amp;emsp;)</code></td>
+<td>标记子表达式的开始和结束位置</td>
+<td><code>\(&amp;emsp;\)</code></td>
+</tr>
+<tr>
+<td><code>[&amp;emsp;]</code></td>
+<td>用于确定中括号表达式的开始和结束位置</td>
+<td><code>\[&amp;emsp;\]</code></td>
+</tr>
+<tr>
+<td><code>{&amp;emsp;}</code></td>
+<td>用于标记前面子表达式的出现频率</td>
+<td><code>\{&amp;emsp;\}</code></td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>指定前面子表达式可以出现零次或多次</td>
+<td><code>\*</code></td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>指定前面子表达式可以出现一次或多次</td>
+<td><code>\+</code></td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>指定前面子表达式可以出现零次或一次</td>
+<td><code>\?</code></td>
+</tr>
+<tr>
+<td><code>.</code></td>
+<td>匹配除换行符\n之外的任何单字符</td>
+<td><code>\.</code></td>
+</tr>
+<tr>
+<td><code>\\</code></td>
+<td>用于转义下一个字符，或指定八进制，十六进制字符</td>
+<td><code>\\</code></td>
+</tr>
+<tr>
+<td>`</td>
+<td>`</td>
+<td>指定两项之间任选一项</td>
+<td>`</td>
+<td>`</td>
+</tr>
+</tbody>
+</table>
+<p>将上面的多个字符拼接起来，就可以创建一个正则表达式了。</p>
+<p>e.g:<br><code>&quot;\u0041\\&quot; //匹配A\</code><br><code>&quot;\u0061\t&quot; //匹配a&lt;制表符&gt;</code><br><code>&quot;\?\[&quot; //匹配?[</code></p>
+<p>以上正则表达式只能匹配单个字符，正则表达式还有通配符，也就是预定义字符，用来匹配多个字符</p>
+<table>
+<thead>
+<tr>
+<th>预定义字符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.</code></td>
+<td>可以匹配任意字符</td>
+</tr>
+<tr>
+<td><code>\d</code></td>
+<td>匹配0~9的所有数字</td>
+</tr>
+<tr>
+<td><code>\D</code></td>
+<td>匹配非数字</td>
+</tr>
+<tr>
+<td><code>\s</code></td>
+<td>匹配所有的空白字符，包括空格，制表符，回车符，换页符，换行符等</td>
+</tr>
+<tr>
+<td><code>\S</code></td>
+<td>匹配所有的非空白符</td>
+</tr>
+<tr>
+<td><code>\w</code></td>
+<td>匹配所有的单词字符，包括0~9所有数字，26个英文字母和下划线（ _ ）</td>
+</tr>
+<tr>
+<td><code>\W</code></td>
+<td>匹配所有的非单词字符</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>记忆诀窍：d-digit，代表数字。s-space，代表空白。w-word，代表单词</li>
+</ul>
+<p>比之前更加强大的表达式得以创建</p>
+<p>e.g.<br><code>c\wt //可以匹配cat,cbt,cct,c0t,c9t等一批字符串</code><br><code>\d\d\d-\d\d\d-\d\d\d\d //匹配如000-000-0000形式的电话号码</code></p>
+<p>为了匹配字母段，以及非字母段，就需要适用方括号表达式了</p>
+<table>
+<thead>
+<tr>
+<th>方括号表达式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>表示枚举</code></td>
+<td><code>[abc]</code>表示a、b、c其中的任意一个字符</td>
+</tr>
+<tr>
+<td><code>表示范围：-</code></td>
+<td><code>[a-d]</code>表示a~d范围内的任意字符，可以和枚举一起使用，<code>[a-fx-z]</code>表示a~f、x-z范围的任意字符</td>
+</tr>
+<tr>
+<td><code>表示求否：^</code></td>
+<td><code>[^abc]</code>表示非a、b、c的任意字符，<code>[^a-f]</code>表示非a~f范围内的任意字符</td>
+</tr>
+<tr>
+<td><code>表示“与”运算：&amp;&amp;</code></td>
+<td><code>[a-z&amp;&amp;[def]</code>表示a~z与<code>[def]</code>的交集，表示d、e或f，<code>[a-z&amp;&amp;[^bc]]</code>即为<code>[ad-z]</code></td>
+</tr>
+<tr>
+<td><code>表示“并”运算</code></td>
+<td>并运算与枚举类似，<code>[a-d[m-p]]</code>即为<code>[a-dm-p]</code></td>
+</tr>
+</tbody>
+</table>
+<p>圆括号表达式：用于将多个表达式组成一个子表达式，圆括号中可用或运算符（<code>|</code>）<br><code>e.g.&quot;((a)|(b)|(c))&quot;</code></p>
+<p>边界匹配符</p>
+<table>
+<thead>
+<tr>
+<th>边界匹配付</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>^</code></td>
+<td>行的开头</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td>行的结尾</td>
+</tr>
+<tr>
+<td><code>\b</code></td>
+<td>单词的边界</td>
+</tr>
+<tr>
+<td><code>\B</code></td>
+<td>非单词的边界</td>
+</tr>
+<tr>
+<td><code>\A</code></td>
+<td>输入的开头</td>
+</tr>
+<tr>
+<td><code>\G</code></td>
+<td>前一个匹配的结尾</td>
+</tr>
+<tr>
+<td><code>\Z</code></td>
+<td>输入的结尾，仅用于最后的结束符</td>
+</tr>
+<tr>
+<td><code>\z</code></td>
+<td>输入的结尾</td>
+</tr>
+</tbody>
+</table>
+<p>正则表达式的数量标识符，贪婪模式（Greedy）：一直匹配。勉强模式（Reluctant）,用问号后缀（?）表示，只会匹配最少的字符。占有模式（Possessive），用加号后缀（+）表示</p>
+<h4 id="使用正则表达式"><a href="#使用正则表达式" class="headerlink" title="使用正则表达式"></a>使用正则表达式</h4><ul>
+<li>一旦程序中定义了正则表达式，就可以使用Pattern和Matcher来使用正则表达式。Pattern对象是正则表达式编译后在内存中的表现形式，故正则表达式会被先编译为Pattern对象，然后利用该Pattern对象创建对应的Matcher对象，执行匹配所涉及的结果保留在Matcher对象中，多个Matcher对象可共享同一个Pattern对象，Pattern是不可变类，可供多个并发线程安全使用。由此得到典型的调用顺序如下：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//将一个字符串编译成Pattern对象</span></span><br><span class="line">Pattern p = Pattern.compile(<span class="string">"a*b"</span>);</span><br><span class="line"><span class="comment">//使用Pattern对象创建Matcher对象</span></span><br><span class="line">Matcher m = p.matcher(<span class="string">"aaaaab"</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = m.matches(); <span class="comment">//返回true</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>以上定义的Pattern对象可以多次重复使用，若只使用一次，可以调用Pattern类的静态方法matcher()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">boolean</span> b = Pattern.matches(<span class="string">"a*b"</span>,<span class="string">"aaaaab"</span>); <span class="comment">//返回true</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Matcher类提供了如下几个常用方法：<ul>
+<li><code>find()</code>：返回目标字符串中是否包含与Pattern匹配的字串</li>
+<li><code>find(int i)</code>：从索引i处向下搜索，返回目标字符串中是否包含与Pattern匹配的字串</li>
+<li><code>group()</code>：返回上一次与Pattern匹配的字串</li>
+<li><code>start()</code>：返回上一次与Pattern匹配的字串在目标字符串中的开始位置</li>
+<li><code>end()</code>：返回上一次与Pattern匹配的字串在目标字符串中的结束位置+1</li>
+<li><code>lookingAt()</code>：返回目标字符串前面部分与Pattern是否匹配</li>
+<li><code>matches()</code>：返回整个目标字符串与Pattern是否匹配</li>
+<li><code>reset()</code>：将现有的Matcher对象应用于一个新的字符序列<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FindGroup</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		<span class="comment">// 使用字符串模拟从网络上得到的网页源码</span></span><br><span class="line">		String str = <span class="string">"我想求购一本《疯狂Java讲义》，尽快联系我13500006666"</span></span><br><span class="line">			+ <span class="string">"交朋友，电话号码是13611125565"</span></span><br><span class="line">			+ <span class="string">"出售二手电脑，联系方式15899903312"</span>;</span><br><span class="line">		<span class="comment">// 创建一个Pattern对象，并用它建立一个Matcher对象</span></span><br><span class="line">		<span class="comment">// 该正则表达式只抓取13X和15X段的手机号，</span></span><br><span class="line">		<span class="comment">// 实际要抓取哪些电话号码，只要修改正则表达式即可。</span></span><br><span class="line">		Matcher m = Pattern.compile(<span class="string">"((13\\d)|(15\\d))\\d&#123;8&#125;"</span>).matcher(str);</span><br><span class="line">		<span class="comment">// 将所有符合正则表达式的子串（电话号码）全部输出</span></span><br><span class="line">		<span class="keyword">while</span>(m.find())&#123;</span><br><span class="line">			System.out.println(m.group());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StartEnd</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		<span class="comment">// 创建一个Pattern对象，并用它建立一个Matcher对象</span></span><br><span class="line">		String regStr = <span class="string">"Java is very easy!"</span>;</span><br><span class="line">		System.out.println(<span class="string">"目标字符串是："</span> + regStr);</span><br><span class="line">		Matcher m = Pattern.compile(<span class="string">"\\w+"</span>).matcher(regStr);</span><br><span class="line">		<span class="keyword">while</span>(m.find())&#123;</span><br><span class="line">			System.out.println(m.group() + <span class="string">"子串的起始位置："</span>+ m.start() + <span class="string">"，其结束位置："</span> + m.end());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MatchesTest</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		String[] mails =&#123;</span><br><span class="line">			<span class="string">"kongyeeku@163.com"</span> ,</span><br><span class="line">			<span class="string">"kongyeeku@gmail.com"</span>,</span><br><span class="line">			<span class="string">"ligang@crazyit.org"</span>,</span><br><span class="line">			<span class="string">"wawa@abc.xx"</span>&#125;;</span><br><span class="line">		String mailRegEx = <span class="string">"\\w&#123;3,20&#125;@\\w+\\.(com|org|cn|net|gov)"</span>;</span><br><span class="line">		Pattern mailPattern = Pattern.compile(mailRegEx);</span><br><span class="line">		Matcher matcher = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">for</span> (String mail : mails)&#123;</span><br><span class="line">			<span class="keyword">if</span> (matcher == <span class="keyword">null</span>)&#123;</span><br><span class="line">				matcher = mailPattern.matcher(mail);</span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				matcher.reset(mail);</span><br><span class="line">			&#125;</span><br><span class="line">			String result = mail + (matcher.matches() ? <span class="string">"是"</span> : <span class="string">"不是"</span>)+ <span class="string">"一个有效的邮件地址！"</span>;</span><br><span class="line">			System.out.println(result);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2017/10/03/java基础类库/" title="Java基础类库">https://cj5785.com/2017/10/03/java基础类库/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/类库/" rel="tag"># 类库</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/18/AndroidMainfest详解/" rel="next" title="AndroidMainfest详解">
+                <i class="fa fa-chevron-left"></i> AndroidMainfest详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/13/xml解析/" rel="prev" title="xml解析">
+                xml解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#与用户互动"><span class="nav-number">1.</span> <span class="nav-text">与用户互动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#运行Java程序的参数"><span class="nav-number">1.1.</span> <span class="nav-text">运行Java程序的参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用Scanner获取键盘输入"><span class="nav-number">1.2.</span> <span class="nav-text">使用Scanner获取键盘输入</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统相关"><span class="nav-number">2.</span> <span class="nav-text">系统相关</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#System类"><span class="nav-number">2.1.</span> <span class="nav-text">System类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Runtime类"><span class="nav-number">2.2.</span> <span class="nav-text">Runtime类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用类"><span class="nav-number">3.</span> <span class="nav-text">常用类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Object类"><span class="nav-number">3.1.</span> <span class="nav-text">Object类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java7新增的Object类"><span class="nav-number">3.2.</span> <span class="nav-text">Java7新增的Object类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String、StringBuffer和StringBuilder类"><span class="nav-number">3.3.</span> <span class="nav-text">String、StringBuffer和StringBuilder类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Math类"><span class="nav-number">3.4.</span> <span class="nav-text">Math类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java7的ThreadLocalRandom与Random"><span class="nav-number">3.5.</span> <span class="nav-text">Java7的ThreadLocalRandom与Random</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BigDecimal类"><span class="nav-number">3.6.</span> <span class="nav-text">BigDecimal类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java8的日期、时间表"><span class="nav-number">4.</span> <span class="nav-text">Java8的日期、时间表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Date类（尽量少用）"><span class="nav-number">4.1.</span> <span class="nav-text">Date类（尽量少用）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Calendar类"><span class="nav-number">4.2.</span> <span class="nav-text">Calendar类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java8新增的日期、时间包"><span class="nav-number">4.3.</span> <span class="nav-text">Java8新增的日期、时间包</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则表达式"><span class="nav-number">5.</span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建正则表达式"><span class="nav-number">5.1.</span> <span class="nav-text">创建正则表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用正则表达式"><span class="nav-number">5.2.</span> <span class="nav-text">使用正则表达式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2017/10/03/java基础类库/';
+          this.page.identifier = '2017/10/03/java基础类库/';
+          this.page.title = 'Java基础类库';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

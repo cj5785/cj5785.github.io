@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CPP,异常处理,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="程序设计的要求之一就是程序的健壮性。希望程序在运行时能够不出或者少出问题。但是，在程序的实际运行时，总会有一些因素会导致程序不能正常运行。异常处理（Exception Handling）就是要提出或者是研究一种机制，能够较好的处理程序不能正常运行的问题">
+<meta name="keywords" content="CPP,异常处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++之异常处理">
+<meta property="og:url" content="https://cj5785.com/2017/03/05/C++之异常处理/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="程序设计的要求之一就是程序的健壮性。希望程序在运行时能够不出或者少出问题。但是，在程序的实际运行时，总会有一些因素会导致程序不能正常运行。异常处理（Exception Handling）就是要提出或者是研究一种机制，能够较好的处理程序不能正常运行的问题">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E9%99%A4%E6%95%B0%E4%B8%BA0.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E6%A0%88%E7%A9%BA.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E6%95%B0%E7%BB%84%E8%B6%8A%E7%95%8C.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E6%9E%90%E6%9E%84%E8%B0%83%E7%94%A8.png">
+<meta property="og:updated_time" content="2018-07-24T18:28:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++之异常处理">
+<meta name="twitter:description" content="程序设计的要求之一就是程序的健壮性。希望程序在运行时能够不出或者少出问题。但是，在程序的实际运行时，总会有一些因素会导致程序不能正常运行。异常处理（Exception Handling）就是要提出或者是研究一种机制，能够较好的处理程序不能正常运行的问题">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E9%99%A4%E6%95%B0%E4%B8%BA0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2017/03/05/C++之异常处理/">
+
+
+
+
+
+  <title>C++之异常处理 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2017/03/05/C++之异常处理/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">C++之异常处理</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-05T21:48:22+08:00">
+                2017-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/CPP/" itemprop="url" rel="index">
+                    <span itemprop="name">CPP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/05/C++之异常处理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/05/C++之异常处理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>程序设计的要求之一就是程序的健壮性。希望程序在运行时能够不出或者少出问题。但是，在程序的实际运行时，总会有一些因素会导致程序不能正常运行。异常处理（Exception Handling）就是要提出或者是研究一种机制，能够较好的处理程序不能正常运行的问题<br><a id="more"></a></p>
+<h3 id="异常和异常处理"><a href="#异常和异常处理" class="headerlink" title="异常和异常处理"></a>异常和异常处理</h3><h4 id="异常及其特点"><a href="#异常及其特点" class="headerlink" title="异常及其特点"></a>异常及其特点</h4><ul>
+<li>异常（Exceptions）是程序在运行时可能出现的会导致程序运行终止的错误</li>
+<li>编译系统检查出来的语法错误，导致程序运行结果不正确的逻辑错误，都不属于异常的范围</li>
+<li>异常是一个可以正确运行的程序在运行中可能发生的错误</li>
+</ul>
+<p>常见的异常： </p>
+<ul>
+<li>系统资源不足。如内存不足，不可以动态申请内存空间；磁盘空间不足，不能打开新的输出文件，等</li>
+<li>用户操作错误导致运算关系不正确。如出现分母为0，数学运算溢出，数组越界，参数类型不能转换，等</li>
+</ul>
+<p>异常有以下的一些特点： </p>
+<ul>
+<li>偶然性。程序运行中，异常并不总是会发生的。 </li>
+<li>可预见性。异常的存在和出现是可以预见的。 </li>
+<li>严重性。一旦异常发生，程序可能终止，或者运行的结果不可预知</li>
+</ul>
+<h4 id="异常处理方法及举例"><a href="#异常处理方法及举例" class="headerlink" title="异常处理方法及举例"></a>异常处理方法及举例</h4><p>对于程序中的异常，通常有三种处理的方法： </p>
+<ul>
+<li>不作处理。很多程序实际上就是不处理异常的。 </li>
+<li>发布相应的错误信息，然后，终止程序的运行。在C语言的程序中，往往就是这样处理的。 </li>
+<li>适当的处理异常，一般应该使程序可以继续运行</li>
+</ul>
+<p>一般来说，异常处理（Exception Handling）就是在程序运行时对异常进行检测和控制。<br>而在C++中，异常处理（EH）就是用C++提供的try－throw－catch的模式进行异常处理的机制</p>
+<p>e.g.<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">divide</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (b == <span class="number">0</span>)				<span class="comment">//检测分母是不是为0</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"除数不可以等于0 !"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		<span class="built_in">abort</span>();				<span class="comment">//调用abort函数终止运行</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> a / b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;	<span class="keyword">double</span> x, y, z;	<span class="built_in">cout</span> &lt;&lt; <span class="string">"输入两个实数 x 和 y ："</span>;	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; x &gt;&gt; y)	&#123;		z = divide(x, y);		<span class="built_in">cout</span> &lt;&lt; <span class="string">"x 除以 y 等于 "</span> &lt;&lt; z &lt;&lt; <span class="string">"\n"</span>;		<span class="built_in">cout</span> &lt;&lt; <span class="string">"输入下一组数 &lt;q 表示结束&gt;: "</span>;	&#125;	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Bye!\n"</span>;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E9%99%A4%E6%95%B0%E4%B8%BA0.png" alt=""><br>这个程序中，对于除数为0的处理有这样的特点： </p>
+<ul>
+<li>异常的检测和处理都是在一个程序模块（divide函数）中进行的； </li>
+<li>由于函数的返回值是double型的数据，因此，即使检测到除数为0的情况，也不能通过返回值来反映这个异常。只能调用函数abort终止程序的运行</li>
+</ul>
+<h3 id="C-异常处理机制"><a href="#C-异常处理机制" class="headerlink" title="C++异常处理机制"></a>C++异常处理机制</h3><p>C++处理异常有两个基本的做法</p>
+<ul>
+<li>异常的检测和处理是在不同的代码段中进行的。一般的说法是在“try”部分检测异常，“catch”部分处理异常。 </li>
+<li>由于异常的检测和处理不是在同一个代码段中进行的，在检测异常和处理异常的代码段之间需要有一种传递异常信息的机制，在C++中是通过“对象”来传递异常的。这种对象可以是一种简单的数据（如整数），也可以是系统定义或用户自定义的类的对象</li>
+</ul>
+<p>C++异常处理的语法可以表述如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">    受保护语句;</span><br><span class="line">    <span class="keyword">throw</span> 异常;</span><br><span class="line">    其他语句;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(异常类型)</span><br><span class="line">&#123;</span><br><span class="line">    异常处理语句;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在C++术语中，异常（Exception，注意结尾没有s）是作为专用名词出现的。就是将异常检测程序所抛掷的“带有异常信息的对象”称为“异常”。<br>而将捕获异常的处理程序称为异常处理程序（Exception Handler）</p>
+<p>在try复合语句中，可以调用其他函数，在所调用的函数中检测和抛掷异常，而不是在try复合语句中直接抛掷异常。这个所调用的函数，仍然是属于这个try模块的，所以这个模块中的catch部分，仍然可以捕获它所抛掷的异常并进行处理<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">divide</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (b == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="string">"输入错误：除数不可以等于0 !"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> a / b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">double</span> x, y, z;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"输入两个实数 x 和 y ："</span>;</span><br><span class="line">	<span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; x &gt;&gt; y)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">try</span></span><br><span class="line">		&#123;</span><br><span class="line">			z = divide(x, y);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (<span class="keyword">const</span> <span class="keyword">char</span> * s)	<span class="comment">// start of exception handler</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">cout</span> &lt;&lt; s &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"输入一对新的实数： "</span>;</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;						<span class="comment">// end of handler</span></span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"x 除以 y 等于 "</span> &lt;&lt; z &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"输入下一组数 &lt;q 表示结束&gt;: "</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"程序结束，再见!\n"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>阅读这个程序，可以注意以下几点： </p>
+<ul>
+<li>在try的复合语句中，调用了函数divide。因此，尽管divide函数是在try模块的外面定义的，它仍然是属于try模块：在try语句块中运行</li>
+<li>divide函数检测到异常后，抛掷出一个字符串作为异常对象，异常的类型就是字符串类型</li>
+<li>catch程序块指定的异常对象类型是char*，可以捕获字符串异常。捕获异常后的处理方式是通过continue语句，跳过本次循环，也不输出结果，直接进入下一次循环，要求用户再输入一对实数</li>
+</ul>
+<p>另外，在编写带有异常处理的程序时，还要注意： </p>
+<ul>
+<li>try语句块和catch语句块是一个整体，两者之间不能有其他的语句</li>
+<li>一个try语句块后面可以有多个catch语句，但是，不可以几个try语句块后面用一个catch语句</li>
+</ul>
+<h3 id="用类的对象传递异常"><a href="#用类的对象传递异常" class="headerlink" title="用类的对象传递异常"></a>用类的对象传递异常</h3><ul>
+<li>throw语句所传递的异常，可以是各种类型的：整型、实型、字符型、指针，等等。也可以用类对象来传递异常</li>
+<li>对象就是既有数据属性，也有行为属性。使用对象来传递异常，就是既可以传递和异常有关的数据属性，也可以传递和处理异常有关的行为或者方法</li>
+<li>专门用来传递异常的类称为异常类。异常类可以是用户自定义的，也可以是系统提供的exception类</li>
+</ul>
+<h4 id="用户自定义类的对象传递异常"><a href="#用户自定义类的对象传递异常" class="headerlink" title="用户自定义类的对象传递异常"></a>用户自定义类的对象传递异常</h4><ul>
+<li>用栈类模板来作为例子，类模板中两个主要的函数push和pop的定义中，都安排了错误检查的语句，以检查栈空或者栈满的错误。由于pop函数是有返回值的，在栈空的条件下，是没有数据可以出栈的。尽管pop函数可以检测到这种错误，但是，也不可能正常的返回，于是只好通过exit函数调用结束程序的执行</li>
+<li>用C++异常处理的机制，改写这个程序。要求改写后的程序不仅有更好的可读性，而且在栈空不能出栈时，程序也可以继续运行，使得程序有更好的健壮性。 </li>
+<li>可以定义两个异常类：一个是“栈空异常”类，另一个是“栈满异常”类。在try块中，如果检测到“栈空异常”，就throw一个“StackEmptyException”类的对象。如果检测到“栈满异常”，就throw一个“StackOverflowException”类的对象</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StackOverflowException</span> //栈满异常类</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	StackOverflowException() &#123;&#125;</span><br><span class="line">	~StackOverflowException() &#123;&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">getMessage</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"异常：栈满不能入栈。"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StackEmptyException</span> //栈空异常类</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	StackEmptyException() &#123;&#125;</span><br><span class="line">	~StackEmptyException() &#123;&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">getMessage</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"异常：栈空不能出栈。"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">int</span> <span class="title">i</span>&gt; //类模板定义</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">MyStack</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	T StackBuffer[i];</span><br><span class="line">	<span class="keyword">int</span> size;</span><br><span class="line">	<span class="keyword">int</span> top;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	MyStack(<span class="keyword">void</span>) : size(i)</span><br><span class="line">	&#123;</span><br><span class="line">		top = i;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">const</span> T item)</span></span>;</span><br><span class="line">	<span class="function">T <span class="title">pop</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">int</span> <span class="title">i</span>&gt; //<span class="title">push</span>成员函数定义</span></span><br><span class="line"><span class="class"><span class="title">void</span> <span class="title">MyStack</span>&lt; T, i &gt;:</span>:push(<span class="keyword">const</span> T item)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (top &gt; <span class="number">0</span>)</span><br><span class="line">		StackBuffer[--top] = item;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">throw</span> StackOverflowException();	<span class="comment">//抛掷对象异常</span></span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">int</span> <span class="title">i</span>&gt; //<span class="title">pop</span>成员函数定义</span></span><br><span class="line"><span class="class"><span class="title">T</span> <span class="title">MyStack</span>&lt; T, i &gt;:</span>:pop(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (top &lt; i)</span><br><span class="line">		<span class="keyword">return</span> StackBuffer[top++];</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">throw</span> StackEmptyException();</span><br><span class="line">	<span class="comment">//抛掷另一个对象异常</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> <span class="comment">//带有异常处理的类模板测试程序</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	MyStack&lt;<span class="keyword">int</span>, <span class="number">5</span>&gt; ss;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">try</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (i % <span class="number">3</span>)<span class="built_in">cout</span> &lt;&lt; ss.pop() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">			<span class="keyword">else</span> ss.push(i);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (StackOverflowException &amp;e)</span><br><span class="line">		&#123;</span><br><span class="line">			e.getMessage();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (StackEmptyException &amp;e)</span><br><span class="line">		&#123;</span><br><span class="line">			e.getMessage();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Bye\n"</span>;</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E6%A0%88%E7%A9%BA.png" alt=""><br>用C++异常处理机制来处理栈操作中的“栈空异常”和“栈满异常”。定义两个相应的异常类。通过异常类对象来传递检测到的异常，并且对异常进行处理。要求在栈空的时候用pop函数出栈失败时，程序的运行也不终止</p>
+<ul>
+<li>通过对象传递参数。具体来说，是在throw语句中直接调用异常类的构造函数，生成一个无名对象（如：throw StackEmptyException();），来传递异常的</li>
+<li>在catch语句中规定的异常类型则是异常类对象的引用。当然，也可以直接用异常类对象作为异常</li>
+<li>通过异常类对象的引用，直接调用异常类的成员函数getMessage，来处理异常</li>
+<li>在try语句块后面直接有两个catch语句来捕获异常。也就是说，要处理的异常增加时，catch语句的数目也要增加。 </li>
+<li>运行结果表明，10次循环都已经完成。没有出现因为空栈时不能出栈而退出运行的情况</li>
+</ul>
+<h4 id="用exception类对象传递异常"><a href="#用exception类对象传递异常" class="headerlink" title="用exception类对象传递异常"></a>用exception类对象传递异常</h4><p>C++提供了一个专门用于传递异常的类：exception类。可以通过exception类的对象来传递异常<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">exception</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	exception();		<span class="comment">//默认构造函数</span></span><br><span class="line">	exception(<span class="keyword">char</span> *);	<span class="comment">//字符串作参数的构造函数</span></span><br><span class="line">	exception(<span class="keyword">const</span> exception&amp;);</span><br><span class="line">	exception&amp; <span class="keyword">operator</span>= (<span class="keyword">const</span> exception&amp;);</span><br><span class="line">	<span class="keyword">virtual</span> ~exception();		<span class="comment">//虚析构函数</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">char</span> * <span class="title">what</span><span class="params">()</span> <span class="keyword">const</span></span>;	<span class="comment">//what()虚函数</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> * m_what;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>其中和传递异常最直接有关的函数有两个： </p>
+<ul>
+<li>带参数的构造函数。参数是字符串，一般就是检测到异常后要显示的异常信息。 </li>
+<li>what()函数。返回值就是构造exception类对象时所输入的字符串。可以直接用插入运算符“&lt;&lt;”在显示器上显示</li>
+</ul>
+<p>如果捕获到exception类对象后，只要显示关于异常的信息，则可以直接使用exception类。如果除了错误信息外，还需要显示其他信息，或者作其他的操作，则可以定义一个exception类的派生类，在派生类中可以定义虚函数what的重载函数，以便增加新的信息的显示<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;exception&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArrayOverflow</span> :</span> <span class="keyword">public</span> exception <span class="comment">//exception类的派生类</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	ArrayOverflow::ArrayOverflow(<span class="keyword">int</span> i) : exception(<span class="string">"数组越界异常!\n"</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		k = i;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">const</span> <span class="keyword">char</span> * <span class="title">what</span><span class="params">()</span> <span class="comment">//重新定义的what()函数</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"数组下标"</span> &lt;&lt; k &lt;&lt; <span class="string">"越界\n"</span>;</span><br><span class="line">		<span class="keyword">return</span> exception::what();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> k;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyArray</span> //数组类的定义</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="keyword">int</span> *p; <span class="comment">//数组首地址</span></span><br><span class="line">	<span class="keyword">int</span> sz; <span class="comment">//数组大小</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	MyArray(<span class="keyword">int</span> s) <span class="comment">//构造函数</span></span><br><span class="line">	&#123;</span><br><span class="line">		p = <span class="keyword">new</span> <span class="keyword">int</span>[s];</span><br><span class="line">		sz = s;</span><br><span class="line">	&#125;</span><br><span class="line">	~MyArray()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">delete</span>[] p;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> sz;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span>&amp; <span class="keyword">operator</span>[ ] (<span class="keyword">int</span> i); <span class="comment">//重载[]运算符的原型</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span>&amp; MyArray :: <span class="keyword">operator</span>[ ] (<span class="keyword">int</span> i) <span class="comment">//重载[]运算符</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (i &gt;= <span class="number">0</span> &amp;&amp; i &lt; sz)</span><br><span class="line">		<span class="keyword">return</span> p[i];</span><br><span class="line">	<span class="keyword">throw</span> ArrayOverflow(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(MyArray&amp; v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (i != <span class="number">1</span>) &#123; v[i] = i; <span class="built_in">cout</span> &lt;&lt; v[i] &lt;&lt; <span class="built_in">endl</span>; &#125;</span><br><span class="line">			<span class="keyword">else</span> v[v.size() + <span class="number">10</span>] = <span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (ArrayOverflow &amp;r)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">cout</span> &lt;&lt; r.what();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;<span class="comment">//for循环结束</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">MyArray <span class="title">A</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">	f(A);</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E6%95%B0%E7%BB%84%E8%B6%8A%E7%95%8C.png" alt=""></p>
+<ul>
+<li>定义一个简单的数组类。在数组类中重载“[ ]”运算符，目的是对于数组元素的下标进行检测。如果发现数组元素下标越界，就抛掷一个对象来传递异常。并且要求处理异常时可以显示越界的下标值</li>
+<li>使用exception类的对象来传递对象。但是，直接使用exception类对象还是不能满足例题的要求。因为不能传递越界的下标值</li>
+<li>为此，可以定义一个exception类的派生类ArrayOverflow。其中包含一个数据成员k。在构造ArrayOverflow类对象时，用越界-的下标值初始化这个数据k。在catch块中捕获到这个对象后，可以设法显示对象的k值</li>
+</ul>
+<h3 id="异常处理中的退栈和对象析构"><a href="#异常处理中的退栈和对象析构" class="headerlink" title="异常处理中的退栈和对象析构"></a>异常处理中的退栈和对象析构</h3><p>在函数调用时，函数中定义的自动变量将在堆栈中存放。结束函数调用时，这些自动变量就会从堆栈中弹出，不再占用堆栈的空间，这个过程有时被称为“退栈”（Stack unwinding）。其他的结束动作还包括调用析构函数，释放函数中定义的对象</p>
+<p>但是，如果函数执行时出现异常，并且只是采用简单的显示异常信息，然后退出（exit）程序的做法，则程序的执行就会突然中断，结束函数调用时必须完成的退栈和对象释放的操作也不会进行。这样的结果是很不希望的</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">function3</span><span class="params">(<span class="keyword">int</span> k)</span> <span class="comment">//function3中可能有异常</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (k == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"function3中发生异常\n"</span>; <span class="comment">//显示异常信息</span></span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">	&#125; <span class="comment">//退出执行</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">return</span> <span class="number">123</span> / k;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">function2</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ForTest A12;</span><br><span class="line">	function3(n); <span class="comment">//第三次调用</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">function1</span><span class="params">(<span class="keyword">int</span> m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ForTest A11;</span><br><span class="line">	function2(m); <span class="comment">//第二次调用</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	function1(<span class="number">0</span>); <span class="comment">//第一次调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序运行后显示：function3中发生异常<br>在function1和fuction2中分别定义了ForTest类的对象。如果函数可以正常退出，这些对象将被释放。<br>但是，程序运行后只显示了异常信息。没有析构函数被调用的迹象。说明所创建的对象没有被释放。<br>如果采用C++的异常处理机制来进行处理。情况就会完全不同</p>
+<p>如果在function3中用throw语句来抛掷异常，就会开始function3的退栈。<br>然后，返回到函数function2开始function2的退栈，，并且调用ForTest类析构函数，释放对象A12。<br>接着，返回到函数function1开始function1的退栈，，并且调用ForTest类析构函数，释放对象A11</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;exception&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ForTest</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	~ForTest() <span class="comment">//析构函数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"ForTest类析构函数被调用\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;; <span class="comment">//ForTest类定义结束</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">function3</span><span class="params">(<span class="keyword">int</span> k)</span> <span class="comment">//function3中可能有异常</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (k == <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">throw</span> exception(<span class="string">"function3中出现异常\n"</span>); <span class="comment">//抛掷异常类对象</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">return</span> <span class="number">123</span> / k;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">function2</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ForTest A12;</span><br><span class="line">	function3(n); <span class="comment">//第三次调用</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">function1</span><span class="params">(<span class="keyword">int</span> m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ForTest A11;</span><br><span class="line">	function2(m); <span class="comment">//第二次调用</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		function1(<span class="number">0</span>); <span class="comment">//第一次调用</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (exception &amp;error)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; error.what() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E6%9E%90%E6%9E%84%E8%B0%83%E7%94%A8.png" alt=""></p>
+<h3 id="异常总结"><a href="#异常总结" class="headerlink" title="异常总结"></a>异常总结</h3><ul>
+<li>在程序设计中使用这样的异常处理机制，有助于提高程序的健壮性、可读性。而且可以防止因为程序不正常结束而导致的资源泄漏，如创建的对象不能释放等。 </li>
+<li>try模块在异常处理中有着极其重要的作用</li>
+<li>可以通过用户自定义类的对象来传递异常</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2017/03/05/C++之异常处理/" title="C++之异常处理">https://cj5785.com/2017/03/05/C++之异常处理/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CPP/" rel="tag"># CPP</a>
+          
+            <a href="/tags/异常处理/" rel="tag"># 异常处理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/04/C++之STL/" rel="next" title="C++之STL">
+                <i class="fa fa-chevron-left"></i> C++之STL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/01/数据结构与算法之概念/" rel="prev" title="数据结构与算法之概念">
+                数据结构与算法之概念 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#异常和异常处理"><span class="nav-number">1.</span> <span class="nav-text">异常和异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#异常及其特点"><span class="nav-number">1.1.</span> <span class="nav-text">异常及其特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常处理方法及举例"><span class="nav-number">1.2.</span> <span class="nav-text">异常处理方法及举例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-异常处理机制"><span class="nav-number">2.</span> <span class="nav-text">C++异常处理机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用类的对象传递异常"><span class="nav-number">3.</span> <span class="nav-text">用类的对象传递异常</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用户自定义类的对象传递异常"><span class="nav-number">3.1.</span> <span class="nav-text">用户自定义类的对象传递异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用exception类对象传递异常"><span class="nav-number">3.2.</span> <span class="nav-text">用exception类对象传递异常</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异常处理中的退栈和对象析构"><span class="nav-number">4.</span> <span class="nav-text">异常处理中的退栈和对象析构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异常总结"><span class="nav-number">5.</span> <span class="nav-text">异常总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2017/03/05/C++之异常处理/';
+          this.page.identifier = '2017/03/05/C++之异常处理/';
+          this.page.title = 'C++之异常处理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,2457 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,System,Runtime,Date,Calendar,Math,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Java中有很多类是很常用的，此处列举System，Runtime，Date，Calendar，Math">
+<meta name="keywords" content="Java,System,Runtime,Date,Calendar,Math">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java之Java中的常用类">
+<meta property="og:url" content="https://cj5785.com/2015/08/02/Java之Java中的常用类/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="Java中有很多类是很常用的，此处列举System，Runtime，Date，Calendar，Math">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-29T18:47:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java之Java中的常用类">
+<meta name="twitter:description" content="Java中有很多类是很常用的，此处列举System，Runtime，Date，Calendar，Math">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2015/08/02/Java之Java中的常用类/">
+
+
+
+
+
+  <title>Java之Java中的常用类 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2015/08/02/Java之Java中的常用类/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Java之Java中的常用类</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-02T21:30:05+08:00">
+                2015-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/08/02/Java之Java中的常用类/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/02/Java之Java中的常用类/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java中有很多类是很常用的，此处列举System，Runtime，Date，Calendar，Math<br><a id="more"></a></p>
+<h3 id="System"><a href="#System" class="headerlink" title="System"></a>System</h3><ul>
+<li>System:类中的方法和属性都是静态的</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">字段摘要</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>static PrintStream</code></td>
+<td style="text-align:left"><code>err</code> “标准”错误输出流</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static InputStream</code></td>
+<td style="text-align:left"><code>in</code> “标准”输入流</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static PrintStream</code></td>
+<td style="text-align:left"><code>out</code> “标准”输出流</td>
+</tr>
+</tbody>
+</table>
+<p>获取系统属性信息：Properties getProperties();<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SystemDemo</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Properties prop = System.getProperties();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//在系统中自定义特有信息</span></span><br><span class="line">		System.setProperty(<span class="string">"mykey"</span>,<span class="string">"myvalue"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">//获取指定属性信息。</span></span><br><span class="line">		String value = System.getProperty(<span class="string">"os.name"</span>);</span><br><span class="line">		System.out.println(<span class="string">"value = "</span> + value);</span><br><span class="line"></span><br><span class="line">		<span class="comment">//获取所有属性信息。</span></span><br><span class="line">		<span class="keyword">for</span>(Object obj : prop.keySet()) &#123;</span><br><span class="line">			String value = (String)prop.get(obj);</span><br><span class="line">			System.out.println(obj + <span class="string">"::"</span> + value);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">方法摘要</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>arraycopy(Object src, int srcPos, Object dest, int destPos, int length)</code>   从指定源数组中复制一个数组，复制从指定的位置开始，到目标数组的指定位置结束</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static String</code></td>
+<td style="text-align:left"><code>clearProperty(String key)</code> 移除指定键指示的系统属性</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Console</code></td>
+<td style="text-align:left"><code>console()</code> 返回与当前 Java 虚拟机关联的唯一 <code>Console</code>对象（如果有）</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static long</code></td>
+<td style="text-align:left"><code>currentTimeMillis()</code>   返回以毫秒为单位的当前时间</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>exit(int status)</code>  终止当前正在运行的 Java 虚拟机</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>gc()</code>  运行垃圾回收器</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Map&lt;String,String&gt;</code></td>
+<td style="text-align:left"><code>getenv()</code>  返回一个不能修改的当前系统环境的字符串映射视图</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static String</code></td>
+<td style="text-align:left"><code>getenv(String name)</code>   获取指定的环境变量值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Properties</code></td>
+<td style="text-align:left"><code>getProperties()</code>   确定当前的系统属性</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static String</code></td>
+<td style="text-align:left"><code>getProperty(String key)</code>   获取指定键指示的系统属性</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static String</code></td>
+<td style="text-align:left"><code>getProperty(String key, String def)</code>   获取用指定键描述的系统属性</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static SecurityManager</code></td>
+<td style="text-align:left"><code>getSecurityManager()</code>  获取系统安全接口</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td style="text-align:left"><code>identityHashCode(Object x)</code>    返回给定对象的哈希码，该代码与默认的方法 hashCode() 返回的代码一样，无论给定对象的类是否重写 hashCode()</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Channel</code></td>
+<td style="text-align:left"><code>inheritedChannel()</code>    返回从创建此 Java 虚拟机的实体中继承的信道</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>load(String filename)</code> 从作为动态库的本地文件系统中以指定的文件名加载代码文件</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>loadLibrary(String libname)</code>   载由 <code>libname</code> 参数指定的系统库</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static String</code></td>
+<td style="text-align:left"><code>mapLibraryName(String libname)</code>    将一个库名称映射到特定于平台的、表示本机库的字符串中</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static long</code></td>
+<td style="text-align:left"><code>nanoTime()</code>    返回最准确的可用系统计时器的当前值，以毫微秒为单位</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>runFinalization()</code> 运行处于挂起终止状态的所有对象的终止方法</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>runFinalizersOnExit(boolean value)</code>    <strong>已过时。</strong> <em>该方法具有固有的不安全性。它可能对正在使用的对象调用终结方法，而其他线程同时正在操作这些对象，从而导致不正确的行为或死锁</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>setErr(PrintStream err)</code>   重新分配“标准”错误输出流</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>setIn(InputStream in)</code> 重新分配“标准”输入流</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>setOut(PrintStream out)</code>   重新分配“标准”输出流</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>setProperties(Properties props)</code>   将系统属性设置为 <code>Properties</code> 参数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static String</code></td>
+<td style="text-align:left"><code>setProperty(String key, String value)</code> 设置指定键指示的系统属性</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td style="text-align:left"><code>setSecurityManager(SecurityManager s)</code> 设置系统安全性</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Runtime"><a href="#Runtime" class="headerlink" title="Runtime"></a>Runtime</h3><p>Runtime由单例模式实现<br><code>static Runtime getRuntime();</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">方法摘要</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>addShutdownHook(Thread hook)</code> 注册新的虚拟机来关闭钩子</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>availableProcessors()</code>    向 Java 虚拟机返回可用处理器的数目</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Process</code></td>
+<td><code>exec(String command)</code> 在单独的进程中执行指定的字符串命令</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Process</code></td>
+<td><code>exec(String[] cmdarray)</code>  在单独的进程中执行指定命令和变量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Process</code></td>
+<td><code>exec(String[] cmdarray, String[] envp)</code>   在指定环境的独立进程中执行指定命令和变量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Process</code></td>
+<td><code>exec(String[] cmdarray, String[] envp, File dir)</code> 在指定环境和工作目录的独立进程中执行指定的命令和变量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Process</code></td>
+<td><code>exec(String command, String[] envp)</code>  在指定环境的单独进程中执行指定的字符串命令</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Process</code></td>
+<td><code>exec(String command, String[] envp, File dir)</code>    在有指定环境和工作目录的独立进程中执行指定的字符串命令</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>exit(int status)</code> 通过启动虚拟机的关闭序列，终止当前正在运行的 Java 虚拟机</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>long</code></td>
+<td><code>freeMemory()</code> 返回 Java 虚拟机中的空闲内存量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>gc()</code> 运行垃圾回收器</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>InputStream</code></td>
+<td><code>getLocalizedInputStream(InputStream in)</code>  <strong>已过时。</strong> <em>从 JDK 1.1 开始，将本地编码字节流转换为 Unicode 字符流的首选方法是使用 InputStreamReader 和 BufferedReader 类</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>OutputStream</code></td>
+<td><code>getLocalizedOutputStream(OutputStream out)</code>   <strong>已过时。</strong> <em>从 JDK 1.1 开始，将 Unicode 字符流转换为本地编码字节流的首选方法是使用 OutputStreamWriter、BufferedWriter 和 PrintWriter 类</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Runtime</code></td>
+<td><code>getRuntime()</code> 返回与当前 Java 应用程序相关的运行时对象</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>halt*(int status)</code>    强行终止目前正在运行的 Java 虚拟机</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>load(String filename)</code>    加载作为动态库的指定文件名</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>loadLibrary(String libname)</code>  加载具有指定库名的动态库</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>long</code></td>
+<td><code>maxMemory()</code>  返回 Java 虚拟机试图使用的最大内存量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>removeShutdownHook(Thread hook)</code>  取消注册某个先前已注册的虚拟机关闭钩子</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>runFinalization()</code>    运行挂起 finalization 的所有对象的终止方法</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static void</code></td>
+<td><code>runFinalizersOnExit(boolean value)</code>   <strong>已过时。</strong> <em>此方法本身具有不安全性。它可能对正在使用的对象调用终结方法，而其他线程正在操作这些对象，从而导致不正确的行为或死锁</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>long</code></td>
+<td><code>totalMemory()</code>    返回 Java 虚拟机中的内存总量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>traceInstructions(boolean on)</code>    启用／禁用指令跟踪</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>traceMethodCalls(boolean on)</code> 启用／禁用方法调用跟踪</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Date"><a href="#Date" class="headerlink" title="Date"></a>Date</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">import</span> java.text.*;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DateDemo</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Date d = <span class="keyword">new</span> Date();</span><br><span class="line"></span><br><span class="line">		<span class="comment">//将模式封装到SimpleDateformat对象中。</span></span><br><span class="line">		SimpleDateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy年MM月dd日E hh:mm:ss"</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//调用format方法让模式格式化指定Date对象。</span></span><br><span class="line">		String time = sdf.format(d);</span><br><span class="line">		System.out.println(<span class="string">"time = "</span> + time);</span><br><span class="line">		<span class="keyword">long</span> l = System.currentTimeMillis();</span><br><span class="line">		Date d1 = <span class="keyword">new</span> Date(l);</span><br><span class="line">		System.out.println(<span class="string">"d1: "</span> + d1);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>构造方法摘要</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Date()</code>    分配 <code>Date</code> 对象并初始化此对象，以表示分配它的时间（精确到毫秒）</td>
+</tr>
+<tr>
+<td><code>Date(int year, int month, int date)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(year + 1900, month, date) 或 GregorianCalendar(year + 1900, month, date) 取代</em></td>
+</tr>
+<tr>
+<td><code>Date(int year, int month, int date, int hrs, int min)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(year + 1900, month, date, hrs, min) 或 GregorianCalendar(year + 1900, month, date, hrs, min) 取代</em></td>
+</tr>
+<tr>
+<td><code>Date(int year, int month, int date, int hrs, int min, int sec)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(year + 1900, month, date, hrs, min, sec) 或 GregorianCalendar(year + 1900, month, date, hrs, min, sec) 取代</em></td>
+</tr>
+<tr>
+<td><code>Date(long date)</code>    分配 <code>Date</code> 对象并初始化此对象，以表示自从标准基准时间（称为“历元（epoch）”，即 1970 年 1 月 1 日 00:00:00 GMT）以来的指定毫秒数</td>
+</tr>
+<tr>
+<td><code>Date(String s)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 DateFormat.parse(String s) 取代</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">方法摘要</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>after(Date when)</code>    测试此日期是否在指定日期之后</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>before(Date when)</code>    测试此日期是否在指定日期之前</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Object</code></td>
+<td><code>clone()</code>    返回此对象的副本</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>compareTo(Date anotherDate)</code>    比较两个日期的顺序</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>equals(Object obj)</code>    比较两个日期的相等性</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getDate()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.get(Calendar.DAY_OF_MONTH) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getDay()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.get(Calendar.DAY_OF_WEEK) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getHours()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.get(Calendar.HOUR_OF_DAY) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getMinutes()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.get(Calendar.MINUTE) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getMonth()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.get(Calendar.MONTH) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getSeconds()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.get(Calendar.SECOND) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>long</code></td>
+<td><code>getTime()</code>    返回自 1970 年 1 月 1 日 00:00:00 GMT 以来此 <code>Date</code> 对象表示的毫秒数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getTimezoneOffset()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 -(Calendar.get(Calendar.ZONE_OFFSET) + Calendar.get(Calendar.DST_OFFSET)) / (60 \</em> 1000) 取代*</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getYear()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.get(Calendar.YEAR) - 1900 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>hashCode()</code>    返回此对象的哈希码值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static long</code></td>
+<td><code>parse(String s)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 DateFormat.parse(String s) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setDate(int date)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(Calendar.DAY_OF_MONTH, int date) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setHours(int hours)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(Calendar.HOUR_OF_DAY, int hours) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setMinutes(int minutes)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(Calendar.MINUTE, int minutes) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setMonth(int month)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(Calendar.MONTH, int month) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setSeconds(int seconds)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(Calendar.SECOND, int seconds) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setTime(long time)</code>    设置此 <code>Date</code> 对象，以表示 1970 年 1 月 1 日 00:00:00 GMT 以后 <code>time</code> 毫秒的时间点</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setYear(int year)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(Calendar.YEAR, year + 1900) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>String</code></td>
+<td><code>toGMTString()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 DateFormat.format(Date date) 取代，使用 GMT TimeZone</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>String</code></td>
+<td><code>toLocaleString()</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 DateFormat.format(Date date) 取代</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>String</code></td>
+<td><code>toString()</code>    把此 <code>Date</code> 对象转换为以下形式的 <code>String</code>： dow mon dd hh:mm:ss zzz yyyy 其中： <code>dow</code> 是一周中的某一天 (<code>Sun, Mon, Tue, Wed, Thu, Fri, Sat</code>)</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static long</code></td>
+<td><code>UTC(int year, int month, int date, int hrs, int min, int sec)</code>    <strong>已过时。</strong> <em>从 JDK 1.1 开始，由 Calendar.set(year + 1900, month, date, hrs, min, sec) 或 GregorianCalendar(year + 1900, month, date, hrs, min, sec) 取代，使用 UTC TimeZone，后跟 Calendar.getTime().getTime()</em></td>
+</tr>
+</tbody>
+</table>
+<h3 id="Calendar"><a href="#Calendar" class="headerlink" title="Calendar"></a>Calendar</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取任意年的二月有多少天。</span></span><br><span class="line"><span class="comment">//思路：根据指定年设置一个时间就是 </span></span><br><span class="line">c.set(year,<span class="number">2</span>,<span class="number">1</span>)<span class="comment">//某一年的3月1日</span></span><br><span class="line">c.add(Calenar.DAY_OF_MONTH,-<span class="number">1</span>);<span class="comment">//3月1日，往前推一天，就是2月最后一天</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//获取昨天的现在这个时刻。</span></span><br><span class="line">c.add(Calenar.DAY_OF_MONTH,-<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">字段摘要</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>ALL_STYLES</code>    指示所有风格名称的 <code>getDisplayNames</code> 的风格说明符，比如 “January” 和 “Jan”</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>AM</code>    指示从午夜到中午之前这段时间的 <code>AM_PM</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>AM_PM</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示 <code>HOUR</code> 是在中午之前还是在中午之后</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>APRIL</code>    指示在格里高利历和罗马儒略历中一年中第四个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected  boolean</code></td>
+<td><code>areFieldsSet</code>    如果 <code>fields[]</code> 与当前的设置时间同步，则返回 true</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>AUGUST</code>    指示在格里高利历和罗马儒略历中一年中第八个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>DATE</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示一个月中的某天</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>DAY_OF_MONTH</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示一个月中的某天</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>DAY_OF_WEEK</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示一个星期中的某天</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>DAY_OF_WEEK_IN_MONTH</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示当前月中的第几个星期</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>DAY_OF_YEAR</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示当前年中的天数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>DECEMBER</code>    指示在格里高利历和罗马儒略历中一年中第十二个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>DST_OFFSET</code>    <code>get</code> 和 <code>set</code> 的字段数字，以毫秒为单位指示夏令时的偏移量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>ERA</code>    指示年代的 <code>get</code> 和 <code>set</code> 的字段数字，比如罗马儒略历中的 AD 或 BC</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>FEBRUARY</code>    指示在格里高利历和罗马儒略历中一年中第二个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>FIELD_COUNT</code>    <code>get</code> 和 <code>set</code> 可识别的不同字段的数量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected  int[]</code></td>
+<td><code>fields</code>    此日历当前设置时间的日历字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>FRIDAY</code>    指示 Friday 的 <code>DAY_OF_WEEK</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>HOUR</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示上午或下午的小时</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>HOUR_OF_DAY</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示一天中的小时</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected  boolean[]</code></td>
+<td><code>isSet</code>    通知是否设置了该日历某一指定日历字段的标志</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected  boolean</code></td>
+<td><code>isTimeSet</code>    如果 <code>time</code> 值是一个有效值，则返回 true</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>JANUARY</code>    指示在格里高利历和罗马儒略历中一年中第一个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>JULY</code>    指示在格里高利历和罗马儒略历中一年中第七个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>JUNE</code>    指示在格里高利历和罗马儒略历中一年中第六个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>LONG</code>    指示长名称的 <code>getDisplayName</code> 的风格说明符，比如 “January”</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>MARCH</code>    指示在格里高利历和罗马儒略历中一年中第三个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>MAY</code>    指示在格里高利历和罗马儒略历中一年中第五个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>MILLISECOND</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示一秒中的毫秒</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>MINUTE</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示一小时中的分钟</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>MONDAY</code>    指示 Monday 的 <code>DAY_OF_WEEK</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>MONTH</code>    指示月份的 <code>get</code> 和 <code>set</code> 的字段数字</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>NOVEMBER</code>    指示在格里高利历和罗马儒略历中一年中第十一个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>OCTOBER</code>    指示在格里高利历和罗马儒略历中一年中第十个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>PM</code>    指示从中午到午夜之前这段时间的 <code>AM_PM</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>SATURDAY</code>    指示 Saturday 的 <code>DAY_OF_WEEK</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>SECOND</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示一分钟中的秒</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>SEPTEMBER</code>    指示在格里高利历和罗马儒略历中一年中第九个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>SHORT</code>    指示短名称的 <code>getDisplayName</code> 和 <code>getDisplayNames</code> 的风格说明符，比如 “Jan”</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>SUNDAY</code>    指示 Sunday 的 <code>DAY_OF_WEEK</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>THURSDAY</code>    指示 Thursday 的 <code>DAY_OF_WEEK</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected  long</code></td>
+<td><code>time</code>    日历的当前设置时间，以毫秒为单位，表示自格林威治标准时间 1970 年 1月 1 日 0:00:00 后经过的时间</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>TUESDAY</code>    指示 Tuesday 的 <code>DAY_OF_WEEK</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>UNDECIMBER</code>    指示一年中第十三个月的 <code>MONTH</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>WEDNESDAY</code>            指示 Wednesday 的 <code>DAY_OF_WEEK</code> 字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>WEEK_OF_MONTH</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示当前月中的星期数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>WEEK_OF_YEAR</code>    <code>get</code> 和 <code>set</code> 的字段数字，指示当前年中的星期数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>YEAR</code>    指示年的 <code>get</code> 和 <code>set</code> 的字段数字</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>ZONE_OFFSET</code>    <code>get</code> 和 <code>set</code> 的字段数字，以毫秒为单位指示距 GMT 的大致偏移量</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">构造方法摘要</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>protected</code></td>
+<td><code>Calendar()</code>    构造一个带有默认时区和语言环境的 Calendar</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected</code></td>
+<td><code>Calendar(TimeZone zone, Locale aLocale)</code>    构造一个带有指定时区和语言环境的 Calendar</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">方法摘要</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>abstract  void</code></td>
+<td><code>add(int field, int amount)</code>    根据日历的规则，为给定的日历字段添加或减去指定的时间量</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>after(Object when)</code>    判断此 <code>Calendar</code> 表示的时间是否在指定 <code>Object</code> 表示的时间之后，返回判断结果</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>before(Object when)</code>    判断此 <code>Calendar</code> 表示的时间是否在指定 <code>Object</code> 表示的时间之前，返回判断结果</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>clear()</code>    将此 <code>Calendar</code> 的所日历字段值和时间值（从历元至现在的毫秒偏移量）设置成未定义</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>clear(int field)</code>    将此 <code>Calendar</code> 的给定日历字段值和时间值（从历元至现在的毫秒偏移量）设置成未定义</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Object</code></td>
+<td><code>clone()</code>    创建并返回此对象的一个副本</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>compareTo(Calendar anotherCalendar)</code>    比较两个 <code>Calendar</code> 对象表示的时间值（从历元至现在的毫秒偏移量）</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected  void</code></td>
+<td><code>complete()</code>    填充日历字段中所有未设置的字段</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected abstract  void</code></td>
+<td><code>computeFields()</code>    将当前毫秒时间值 <code>time</code> 转换为 <code>fields[\]</code> 中的日历字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected abstract  void</code></td>
+<td><code>computeTime()</code>    将 <code>fields[\]</code> 中的当前日历字段值转换为毫秒时间值 <code>time</code></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>equals(Object obj)</code>    将此 <code>Calendar</code> 与指定 <code>Object</code> 比较</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>get(int field)</code>    返回给定日历字段的值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getActualMaximum(int field)</code>    给定此 <code>Calendar</code> 的时间值，返回指定日历字段可能拥有的最大值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getActualMinimum(int field)</code>    给定此 <code>Calendar</code> 的时间值，返回指定日历字段可能拥有的最小值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Locale[]</code></td>
+<td><code>getAvailableLocales()</code>    返回所有语言环境的数组，此类的 <code>getInstance</code> 方法可以为其返回本地化的实例</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>String</code></td>
+<td><code>getDisplayName(int field, int style, Locale locale)</code>    返回给定 <code>style</code> 和 <code>locale</code> 下的日历 <code>field</code> 值的字符串表示形式</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Map&lt;String,Integer&gt;</code></td>
+<td><code>getDisplayNames(int field, int style, Locale locale)</code>    返回给定 <code>style</code> 和 <code>locale</code> 下包含日历 <code>field</code> 所有名称的 <code>Map</code> 及其相应字段值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getFirstDayOfWeek()</code>    获取一星期的第一天；例如，在美国，这一天是 <code>SUNDAY</code>，而在法国，这一天是 <code>MONDAY</code></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>abstract  int</code></td>
+<td><code>getGreatestMinimum(int field)</code>    返回此 <code>Calendar</code> 实例给定日历字段的最高的最小值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Calendar</code></td>
+<td><code>getInstance()</code>    使用默认时区和语言环境获得一个日历</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Calendar</code></td>
+<td><code>getInstance(Locale aLocale)</code>    使用默认时区和指定语言环境获得一个日历</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Calendar</code></td>
+<td><code>getInstance(TimeZone zone)</code>    使用指定时区和默认语言环境获得一个日历</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static Calendar</code></td>
+<td><code>getInstance(TimeZone zone, Locale aLocale)</code>     使用指定时区和语言环境获得一个日历</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>abstract  int</code></td>
+<td><code>getLeastMaximum(int field)</code>    返回此 <code>Calendar</code> 实例给定日历字段的最低的最大值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>abstract  int</code></td>
+<td><code>getMaximum(int field)</code>    返回此 <code>Calendar</code> 实例给定日历字段的最大值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>getMinimalDaysInFirstWeek()</code>     获取一年中第一个星期所需的最少天数，例如，如果定义第一个星期包含一年第一个月的第一天，则此方法将返回 1</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>abstract  int</code></td>
+<td><code>getMinimum(int field)</code>    返回此 <code>Calendar</code> 实例给定日历字段的最小值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>Date</code></td>
+<td><code>getTime()</code>    返回一个表示此 <code>Calendar</code> 时间值（从历元至现在的毫秒偏移量）的 <code>Date</code> 对象</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>long</code></td>
+<td><code>getTimeInMillis()</code>    返回此 Calendar 的时间值，以毫秒为单位</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>TimeZone</code></td>
+<td><code>getTimeZone()</code>    获得时区</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code></td>
+<td><code>hashCode()</code>    返回该此日历的哈希码</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>protected  int</code></td>
+<td><code>internalGet(int field)</code>    返回给定日历字段的值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>isLenient()</code>    判断日期/时间的解释是否为宽松的</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td><code>isSet(int field)</code>    确定给定日历字段是否已经设置了一个值，其中包括因为调用 <code>get</code> 方法触发内部字段计算而导致已经设置该值的情况</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>abstract  void</code></td>
+<td><code>roll(int field, boolean up)</code>    在给定的时间字段上添加或减去（上/下）单个时间单元，不更改更大的字段</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>roll(int field, int amount)</code>    向指定日历字段添加指定（有符号的）时间量，不更改更大的字段</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>set(int field, int value)</code>    将给定的日历字段设置为给定值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>set(int year, int month, int date)</code>    设置日历字段 <code>YEAR</code>、<code>MONTH</code> 和 <code>DAY_OF_MONTH</code> 的值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>set(int year, int month, int date, int hourOfDay, int minute)</code>    设置日历字段 <code>YEAR</code>、<code>MONTH</code>、<code>DAY_OF_MONTH</code>、<code>HOUR_OF_DAY</code> 和 <code>MINUTE</code> 的值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>set(int year, int month, int date, int hourOfDay, int minute, int second)</code>    设置字段 <code>YEAR</code>、<code>MONTH</code>、<code>DAY_OF_MONTH</code>、<code>HOUR</code>、<code>MINUTE</code> 和 <code>SECOND</code> 的值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setFirstDayOfWeek(int value)</code>    设置一星期的第一天是哪一天；例如，在美国，这一天是 <code>SUNDAY</code>，而在法国，这一天是 <code>MONDAY</code></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setLenient(boolean lenient)</code>    指定日期/时间解释是否是宽松的</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setMinimalDaysInFirstWeek(int value)</code>    设置一年中第一个星期所需的最少天数，例如，如果定义第一个星期包含一年第一个月的第一天，则使用值 1 调用此方法</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setTime(Date date)</code>    使用给定的 <code>Date</code> 设置此 Calendar 的时间</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setTimeInMillis(long millis)</code>    用给定的 long 值设置此 Calendar 的当前时间值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>void</code></td>
+<td><code>setTimeZone(TimeZone value)</code>    使用给定的时区值来设置时区</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>String</code></td>
+<td><code>toString()</code>    返回此日历的字符串表示形式</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Math"><a href="#Math" class="headerlink" title="Math"></a>Math</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> d = Math.ceil(<span class="number">6.53</span>); <span class="comment">//ceil返回大于指定数据的最小整数。</span></span><br><span class="line"><span class="keyword">double</span> d1 = Math.floor(<span class="number">5.84</span>); <span class="comment">//floor返回小于指定数据的最大整数。</span></span><br><span class="line"><span class="keyword">long</span> l = Math.round(<span class="number">15.33</span>); <span class="comment">//四舍五入</span></span><br><span class="line"><span class="keyword">double</span> d2 = Math.pow(<span class="number">2</span>,<span class="number">3</span>); <span class="comment">//2的3次幂</span></span><br><span class="line"><span class="comment">//产生随机数</span></span><br><span class="line">Random r = <span class="keyword">new</span> Random();</span><br><span class="line"><span class="keyword">int</span> d = r.necxtInt(<span class="number">10</span>) + <span class="number">1</span>;<span class="comment">//1~10的随机数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> d = (<span class="keyword">int</span>)Math.random() * <span class="number">10</span> + <span class="number">1</span>;<span class="comment">//1~10的随机数</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">字段摘要</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>E</code>    比任何其他值都更接近 <em>e</em>（即自然对数的底数）的 <code>double</code> 值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>PI</code>    比任何其他值都更接近 <em>pi</em>（即圆的周长与直径之比）的 <code>double</code> 值</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">方法摘要</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>abs(double a)</code>    返回 <code>double</code> 值的绝对值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>abs(float a)</code>    返回 <code>float</code> 值的绝对值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>abs(int a)</code>    返回 <code>int</code> 值的绝对值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static long</code></td>
+<td><code>abs(long a)</code>    返回 <code>long</code> 值的绝对值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>acos(double a)</code>    返回一个值的反余弦；返回的角度范围在 0.0 到 <em>pi</em> 之间</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>asin(double a)</code>    返回一个值的反正弦；返回的角度范围在 -<em>pi</em>/2 到 <em>pi</em>/2 之间</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>atan(double a)</code>    返回一个值的反正切；返回的角度范围在 -<em>pi</em>/2 到 <em>pi</em>/2 之间</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>atan2(double y, double x)</code>    将矩形坐标 (<code>x</code>, <code>y</code>) 转换成极坐标 (r, <em>theta</em>)，返回所得角 <em>theta</em></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>cbrt(double a)</code>    返回 <code>double</code> 值的立方根</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>ceil(double a)</code>    返回最小的（最接近负无穷大）<code>double</code> 值，该值大于等于参数，并等于某个整数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>copySign(double magnitude, double sign)</code>    返回带有第二个浮点参数符号的第一个浮点参数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>copySign(float magnitude, float sign)</code>    返回带有第二个浮点参数符号的第一个浮点参数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>cos(double a)</code>    返回角的三角余弦</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>cosh(double x)</code>    返回 <code>double</code> 值的双曲线余弦</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>exp(double a)</code>    返回欧拉数 <em>e</em> 的 <code>double</code> 次幂的值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>expm1(double x)</code>    返回 <em>e</em><sup><code>x</code></sup> -1</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>floor(double a)</code>    返回最大的（最接近正无穷大）<code>double</code> 值，该值小于等于参数，并等于某个整数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>getExponent(double d)</code>    返回 <code>double</code> 表示形式中使用的无偏指数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>getExponent(float f)</code>    返回 <code>float</code> 表示形式中使用的无偏指数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>hypot(double x, double y)</code>    返回 sqrt(<em>x</em><sup>2</sup> +<em>y</em><sup>2</sup>)，没有中间溢出或下溢</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>IEEEremainder(double f1, double f2)</code>    按照 IEEE 754 标准的规定，对两个参数进行余数运算</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>log(double a)</code>    返回 <code>double</code> 值的自然对数（底数是 <em>e</em>）</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>log10(double a)</code>    返回 <code>double</code> 值的底数为 10 的对数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>log1p(double x)</code>    返回参数与 1 之和的自然对数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>max(double a, double b)</code>    返回两个 <code>double</code> 值中较大的一个</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>max(float a, float b)</code>    返回两个 <code>float</code> 值中较大的一个</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>max(int a, int b)</code>    返回两个 <code>int</code> 值中较大的一个</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static long</code></td>
+<td><code>max(long a, long b)</code>    返回两个 <code>long</code> 值中较大的一个</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>min(double a, double b)</code>    返回两个 <code>double</code> 值中较小的一个</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>min(float a, float b)</code>    返回两个 <code>float</code> 值中较小的一个</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>min(int a, int b)</code>    返回两个 <code>int</code> 值中较小的一个</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static long</code></td>
+<td><code>min(long a, long b)</code>    返回两个 <code>long</code> 值中较小的一个</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>nextAfter(double start, double direction)</code>    返回第一个参数和第二个参数之间与第一个参数相邻的浮点数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>nextAfter(float start, double direction)</code>    返回第一个参数和第二个参数之间与第一个参数相邻的浮点数</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>nextUp(double d)</code>    返回 <code>d</code> 和正无穷大之间与 <code>d</code> 相邻的浮点值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>nextUp(float f)</code>    返回 <code>f</code> 和正无穷大之间与 <code>f</code> 相邻的浮点值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>pow(double a, double b)</code>    返回第一个参数的第二个参数次幂的值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>random()</code>    返回带正号的 <code>double</code> 值，该值大于等于 <code>0.0</code> 且小于 <code>1.0</code></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>rint(double a)</code>    返回最接近参数并等于某一整数的 <code>double</code> 值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static long</code></td>
+<td><code>round(double a)</code>    返回最接近参数的 <code>long</code></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static int</code></td>
+<td><code>round(float a)</code>    返回最接近参数的 <code>int</code></td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>scalb(double d, int scaleFactor)</code>    返回 <code>d</code> × 2<sup><code>scaleFactor</code></sup>，其舍入方式如同将一个正确舍入的浮点值乘以 double 值集合中的一个值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>scalb(float f, int scaleFactor)</code>    返回 <code>f</code> × 2<sup><code>scaleFactor</code></sup>，其舍入方式如同将一个正确舍入的浮点值乘以 float 值集合中的一个值</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>signum(double d)</code>    返回参数的符号函数；如果参数为 0，则返回 0；如果参数大于 0，则返回 1.0；如果参数小于 0，则返回 -1.0</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>signum(float f)</code>    返回参数的符号函数；如果参数为 0，则返回 0；如果参数大于 0，则返回 1.0；如果参数小于 0，则返回 -1.0</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>sin(double a)</code>    返回角的三角正弦</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>sinh(double x)</code>    返回 <code>double</code> 值的双曲线正弦</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>sqrt(double a)</code>    返回正确舍入的 <code>double</code> 值的正平方根</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>tan(double a)</code>    返回角的三角正切</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>tanh(double x)</code>    返回 <code>double</code> 值的双曲线余弦</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>toDegrees(double angrad)</code>    将用弧度表示的角转换为近似相等的用角度表示的角</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>toRadians(double angdeg)</code>    将用角度表示的角转换为近似相等的用弧度表示的角</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static double</code></td>
+<td><code>ulp(double d)</code>    返回参数的 ulp 大小</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>static float</code></td>
+<td><code>ulp(float f)</code>    返回参数的 ulp 大小</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2015/08/02/Java之Java中的常用类/" title="Java之Java中的常用类">https://cj5785.com/2015/08/02/Java之Java中的常用类/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/System/" rel="tag"># System</a>
+          
+            <a href="/tags/Runtime/" rel="tag"># Runtime</a>
+          
+            <a href="/tags/Date/" rel="tag"># Date</a>
+          
+            <a href="/tags/Calendar/" rel="tag"># Calendar</a>
+          
+            <a href="/tags/Math/" rel="tag"># Math</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/01/Java之泛型/" rel="next" title="Java之泛型">
+                <i class="fa fa-chevron-left"></i> Java之泛型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/03/Java之IO/" rel="prev" title="Java之IO">
+                Java之IO <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#System"><span class="nav-number">1.</span> <span class="nav-text">System</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Runtime"><span class="nav-number">2.</span> <span class="nav-text">Runtime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Date"><span class="nav-number">3.</span> <span class="nav-text">Date</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Calendar"><span class="nav-number">4.</span> <span class="nav-text">Calendar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Math"><span class="nav-number">5.</span> <span class="nav-text">Math</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2015/08/02/Java之Java中的常用类/';
+          this.page.identifier = '2015/08/02/Java之Java中的常用类/';
+          this.page.title = 'Java之Java中的常用类';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

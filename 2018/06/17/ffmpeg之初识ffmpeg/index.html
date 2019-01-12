@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="windows,ffmpeg,音频,视频,基础知识,视频解码器,SDL,视频播放器,MFC,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="ffmpeg用来对音视频进行处理，那么在使用ffmpeg前就需要ffmpeg有一个大概的了解，这里使用雷神的ppt素材进行整理，以便于复习">
+<meta name="keywords" content="windows,ffmpeg,音频,视频,基础知识,视频解码器,SDL,视频播放器,MFC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ffmpeg之初识ffmpeg">
+<meta property="og:url" content="https://cj5785.com/2018/06/17/ffmpeg之初识ffmpeg/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="ffmpeg用来对音视频进行处理，那么在使用ffmpeg前就需要ffmpeg有一个大概的了解，这里使用雷神的ppt素材进行整理，以便于复习">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-%E5%B0%81%E8%A3%85%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-MPEG2-TS.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-flv.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-H.264.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-AAC.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-RGB24.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-YUV.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-PCM.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-sws_scale.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8BSDL%E6%98%BE%E7%A4%BA-SDL%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8BSDL%E6%98%BE%E7%A4%BA-SDL%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8BSDL%E6%98%BE%E7%A4%BA-SDL%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png">
+<meta property="og:updated_time" content="2018-09-11T07:02:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ffmpeg之初识ffmpeg">
+<meta name="twitter:description" content="ffmpeg用来对音视频进行处理，那么在使用ffmpeg前就需要ffmpeg有一个大概的了解，这里使用雷神的ppt素材进行整理，以便于复习">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E6%B5%81%E7%A8%8B.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/06/17/ffmpeg之初识ffmpeg/">
+
+
+
+
+
+  <title>ffmpeg之初识ffmpeg | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/06/17/ffmpeg之初识ffmpeg/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ffmpeg之初识ffmpeg</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-17T20:39:33+08:00">
+                2018-06-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/ffmpeg/" itemprop="url" rel="index">
+                    <span itemprop="name">ffmpeg</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/17/ffmpeg之初识ffmpeg/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/17/ffmpeg之初识ffmpeg/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>ffmpeg用来对音视频进行处理，那么在使用ffmpeg前就需要ffmpeg有一个大概的了解，这里使用雷神的ppt素材进行整理，以便于复习<br><a id="more"></a></p>
+<h2 id="音视频基础知识"><a href="#音视频基础知识" class="headerlink" title="音视频基础知识"></a>音视频基础知识</h2><h3 id="视频播放器的原理"><a href="#视频播放器的原理" class="headerlink" title="视频播放器的原理"></a>视频播放器的原理</h3><ul>
+<li><p>播放视频的流程大致如下：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E6%B5%81%E7%A8%8B.png" alt=""></p>
+</li>
+<li><p>常用播放器</p>
+<ul>
+<li>跨平台<ul>
+<li><code>VLC,Mplayer,ffplay等</code></li>
+</ul>
+</li>
+<li>Windows平台<ul>
+<li><code>完美解码，终极解码，暴风影音</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>信息查看工具</p>
+<ul>
+<li>综合信息查看：<code>MediaInfo</code></li>
+<li>二进制信息查看：<code>UltraEdit</code></li>
+<li>单项详细信息分析<ul>
+<li>封装格式：<code>Elecard Format Analyzer</code></li>
+<li>视频编码数据：<code>Elecard Stream Eye</code></li>
+<li>视频像素数据：<code>YUV Player</code></li>
+<li>音频采样数据：<code>Adobe Audition</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="封装格式"><a href="#封装格式" class="headerlink" title="封装格式"></a>封装格式</h3><p>封装格式的作用：视频码流和音频码流按照一定的格式存储在一个文件中<br>封装格式分析工具：<code>Elecard Format Analyzer</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-%E5%B0%81%E8%A3%85%E6%A0%BC%E5%BC%8F.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>推出机构</th>
+<th>目前使用领域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AVI</code></td>
+<td><code>Microsoft Inc.</code></td>
+<td><code>BT下载影视</code></td>
+</tr>
+<tr>
+<td><code>MP4</code></td>
+<td><code>MPEG</code></td>
+<td><code>互联网视频网站</code></td>
+</tr>
+<tr>
+<td><code>TS</code></td>
+<td><code>MPEG</code></td>
+<td><code>IPTV，数字电视</code></td>
+</tr>
+<tr>
+<td><code>FLV</code></td>
+<td><code>Adobe Inc.</code></td>
+<td><code>互联网视频网站</code></td>
+</tr>
+<tr>
+<td><code>MKV</code></td>
+<td><code>CoreCodec Inc.</code></td>
+<td><code>互联网视频网站</code></td>
+</tr>
+<tr>
+<td><code>RMVB</code></td>
+<td><code>Real Networks Inc.</code></td>
+<td><code>BT下载影视</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>MPEG2-TS格式简介<br>不包含文件头。数据大小固定（<code>188Byte</code>）的<code>TS Packet</code>构成<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-MPEG2-TS.png" alt=""></p>
+</li>
+<li><p>FLV格式简介<br>包含文件头。数据由大小不固定的<code>Tag</code>构成<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-flv.png" alt=""></p>
+</li>
+</ul>
+<h3 id="视频编码数据"><a href="#视频编码数据" class="headerlink" title="视频编码数据"></a>视频编码数据</h3><ul>
+<li><p>视频编码的作用：将视频像素数据（<code>RGB</code>，<code>YUV</code>等）压缩成为视频码流，从而降低视频的数据量</p>
+</li>
+<li><p>视频编码分析工具：<code>Elecard Stream Eye</code></p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>推出机构</th>
+<th>推出时间</th>
+<th>目前使用领域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HEVC(H.265)</code></td>
+<td><code>MPEG/ITU-T</code></td>
+<td><code>2013</code></td>
+<td><code>研发中</code></td>
+</tr>
+<tr>
+<td><code>H.264</code></td>
+<td><code>MPEG/ITU-T</code></td>
+<td><code>2003</code></td>
+<td><code>各个领域</code></td>
+</tr>
+<tr>
+<td><code>MPEG4</code></td>
+<td><code>MPEG</code></td>
+<td><code>2001</code></td>
+<td><code>不温不火</code></td>
+</tr>
+<tr>
+<td><code>MPEG2</code></td>
+<td><code>MPEG</code></td>
+<td><code>1994</code></td>
+<td><code>数字电视</code></td>
+</tr>
+<tr>
+<td><code>VP9</code></td>
+<td><code>Google</code></td>
+<td><code>2013</code></td>
+<td><code>研发中</code></td>
+</tr>
+<tr>
+<td><code>VP8</code></td>
+<td><code>Google</code></td>
+<td><code>2008</code></td>
+<td><code>不普及</code></td>
+</tr>
+<tr>
+<td><code>VC-1</code></td>
+<td><code>Microsoft Inc.</code></td>
+<td><code>2006</code></td>
+<td><code>微软平台</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>H.264格式简介<br>数据由大小不固定的NALU构成<br>最常见的情况下，1个<code>NALU</code>存储了1帧画面的压缩编码后的数据<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-H.264.png" alt=""></p>
+</li>
+<li><p>H.264压缩方法<br>比较复杂。包含了帧内预测、帧间预测、熵编码、环路滤波等环节构成<br>可以将图像数据压缩100倍以上</p>
+</li>
+</ul>
+<h3 id="音频编码数据"><a href="#音频编码数据" class="headerlink" title="音频编码数据"></a>音频编码数据</h3><p>音频编码的作用：将音频采样数据（<code>PCM</code>等）压缩成为音频码流，从而降低音频的数据量</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>推出机构</th>
+<th>推出时间</th>
+<th>目前使用领域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AAC</code></td>
+<td><code>MPEG</code></td>
+<td><code>1997</code></td>
+<td><code>各个领域（新）</code></td>
+</tr>
+<tr>
+<td><code>AC-3</code></td>
+<td><code>Dolby Inc.</code></td>
+<td><code>1992</code></td>
+<td><code>电影</code></td>
+</tr>
+<tr>
+<td><code>MP3</code></td>
+<td><code>MPEG</code></td>
+<td><code>1993</code></td>
+<td><code>各个领域（旧）</code></td>
+</tr>
+<tr>
+<td><code>WMA</code></td>
+<td><code>Microsoft Inc.</code></td>
+<td><code>1999</code></td>
+<td><code>微软平台</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>AAC格式简介<br>数据由大小不固定的<code>ADTS</code>构成<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-AAC.png" alt=""></p>
+</li>
+<li><p>AAC压缩方法<br>比较复杂<br>可以将音频数据压缩10倍以上</p>
+</li>
+</ul>
+<h3 id="视频像素数据"><a href="#视频像素数据" class="headerlink" title="视频像素数据"></a>视频像素数据</h3><ul>
+<li><p>视频像素数据作用：保存了屏幕上每个像素点的像素值</p>
+</li>
+<li><p>格式：<br>常见的像素数据格式有<code>RGB24</code>，<code>RGB32</code>，<code>YUV420P</code>，<code>YUV422P</code>，<code>YUV444P</code>等<br>压缩编码中一般使用的是<code>YUV</code>格式的像素数据，最为常见的格式为<code>YUV420P</code></p>
+</li>
+<li><p>特点<br>频像素数据体积很大，一般情况下1小时高清视频的RGB24格式的数据体积为：<br><code>3600*25*1920*1080*3=559.9GByte</code><br>PS:这里假定帧率为<code>25Hz</code>,取样精度<code>8bit</code></p>
+</li>
+<li><p>YUV格式像素数据查看工具：<code>YUV Player</code></p>
+</li>
+<li><p>RGB格式简介<br>Red、Green、Blue三种颜色，可以混合成世界上所有的颜色<br>彩色图像中每个点，由R、G、B三个分量组成<br>以<code>RGB24</code>为例，图像像素数据的存储方式如下：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-RGB24.png" alt=""><br>从图中可以看出，<code>RGB24</code>依次存储了每个像素点的R、G、B信息<br>PS：BMP文件中存储的就是RGB格式的像素数据</p>
+</li>
+<li><p>YUV格式简介<br>相关实验表明，人眼对亮度敏感而对色度不敏感。因而可以将亮度信息和色度信息分离，并对色度信息采用更“狠”一点的压缩方案，从而提高压缩效率<br>YUV格式中，Y只包含亮度信息，而UV只包含色度信息<br>以<code>YUV420P</code>为例，图像像素数据的存储方式如图所示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-YUV.png" alt=""><br>从图中可以看出，<code>YUV420P</code>首先存储了整张图像的Y信息，然后存储整张图像的U信息，最后存储了整张图像的V信息</p>
+</li>
+</ul>
+<h3 id="音频采样数据"><a href="#音频采样数据" class="headerlink" title="音频采样数据"></a>音频采样数据</h3><ul>
+<li><p>音频采样数据作用：保存了音频中每个采样点的值</p>
+</li>
+<li><p>特点<br>音频采样数据体积很大，一般情况下一首4分钟的PCM格式的歌曲体积为：<br><code>4*60*44100*2*2=42.3MByte</code><br>PS:这里假定采样率为<code>44100Hz</code>，采样精度为<code>16bit</code></p>
+</li>
+<li><p>音频采样数据查看工具：<code>Adobe Audition</code></p>
+</li>
+<li><p>PCM格式简介<br>单声道的情况下按照顺序存储每个采样点的数据<br>双声道的情况下按照“左右、左右”的顺序存储每个采样点两个声道的数据<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-PCM.png" alt=""></p>
+</li>
+</ul>
+<h2 id="在Windows下使用"><a href="#在Windows下使用" class="headerlink" title="在Windows下使用"></a>在Windows下使用</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
+<li><p>使用广泛<br>使用FFmpeg作为内核的视频播放器<br><code>Mplayer，射手播放器，暴风影音，KMPlayer，QQ影音...</code></p>
+</li>
+<li><p>使用FFmpeg作为内核的转码器<br><code>格式工厂，狸窝视频转换器，暴风转码...</code></p>
+</li>
+</ul>
+<p>总而言之，FFmpeg是视频行业中的”瑞士军刀”</p>
+<ul>
+<li>特点<br>基于命令行：FFmpeg界面不太人性化，操作相对复杂，但是也更加灵活<br>开源：可以吸引全世界优秀的开发者加入其中进行开发</li>
+</ul>
+<h3 id="FFmpeg命令行工具的获取"><a href="#FFmpeg命令行工具的获取" class="headerlink" title="FFmpeg命令行工具的获取"></a>FFmpeg命令行工具的获取</h3><ul>
+<li><p>下载地址<br>访问<code>FFmpeg官网</code><a href="http://ffmpeg.org" target="_blank" rel="noopener"><code>ffmpeg官网</code></a> → <code>选择Download</code> → <code>选择 Windows Package</code> → <code>进入Zeranoe FFmpeg网站</code><br>注意不要直接从FFmpeg官网下载源代码</p>
+</li>
+<li><p>版本说明<br><code>Zeranoe</code>网站中的FFmpeg分为3个版本：<br><code>Static</code>：只包含3个体积很大的<code>exe</code><br><code>Shared</code>：除了3个体积较小的<code>exe</code>之外，还包含了<code>dll</code>动态库文件<br><code>Dev</code>：只包含了开发用的头文件（<code>*.h</code>）和导入库文件（<code>*.lib</code>）<br>PS: 命令行使用的时候下载<code>Static</code>或者<code>Shared</code>版本就可以了</p>
+</li>
+<li><p>使用<br>将下载下来的压缩包解压到任意目录（例如<code>D:\ffmpeg</code>）<br>打开命令行工具，切换到<code>ffmpeg</code>的<code>bin</code>文件夹<br>命令行中输入<code>ffmpeg.exe</code>，查看弹出的信息</p>
+</li>
+</ul>
+<h3 id="ffmpeg-exe的使用"><a href="#ffmpeg-exe的使用" class="headerlink" title="ffmpeg.exe的使用"></a>ffmpeg.exe的使用</h3><ul>
+<li><p>命令格式<br>功能  <code>ffmpeg.exe用于视频的转码</code><br>最简单的命令 <code>ffmpeg -i input.avi -b:v 640k output.ts</code><br>该命令将当前文件夹下的<code>input.avi</code>文件转换为<code>output.ts</code>文件，并将<code>output.ts</code>文件视频的码率设置为<code>640kbps</code></p>
+</li>
+<li><p>命令格式<br><code>ffmpeg -i {输入文件路径} -b:v {输出视频码率} {输出文件路径}</code><br>所有的参数都是以键值对的形式指定的。例如输入文件参数是”<code>-i</code>“，而参数值是文件路径；输出视频码率参数是”<code>-b:v</code>“，而参数值是视频的码率值。但是注意位于最后面的输出文件路径前面不包含参数名称</p>
+</li>
+<li><p>命令参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">参数</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-h</code></td>
+<td style="text-align:center"><code>帮助</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-i filename</code></td>
+<td style="text-align:center"><code>输入文件</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-t duration</code></td>
+<td style="text-align:center"><code>设置处理时间，格式为hh:mm:ss</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-ss position</code></td>
+<td style="text-align:center"><code>设置起始时间，格式为hh:mm:ss</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-b:v bitrate</code></td>
+<td style="text-align:center"><code>设置视频码率</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-b:a bitrate</code></td>
+<td style="text-align:center"><code>设置音频码率</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-r fps</code></td>
+<td style="text-align:center"><code>设置帧率</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-s wxh</code></td>
+<td style="text-align:center"><code>设置帧大小，格式为WxH</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-c:v codec</code></td>
+<td style="text-align:center"><code>设置视频编码器</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-c:a codec</code></td>
+<td style="text-align:center"><code>设置音频编码器</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-ar freq</code></td>
+<td style="text-align:center"><code>设置音频采样率</code></td>
+</tr>
+</tbody>
+</table>
+<p>PS：详细的参数可以访问<a href="http://ffmpeg.org/ffmpeg.html" target="_blank" rel="noopener">http://ffmpeg.org/ffmpeg.html</a> </p>
+<h3 id="ffplay-exe的使用"><a href="#ffplay-exe的使用" class="headerlink" title="ffplay.exe的使用"></a>ffplay.exe的使用</h3><ul>
+<li><p>命令格式<br>功能  <code>ffplay.exe用于视频的播放</code><br>最简单的命令 <code>ffplay input.avi</code><br>该命令将播放当前文件夹下的<code>input.avi</code>文件</p>
+</li>
+<li><p>命令格式<br><code>ffplay {输入文件路径}</code><br><code>ffplay.exe</code>的参数格式和<code>ffmpeg.exe</code>是类似的。所有的参数都是以键值对的形式指定的（由于不包含输出文件，所以只能指定输入参数）。注意位于最后面的输入文件路径前面不包含参数名称</p>
+</li>
+<li><p>快捷键</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">快捷键</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">q, ESC</td>
+<td style="text-align:center">退出</td>
+</tr>
+<tr>
+<td style="text-align:center">f</td>
+<td style="text-align:center">全屏</td>
+</tr>
+<tr>
+<td style="text-align:center">p, 空格</td>
+<td style="text-align:center">暂停</td>
+</tr>
+<tr>
+<td style="text-align:center">鼠标点击屏幕</td>
+<td style="text-align:center">跳转到指定位置</td>
+</tr>
+</tbody>
+</table>
+<p>PS：详细的参数可以访问<a href="http://ffmpeg.org/ffplay.html" target="_blank" rel="noopener">http://ffmpeg.org/ffplay.html</a></p>
+<h2 id="视频解码器"><a href="#视频解码器" class="headerlink" title="视频解码器"></a>视频解码器</h2><h3 id="视频解码知识"><a href="#视频解码知识" class="headerlink" title="视频解码知识"></a>视频解码知识</h3><ul>
+<li><p>纯净的视频解码流程<br><code>压缩编码数据 -&gt; 像素数据</code><br>例如解码<code>H.264</code>，就是”<code>H.264码流 -&gt; YUV</code>“</p>
+</li>
+<li><p>一般的视频解码流程<br>视频码流一般存储在一定的封装格式（例如<code>MP4</code>、<code>AVI</code>等）中。封装格式中通常还包含音频码流等内容<br>对于封装格式中的视频，需要先从封装格式中提取中视频码流，然后再进行解码<br>例如解码<code>MKV</code>格式的视频文件，就是”<code>MKV -&gt; H.264码流 -&gt; YUV</code>“</p>
+</li>
+</ul>
+<h3 id="VC下FFmpeg开发环境的搭建"><a href="#VC下FFmpeg开发环境的搭建" class="headerlink" title="VC下FFmpeg开发环境的搭建"></a>VC下FFmpeg开发环境的搭建</h3><ul>
+<li><p>新建控制台工程<br><code>打开VC++</code><br><code>文件 -&gt; 新建 -&gt; 项目 -&gt; Win32控制台应用程序</code></p>
+</li>
+<li><p>拷贝FFmpeg开发文件<br><code>头文件（*.h）拷贝至项目文件夹的include子文件夹下</code><br><code>导入库文件（*.lib）拷贝至项目文件夹的lib子文件夹下</code><br><code>动态库文件（*.dll）拷贝至项目文件夹下</code><br>PS：如果直接使用官网上下载的<code>FFmpeg</code>开发文件。则可能还需要将<code>MinGW</code>安装目录中的<code>inttypes.h</code>，<code>stdint.h</code>，<code>_mingw.h</code>三个文件拷贝至项目文件夹的<code>include</code>子文件夹下</p>
+</li>
+<li><p>配置开发文件<br>打开属性面板<br><code>解决方案资源管理器 -&gt; 右键单击项目 -&gt; 属性</code><br>头文件配置<br><code>配置属性 -&gt; C/C++ -&gt; 常规 -&gt; 附加包含目录，输入&quot;include&quot;（刚才拷贝头文件的目录）</code><br>导入库配置<br><code>配置属性 -&gt; 链接器 -&gt; 常规 -&gt; 附加库目录，输入&quot;lib&quot;（刚才拷贝库文 件的目录</code><br><code>配置属性 -&gt; 链接器 -&gt; 输入 -&gt; 附加依赖项，输入&quot;avcodec.lib; avformat.lib; avutil.lib; avdevice.lib; avfilter.lib; postproc.lib; swresample.lib; swscale.lib&quot;（导入库的文件名）</code><br>动态库不用配置 </p>
+</li>
+<li><p>测试<br>创建源代码文件<br><code>在工程中创建一个包含</code>main()<code>函数的C/C++文件（如果已经有了可以跳过这一步）</code><br>包含头文件<br>如果是C语言中使用FFmpeg，则直接使用下面代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">"libavcodec/avcodec.h"</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果是C++语言中使用FFmpeg，则使用下面代码<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __STDC_CONSTANT_MACROS</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"libavcodec/avcodec.h"</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>main()</code>中调用一个FFmpeg的接口函数<br>例如下面代码打印出了FFmpeg的配置信息<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s"</span>, avcodec_configuration());</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果运行无误，则代表FFmpeg已经配置完成</p>
+<h3 id="FFmpeg库简介-FFmpeg一共包含8个库"><a href="#FFmpeg库简介-FFmpeg一共包含8个库" class="headerlink" title="FFmpeg库简介 FFmpeg一共包含8个库"></a>FFmpeg库简介 FFmpeg一共包含8个库</h3><p><code>avcodec</code>：编解码（最重要的库）<br><code>avformat</code>：封装格式处理<br><code>avfilter</code>：滤镜特效处理<br><code>avdevice</code>：各种设备的输入输出<br><code>avutil</code>：工具库（大部分库都需要这个库的支持）<br><code>postproc</code>：后加工<br><code>swresample</code>：音频采样数据格式转换<br><code>swscale</code>：视频像素数据格式转换</p>
+<h3 id="FFmpeg解码的函数"><a href="#FFmpeg解码的函数" class="headerlink" title="FFmpeg解码的函数"></a>FFmpeg解码的函数</h3><ul>
+<li><p>FFmpeg解码的流程图如下所示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt=""></p>
+</li>
+<li><p>FFmpeg解码函数简介<br><code>av_register_all()</code>：注册所有组件<br><code>avformat_open_input()</code>：打开输入视频文件<br><code>avformat_find_stream_info()</code>：获取视频文件信息<br><code>avcodec_find_decoder()</code>：查找解码器<br><code>avcodec_open2()</code>：打开解码器<br><code>av_read_frame()</code>：从输入文件读取一帧压缩数据<br><code>avcodec_decode_video2()</code>：解码一帧压缩数据<br><code>avcodec_close()</code>：关闭解码器<br><code>avformat_close_input()</code>：关闭输入视频文件</p>
+</li>
+</ul>
+<h3 id="FFmpeg解码的数据结构"><a href="#FFmpeg解码的数据结构" class="headerlink" title="FFmpeg解码的数据结构"></a>FFmpeg解码的数据结构</h3><ul>
+<li><p>FFmpeg解码的数据结构如下所示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt=""></p>
+</li>
+<li><p>FFmpeg数据结构简介<br><code>AVFormatContext</code>：封装格式上下文结构体，也是统领全局的结构体，保存了视频文件封装格式相关信息<br><code>AVInputFormat</code>：每种封装格式（例如<code>FLV</code>, <code>MKV</code>, <code>MP4</code>, <code>AVI</code>）对应一个该结构体<br><code>AVStream</code>：视频文件中每个视频（音频）流对应一个该结构体<br><code>AVCodecContext</code>：编码器上下文结构体，保存了视频（音频）编解码相关信息<br><code>AVCodec</code>：每种视频（音频）编解码器(例如<code>H.264</code>解码器)对应一个该结构体<br><code>AVPacket</code>：存储一帧压缩编码数据<br><code>AVFrame</code>：存储一帧解码后像素（采样）数据</p>
+</li>
+<li><p>FFmpeg数据结构分析</p>
+<ul>
+<li><code>AVFormatContext</code><ul>
+<li><code>iformat</code>：输入视频的<code>AVInputFormat</code></li>
+<li><code>nb_streams</code>：输入视频的<code>AVStream</code>个数</li>
+<li><code>streams</code>：输入视频的<code>AVStream []</code>数组</li>
+<li><code>duration</code>：输入视频的时长（以微秒为单位）</li>
+<li><code>bit_rate</code>：输入视频的码率</li>
+</ul>
+</li>
+<li><code>AVInputFormat</code><ul>
+<li><code>name</code>：封装格式名称</li>
+<li><code>long_name</code>：封装格式的长名称</li>
+<li><code>extensions</code>：封装格式的扩展名</li>
+<li><code>id</code>：封装格式ID</li>
+<li>一些封装格式处理的接口函数 </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>FFmpeg数据结构分析</p>
+<ul>
+<li><code>AVStream</code><ul>
+<li><code>id</code>：序号</li>
+<li><code>codec</code>：该流对应的<code>AVCodecContext</code></li>
+<li><code>time_base</code>：该流的时基</li>
+<li><code>r_frame_rate</code>：该流的帧率</li>
+</ul>
+</li>
+<li><code>AVCodecContext</code><ul>
+<li><code>codec</code>：编解码器的<code>AVCodec</code></li>
+<li><code>width, height</code>：图像的宽高（只针对视频）</li>
+<li><code>pix_fmt</code>：像素格式（只针对视频）</li>
+<li><code>sample_rate</code>：采样率（只针对音频）</li>
+<li><code>channels</code>：声道数（只针对音频）</li>
+<li><code>sample_fmt</code>：采样格式（只针对音频）</li>
+</ul>
+</li>
+<li><code>AVCodec</code><ul>
+<li><code>name</code>：编解码器名称</li>
+<li><code>long_name</code>：编解码器长名称</li>
+<li><code>type</code>：编解码器类型</li>
+<li><code>id</code>：编解码器ID</li>
+<li>一些编解码的接口函数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>FFmpeg数据结构分析</p>
+<ul>
+<li><code>AVPacket</code><ul>
+<li><code>pts</code>：显示时间戳</li>
+<li><code>dts</code>：解码时间戳</li>
+<li><code>data</code>：压缩编码数据</li>
+<li><code>size</code>：压缩编码数据大小</li>
+<li><code>stream_index</code>：所属的<code>AVStream</code></li>
+</ul>
+</li>
+<li><code>AVFrame</code><ul>
+<li><code>data</code>：解码后的图像像素数据（音频采样数据）</li>
+<li><code>linesize</code>：对视频来说是图像中一行像素的大小；对音频来说是整个音频帧的大小</li>
+<li><code>width, height</code>：图像的宽高（只针对视频）</li>
+<li><code>key_frame</code>：是否为关键帧（只针对视频）</li>
+<li><code>pict_type</code>：帧类型（只针对视频）。例如<code>I，P，B</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="补充小知识"><a href="#补充小知识" class="headerlink" title="补充小知识"></a>补充小知识</h3><ul>
+<li>解码后的数据为什么要经过<code>sws_scale()</code>函数处理？<br>解码后YUV格式的视频像素数据保存在<code>AVFrame</code>的<code>data[0]</code>、<code>data[1]</code>、<code>data[2]</code>中。但是这些像素值并不是连续存储的，每行有效像素之后存储了一些无效像素。以<code>亮度Y</code>数据为例，<code>data[0]</code>中一共包含了<code>linesize[0]*height</code>个数据。但是出于优化等方面的考虑，<code>linesize[0]</code>实际上并不等于宽度<code>width</code>，而是一个比宽度大一些的值。因此需要使用<code>sws_scale()</code>进行转换。转换后去除了无效数据，<code>width</code>和<code>linesize[0]</code>取值相等<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-sws_scale.png" alt=""></li>
+</ul>
+<h2 id="SDL显示"><a href="#SDL显示" class="headerlink" title="SDL显示"></a>SDL显示</h2><h3 id="视频显示知识"><a href="#视频显示知识" class="headerlink" title="视频显示知识"></a>视频显示知识</h3><ul>
+<li>视频显示的流程<br>视频显示的流程，就是将像素数据”画”在屏幕上的过程<br>例如显示YUV，就是将YUV”画”在系统的窗口中</li>
+</ul>
+<h3 id="SDL简介"><a href="#SDL简介" class="headerlink" title="SDL简介"></a>SDL简介</h3><ul>
+<li><p>作用<br><code>SDL(Simple DirectMedia Layer)</code>库的作用说白了就是封装了复杂的视音频底层交互工作，简化了视音频处理的难度</p>
+</li>
+<li><p>特点<br>跨平台<br>开源 </p>
+</li>
+<li><p>结构<br>SDL结构如下所示<br>可以看出它实际上还是调用了<code>DirectX</code>等底层的<code>API</code>完成了和硬件的交互<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8BSDL%E6%98%BE%E7%A4%BA-SDL%E7%BB%93%E6%9E%84.png" alt=""></p>
+</li>
+</ul>
+<h3 id="VC下SDL开发环境的搭建"><a href="#VC下SDL开发环境的搭建" class="headerlink" title="VC下SDL开发环境的搭建"></a>VC下SDL开发环境的搭建</h3><ul>
+<li><p>新建控制台工程<br><code>打开VC++</code><br><code>文件 -&gt; 新建 -&gt; 项目 -&gt; Win32控制台应用程序</code></p>
+</li>
+<li><p>拷贝SDL开发文件<br><code>头文件（*.h）拷贝至项目文件夹的include子文件夹下</code><br><code>导入库文件（*.lib）拷贝至项目文件夹的lib子文件夹下</code><br><code>动态库文件（*.dll）拷贝至项目文件夹下</code></p>
+</li>
+<li><p>配置开发文件<br>打开属性面板<br><code>解决方案资源管理器 -&gt; 右键单击项目 -&gt; 属性</code><br>头文件配置<br><code>配置属性 -&gt; C/C++ -&gt; 常规 -&gt; 附加包含目录，输入&quot;include&quot;（刚才拷贝文件的目录）</code><br>导入库配置<br><code>配置属性 -&gt; 链接器 -&gt; 常规 -&gt; 附加库目录，输入&quot;lib&quot;（刚才拷贝文件的目录）</code><br><code>配置属性 -&gt; 链接器 -&gt; 输入 -&gt; 附加依赖项，输入&quot;SDL2.lib; SDL2main.lib&quot;（导入库的文件名）</code><br>动态库不用配置</p>
+</li>
+<li><p>测试<br>创建源代码文件<br>在工程中创建一个包含<code>main()</code>函数的C/C++文件（如果已经有了可以跳过这一步），后续步骤在该文件中编写源代码<br>包含头文件<br>如果是C语言中使用SDL，则直接使用下面代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"SDL2/SDL.h"</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果是C++语言中使用SDL，则使用下面代码<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"SDL2/SDL.h"</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>main()</code>中调用一个SDL的接口函数<br>例如下面代码初始化了SDL<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(SDL_Init(SDL_INIT_VIDEO))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Could not initialize SDL - %s\n"</span>, SDL_GetError());</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Success init SDL"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果运行无误，则代表SDL已经配置完成</p>
+<h3 id="SDL视频显示的函数"><a href="#SDL视频显示的函数" class="headerlink" title="SDL视频显示的函数"></a>SDL视频显示的函数</h3><ul>
+<li><p>SDL视频显示的流程图如下所示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8BSDL%E6%98%BE%E7%A4%BA-SDL%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B.png" alt=""></p>
+</li>
+<li><p>SDL视频显示函数简介<br><code>SDL_Init()</code>：初始化SDL系统<br><code>SDL_CreateWindow()</code>：创建窗口<code>SDL_Window</code><br><code>SDL_CreateRenderer()</code>：创建渲染器<code>SDL_Renderer</code><br><code>SDL_CreateTexture()</code>：创建纹理<code>SDL_Texture</code><br><code>SDL_UpdateTexture()</code>：设置纹理的数据<br><code>SDL_RenderCopy()</code>：将纹理的数据拷贝给渲染器<br><code>SDL_RenderPresent()</code>：显示<br><code>SDL_Delay()</code>：工具函数，用于延时<br><code>SDL_Quit()</code>：退出SDL系统</p>
+</li>
+</ul>
+<h3 id="SDL视频显示的数据结构"><a href="#SDL视频显示的数据结构" class="headerlink" title="SDL视频显示的数据结构"></a>SDL视频显示的数据结构</h3><ul>
+<li><p>SDL视频显示的数据结构如下所示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8BSDL%E6%98%BE%E7%A4%BA-SDL%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" alt=""></p>
+</li>
+<li><p>SDL数据结构简介<br><code>SDL_Window</code>：代表了一个”窗口”<br><code>SDL_Renderer</code>：代表了一个”渲染器”<br><code>SDL_Texture</code>：代表了一个”纹理”<br><code>SDL_Rect</code>：一个简单的矩形结构</p>
+</li>
+</ul>
+<h3 id="进阶-SDL中事件和多线程"><a href="#进阶-SDL中事件和多线程" class="headerlink" title="进阶-SDL中事件和多线程"></a>进阶-SDL中事件和多线程</h3><ul>
+<li><p>SDL多线程<br>函数：<code>SDL_CreateThread()</code>：创建一个线程<br>数据结构：<code>SDL_Thread</code>：线程的句柄</p>
+</li>
+<li><p>SDL事件<br>函数<br><code>SDL_WaitEvent()</code>等待一个事件<br><code>SDL_PushEvent()</code>发送一个事件<br>数据结构<br><code>SDL_Event</code>：代表一个事件</p>
+</li>
+</ul>
+<h2 id="fffmpeg-SDL视频播放器"><a href="#fffmpeg-SDL视频播放器" class="headerlink" title="fffmpeg + SDL视频播放器"></a>fffmpeg + SDL视频播放器</h2><h3 id="FFmpeg和SDL整合实现视频播放器"><a href="#FFmpeg和SDL整合实现视频播放器" class="headerlink" title="FFmpeg和SDL整合实现视频播放器"></a>FFmpeg和SDL整合实现视频播放器</h3><ul>
+<li>整合方式<br>FFmpeg解码器实现了：<code>视频文件 -&gt; YUV</code><br>SDL视频显示实现了：<code>YUV -&gt; 屏幕</code><br>FFmpeg+SDL整合之后实现了：<code>视频文件 -&gt; YUV -&gt; 屏幕</code></li>
+</ul>
+<h3 id="进阶：脱离开发环境的独立播放器"><a href="#进阶：脱离开发环境的独立播放器" class="headerlink" title="进阶：脱离开发环境的独立播放器"></a>进阶：脱离开发环境的独立播放器</h3><ul>
+<li><code>main()</code>函数的参数<br><code>argc argv</code>：全称为<code>ARGument Counter</code>和<code>ARGument Vector</code>。其中<code>argv</code>存储了来自于命令行的参数；而<code>argc</code>存储了参数的个数<br>例如在命令行中输入<code>ffmpeg -i test.mkv test.ts</code>，则<code>argc</code>取值为4，而<code>argv[]</code>数组取值如下：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">argv [<span class="number">0</span>] = <span class="string">"ffmpeg"</span>;</span><br><span class="line">argv [<span class="number">1</span>] = <span class="string">"-i"</span>;</span><br><span class="line">argv [<span class="number">2</span>] = <span class="string">"test.mkv"</span>;</span><br><span class="line">argv [<span class="number">3</span>] = <span class="string">"test.ts"</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>动态链接库（<code>*.dll</code>）<br>动态链接库不能被编译进应用程序。因而使用应用程序的时候必须在相同目录下保存用到的动态链接库文件</p>
+<h3 id="MFC知识"><a href="#MFC知识" class="headerlink" title="MFC知识"></a>MFC知识</h3><ul>
+<li><p>创建MFC工程的方法<br><code>打开VC++</code><br><code>文件 -&gt; 新建 -&gt; 项目 -&gt; MFC应用程序</code><br><code>应用程序类型 -&gt; 基于对话框</code><br><code>取消勾选&quot;使用Unicode库&quot;（暂不详细介绍）</code></p>
+</li>
+<li><p>设置控件<br><code>找到&quot;工具箱&quot;，就可以将相应的控件拖拽至应用程序对话框中</code><br><code>常用控件有：Button，Edit Control，Static Text等</code><br><code>找到&quot;属性&quot;选项卡</code><br><code>可以在&quot;Caption&quot;属性上修改控件上的文字</code><br><code>可以在&quot;ID&quot;属性上修改控件上的ID（ID是控件的标识，不可重复）</code></p>
+</li>
+<li><p>添加消息响应函数<br><code>双击Button控件，就可以给该控件添加消息响应函数</code><br><code>在菜单栏的&quot;项目 -&gt; 类向导&quot;处，可以添加更多种类的消息响应函数</code><br><code>MFC最简单的弹出消息框的函数是AfxMessageBox(&quot;HelloWorld&quot;)</code></p>
+</li>
+</ul>
+<h3 id="FFmpeg-SDL-MFC实现图形界面视频播放器"><a href="#FFmpeg-SDL-MFC实现图形界面视频播放器" class="headerlink" title="FFmpeg + SDL + MFC实现图形界面视频播放器"></a>FFmpeg + SDL + MFC实现图形界面视频播放器</h3><ul>
+<li><p>FFmpeg解码器与MFC的整合<br>需要将视频文件路径从MFC界面上的<code>Edit Control</code>控件传递给FFmpeg解码器<br><code>GetWindowText()</code></p>
+</li>
+<li><p>SDL与MFC的整合<br>需要将SDL显示的画面绘制到MFC的<code>Picture Control</code>控件上<br><code>SDL_CreateWindowFrom()</code></p>
+</li>
+</ul>
+<p>PS：<code>SDL2</code>有一个Bug。在系统退出的时候会把显示图像的控件隐藏起来，因此需要调用该控件的<code>ShowWindow()</code>方法将控件显示出来</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/06/17/ffmpeg之初识ffmpeg/" title="ffmpeg之初识ffmpeg">https://cj5785.com/2018/06/17/ffmpeg之初识ffmpeg/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/windows/" rel="tag"># windows</a>
+          
+            <a href="/tags/ffmpeg/" rel="tag"># ffmpeg</a>
+          
+            <a href="/tags/音频/" rel="tag"># 音频</a>
+          
+            <a href="/tags/视频/" rel="tag"># 视频</a>
+          
+            <a href="/tags/基础知识/" rel="tag"># 基础知识</a>
+          
+            <a href="/tags/视频解码器/" rel="tag"># 视频解码器</a>
+          
+            <a href="/tags/SDL/" rel="tag"># SDL</a>
+          
+            <a href="/tags/视频播放器/" rel="tag"># 视频播放器</a>
+          
+            <a href="/tags/MFC/" rel="tag"># MFC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/16/NDK开发之使用现有so动态库/" rel="next" title="NDK开发之使用现有so动态库">
+                <i class="fa fa-chevron-left"></i> NDK开发之使用现有so动态库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/18/ffmpeg之ffmpeg在VS下的运用/" rel="prev" title="ffmpeg之ffmpeg在VS下的运用">
+                ffmpeg之ffmpeg在VS下的运用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#音视频基础知识"><span class="nav-number">1.</span> <span class="nav-text">音视频基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#视频播放器的原理"><span class="nav-number">1.1.</span> <span class="nav-text">视频播放器的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#封装格式"><span class="nav-number">1.2.</span> <span class="nav-text">封装格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#视频编码数据"><span class="nav-number">1.3.</span> <span class="nav-text">视频编码数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#音频编码数据"><span class="nav-number">1.4.</span> <span class="nav-text">音频编码数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#视频像素数据"><span class="nav-number">1.5.</span> <span class="nav-text">视频像素数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#音频采样数据"><span class="nav-number">1.6.</span> <span class="nav-text">音频采样数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Windows下使用"><span class="nav-number">2.</span> <span class="nav-text">在Windows下使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">2.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FFmpeg命令行工具的获取"><span class="nav-number">2.2.</span> <span class="nav-text">FFmpeg命令行工具的获取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ffmpeg-exe的使用"><span class="nav-number">2.3.</span> <span class="nav-text">ffmpeg.exe的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ffplay-exe的使用"><span class="nav-number">2.4.</span> <span class="nav-text">ffplay.exe的使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#视频解码器"><span class="nav-number">3.</span> <span class="nav-text">视频解码器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#视频解码知识"><span class="nav-number">3.1.</span> <span class="nav-text">视频解码知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VC下FFmpeg开发环境的搭建"><span class="nav-number">3.2.</span> <span class="nav-text">VC下FFmpeg开发环境的搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FFmpeg库简介-FFmpeg一共包含8个库"><span class="nav-number">3.3.</span> <span class="nav-text">FFmpeg库简介 FFmpeg一共包含8个库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FFmpeg解码的函数"><span class="nav-number">3.4.</span> <span class="nav-text">FFmpeg解码的函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FFmpeg解码的数据结构"><span class="nav-number">3.5.</span> <span class="nav-text">FFmpeg解码的数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充小知识"><span class="nav-number">3.6.</span> <span class="nav-text">补充小知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDL显示"><span class="nav-number">4.</span> <span class="nav-text">SDL显示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#视频显示知识"><span class="nav-number">4.1.</span> <span class="nav-text">视频显示知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDL简介"><span class="nav-number">4.2.</span> <span class="nav-text">SDL简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VC下SDL开发环境的搭建"><span class="nav-number">4.3.</span> <span class="nav-text">VC下SDL开发环境的搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDL视频显示的函数"><span class="nav-number">4.4.</span> <span class="nav-text">SDL视频显示的函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDL视频显示的数据结构"><span class="nav-number">4.5.</span> <span class="nav-text">SDL视频显示的数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进阶-SDL中事件和多线程"><span class="nav-number">4.6.</span> <span class="nav-text">进阶-SDL中事件和多线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fffmpeg-SDL视频播放器"><span class="nav-number">5.</span> <span class="nav-text">fffmpeg + SDL视频播放器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FFmpeg和SDL整合实现视频播放器"><span class="nav-number">5.1.</span> <span class="nav-text">FFmpeg和SDL整合实现视频播放器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进阶：脱离开发环境的独立播放器"><span class="nav-number">5.2.</span> <span class="nav-text">进阶：脱离开发环境的独立播放器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MFC知识"><span class="nav-number">5.3.</span> <span class="nav-text">MFC知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FFmpeg-SDL-MFC实现图形界面视频播放器"><span class="nav-number">5.4.</span> <span class="nav-text">FFmpeg + SDL + MFC实现图形界面视频播放器</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/06/17/ffmpeg之初识ffmpeg/';
+          this.page.identifier = '2018/06/17/ffmpeg之初识ffmpeg/';
+          this.page.title = 'ffmpeg之初识ffmpeg';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CPP,多态,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="多态作为面向对象的重要概念，在如何一门面向对象编程语言中都有着举足轻重的作用，学习多态，有助于更好地理多态的行为多态性（Polymorphism）是指一个名字，多种语义；或界面相同，多种实现。重载函数是多态性的一种简单形式。虚函数允许函数调用与函数体的联系在运行时才进行，称为动态联编">
+<meta name="keywords" content="CPP,多态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++之多态">
+<meta property="og:url" content="https://cj5785.com/2017/03/01/C++之多态/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="多态作为面向对象的重要概念，在如何一门面向对象编程语言中都有着举足轻重的作用，学习多态，有助于更好地理多态的行为多态性（Polymorphism）是指一个名字，多种语义；或界面相同，多种实现。重载函数是多态性的一种简单形式。虚函数允许函数调用与函数体的联系在运行时才进行，称为动态联编">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-18T18:50:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++之多态">
+<meta name="twitter:description" content="多态作为面向对象的重要概念，在如何一门面向对象编程语言中都有着举足轻重的作用，学习多态，有助于更好地理多态的行为多态性（Polymorphism）是指一个名字，多种语义；或界面相同，多种实现。重载函数是多态性的一种简单形式。虚函数允许函数调用与函数体的联系在运行时才进行，称为动态联编">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2017/03/01/C++之多态/">
+
+
+
+
+
+  <title>C++之多态 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2017/03/01/C++之多态/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">C++之多态</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-01T21:57:49+08:00">
+                2017-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/CPP/" itemprop="url" rel="index">
+                    <span itemprop="name">CPP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/01/C++之多态/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/01/C++之多态/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>多态作为面向对象的重要概念，在如何一门面向对象编程语言中都有着举足轻重的作用，学习多态，有助于更好地理多态的行为<br>多态性（Polymorphism）是指一个名字，多种语义；或界面相同，多种实现。<br>重载函数是多态性的一种简单形式。<br>虚函数允许函数调用与函数体的联系在运行时才进行，称为动态联编<br><a id="more"></a></p>
+<h3 id="静态联编"><a href="#静态联编" class="headerlink" title="静态联编"></a>静态联编</h3><p>联编是指一个程序模块、代码之间互相关联的过程<br>静态联编，是程序的匹配、连接在编译阶段实现，也称为早期匹配。重载函数使用静态联编<br>动态联编是指程序联编推迟到运行时进行，所以又称为晚期联编。switch语句和if语句是动态联编的例子<br>普通成员函数重载可表达为两种形式：</p>
+<ul>
+<li><p>在一个类说明中重载</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Show(<span class="keyword">int</span> , <span class="keyword">char</span>);</span><br><span class="line">Show(<span class="keyword">char</span> * , <span class="keyword">float</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基类的成员函数在派生类重载。有 3 种编译区分方法：</p>
+<ul>
+<li><p>根据参数的特征加以区分</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">   Show(<span class="keyword">int</span> , <span class="keyword">char</span>);</span><br><span class="line">Show(<span class="keyword">char</span> * , <span class="keyword">float</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用<code>::</code>加以区分</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">   A :: Show();</span><br><span class="line">B :: Show();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根据类对象加以区分</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">//这其实是通过this指针区分</span></span><br><span class="line">   Aobj.Show();<span class="comment">//调用	A :: Show()</span></span><br><span class="line">Bobj.Show();<span class="comment">//调用	B :: Show()</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="类指针的关系"><a href="#类指针的关系" class="headerlink" title="类指针的关系"></a>类指针的关系</h3><p>基类指针和派生类指针与基类对象和派生类对象4种可能匹配：</p>
+<ul>
+<li>直接用基类指针引用基类对象</li>
+<li>直接用派生类指针引用派生类对象</li>
+<li>用基类指针引用一个派生类对象</li>
+<li>用派生类指针引用一个基类对象</li>
+</ul>
+<h4 id="基类指针引用派生类对象"><a href="#基类指针引用派生类对象" class="headerlink" title="基类指针引用派生类对象"></a>基类指针引用派生类对象</h4><p><code>class B : public A</code><br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">A    * p ;<span class="comment">// 指向类型 A 的对象的指针</span></span><br><span class="line">A    A_obj ;<span class="comment">// 类型 A 的对象</span></span><br><span class="line">B    B_obj ;<span class="comment">// 类型 B 的对象</span></span><br><span class="line">p = &amp;A_obj ;<span class="comment">// p 指向类型 A 的对象</span></span><br><span class="line">p = &amp;B_obj ;<span class="comment">// p 指向类型 B 的对象，它是 A 的派生类</span></span><br></pre></td></tr></table></figure></p>
+<p>利用 p，可以通过 B_obj 访问所有从 A 类继承的元素，但不能用 p访问 B 类自定义的元素（除非用了显式类型转换）</p>
+<h4 id="派生类指针引用基类对象"><a href="#派生类指针引用基类对象" class="headerlink" title="派生类指针引用基类对象"></a>派生类指针引用基类对象</h4><p>派生类指针只有经过强制类型转换之后，才能引用基类对象<br><code>class DateTime : public Data</code><br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((Date *)<span class="keyword">this</span>) -&gt; Print();</span><br></pre></td></tr></table></figure></p>
+<h3 id="虚函数和动态联编"><a href="#虚函数和动态联编" class="headerlink" title="虚函数和动态联编"></a>虚函数和动态联编</h3><p>冠以关键字 virtual 的成员函数称为虚函数<br>实现运行时多态的关键首先是要说明虚函数，另外，必须用基类指针调用派生类的不同实现版本</p>
+<h4 id="虚函数和基类指针"><a href="#虚函数和基类指针" class="headerlink" title="虚函数和基类指针"></a>虚函数和基类指针</h4><p>基类指针虽然获取派生类对象地址，却只能访问派生类从基类继承的成员<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Base(<span class="keyword">char</span> xx)</span><br><span class="line">	&#123;</span><br><span class="line">		x = xx;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">who</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Base class: "</span> &lt;&lt; x &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">char</span> x;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">First_d</span> :</span> <span class="keyword">public</span> Base</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	First_d(<span class="keyword">char</span> xx, <span class="keyword">char</span> yy) : Base(xx)</span><br><span class="line">	&#123;</span><br><span class="line">		y = yy;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">who</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"First derived class: "</span> &lt;&lt; x &lt;&lt; <span class="string">", "</span> &lt;&lt; y &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">char</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Second_d</span> :</span> <span class="keyword">public</span> First_d</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Second_d(<span class="keyword">char</span> xx, <span class="keyword">char</span> yy, <span class="keyword">char</span> zz) : First_d(xx, yy)</span><br><span class="line">	&#123;</span><br><span class="line">		z = zz;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">who</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Second derived class: "</span> &lt;&lt; x &lt;&lt; <span class="string">", "</span> &lt;&lt; y &lt;&lt; <span class="string">", "</span> &lt;&lt; z &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">char</span> z;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">Base <span class="title">B_obj</span><span class="params">(<span class="string">'A'</span>)</span></span>;</span><br><span class="line">	<span class="function">First_d <span class="title">F_obj</span><span class="params">(<span class="string">'T'</span>, <span class="string">'O'</span>)</span></span>;</span><br><span class="line">	<span class="function">Second_d <span class="title">S_obj</span><span class="params">(<span class="string">'E'</span>, <span class="string">'N'</span>, <span class="string">'D'</span>)</span></span>;</span><br><span class="line">	Base * p;</span><br><span class="line"></span><br><span class="line">	p = &amp;B_obj;</span><br><span class="line">	p-&gt;who();</span><br><span class="line"></span><br><span class="line">	p = &amp;F_obj;</span><br><span class="line">	p-&gt;who();</span><br><span class="line"></span><br><span class="line">	p = &amp;S_obj;</span><br><span class="line">	p-&gt;who();</span><br><span class="line"></span><br><span class="line">	F_obj.who();</span><br><span class="line"></span><br><span class="line">	((Second_d *)p)-&gt;who();</span><br><span class="line"></span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为</p>
+<blockquote>
+<p>Base class: A<br>Base class: T<br>Base class: E<br>First derived class: T, O<br>Second derived class: E, N, D<br>请按任意键继续. . .</p>
+</blockquote>
+<p>修改程序，定义虚函数<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Base(<span class="keyword">char</span> xx)</span><br><span class="line">	&#123;</span><br><span class="line">		x = xx;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">who</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Base class: "</span> &lt;&lt; x &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">char</span> x;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">First_d</span> :</span> <span class="keyword">public</span> Base</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	First_d(<span class="keyword">char</span> xx, <span class="keyword">char</span> yy) : Base(xx)</span><br><span class="line">	&#123;</span><br><span class="line">		y = yy;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">who</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"First derived class: "</span> &lt;&lt; x &lt;&lt; <span class="string">", "</span> &lt;&lt; y &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">char</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Second_d</span> :</span> <span class="keyword">public</span> First_d</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Second_d(<span class="keyword">char</span> xx, <span class="keyword">char</span> yy, <span class="keyword">char</span> zz) : First_d(xx, yy)</span><br><span class="line">	&#123;</span><br><span class="line">		z = zz;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">who</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Second derived class: "</span> &lt;&lt; x &lt;&lt; <span class="string">", "</span> &lt;&lt; y &lt;&lt; <span class="string">", "</span> &lt;&lt; z &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">char</span> z;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">Base <span class="title">B_obj</span><span class="params">(<span class="string">'A'</span>)</span></span>;</span><br><span class="line">	<span class="function">First_d <span class="title">F_obj</span><span class="params">(<span class="string">'T'</span>, <span class="string">'O'</span>)</span></span>;</span><br><span class="line">	<span class="function">Second_d <span class="title">S_obj</span><span class="params">(<span class="string">'E'</span>, <span class="string">'N'</span>, <span class="string">'D'</span>)</span></span>;</span><br><span class="line">	Base * p;</span><br><span class="line"></span><br><span class="line">	p = &amp;B_obj;</span><br><span class="line">	p-&gt;who();</span><br><span class="line"></span><br><span class="line">	p = &amp;F_obj;</span><br><span class="line">	p-&gt;who();</span><br><span class="line"></span><br><span class="line">	p = &amp;S_obj;</span><br><span class="line">	p-&gt;who();</span><br><span class="line"></span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为：</p>
+<blockquote>
+<p>Base class: A<br>First derived class: T, O<br>Second derived class: E, N, D<br>请按任意键继续. . .</p>
+</blockquote>
+<p>结论：<br>由于who()的虚特性随着p指向不同对象，this指针作类型转换执行不同实现版本</p>
+<p>注意事项：</p>
+<ul>
+<li>一个虚函数，在派生类层界面相同的重载函数都保持虚特性</li>
+<li>虚函数必须是类的成员函数</li>
+<li>不能将友员说明为虚函数，但虚函数可以是另一个类的友员</li>
+<li>析构函数可以是虚函数，但构造函数不能是虚函数</li>
+</ul>
+<h4 id="虚函数的重载特性"><a href="#虚函数的重载特性" class="headerlink" title="虚函数的重载特性"></a>虚函数的重载特性</h4><ul>
+<li>在派生类中重载基类的虚函数要求函数名、返回类型、参数个数、参数类型和顺序完全相同</li>
+<li>如果仅仅返回类型不同，C++认为是错误重载</li>
+<li>如果函数原型不同，仅函数名相同，丢失虚特性<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">vf1</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">vf2</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">vf3</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">derived</span> :</span> <span class="keyword">public</span> base</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">vf1</span><span class="params">()</span></span>;<span class="comment">// 虚函数</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">vf2</span><span class="params">(<span class="keyword">int</span>)</span></span>;<span class="comment">// 重载，参数不同，虚特性丢失</span></span><br><span class="line">	<span class="comment">//char vf3();// error，仅返回类型不同</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>;<span class="comment">// 非虚函数重载</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>  <span class="title">g</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	derived d;</span><br><span class="line">	base *bp = &amp;d;<span class="comment">// 基类指针指向派生类对象</span></span><br><span class="line">	bp-&gt;vf1();<span class="comment">// 调用 deriver :: vf1()</span></span><br><span class="line">	bp-&gt;vf2();<span class="comment">// 调用 base :: vf2()</span></span><br><span class="line">	bp-&gt;f();<span class="comment">// 调用 base::f()</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="虚析构函数"><a href="#虚析构函数" class="headerlink" title="虚析构函数"></a>虚析构函数</h4><ul>
+<li>构造函数不能是虚函数。建立一个派生类对象时，必须从类   层次的根开始，沿着继承路径逐个调用基类的构造函数</li>
+<li>析构函数可以是虚的。虚析构函数用于指引 delete 运算符正   确析构动态对象<br>普通析构函数在删除动态派生类对象的调用情况：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	~A()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"A::~A() is called.\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> :</span> <span class="keyword">public</span> A</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	~B()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"B::~B() is called.\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	A *Ap = <span class="keyword">new</span> B;</span><br><span class="line">	B *Bp2 = <span class="keyword">new</span> B;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"delete first object:\n"</span>;</span><br><span class="line">	<span class="keyword">delete</span> Ap;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"delete second object:\n"</span>;</span><br><span class="line">	<span class="keyword">delete</span> Bp2;</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>输出结果：</p>
+<blockquote>
+<p>delete first object:<br>A::~A() is called.<br>delete second object:<br>B::~B() is called.<br>A::~A() is called.<br>请按任意键继续. . .</p>
+</blockquote>
+<p>虚析构函数在删除动态派生类对象的调用情况：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	~A()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"A::~A() is called.\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> :</span> <span class="keyword">public</span> A</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	~B()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"B::~B() is called.\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	A *Ap = <span class="keyword">new</span> B;</span><br><span class="line">	B *Bp2 = <span class="keyword">new</span> B;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"delete first object:\n"</span>;</span><br><span class="line">	<span class="keyword">delete</span> Ap;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"delete second object:\n"</span>;</span><br><span class="line">	<span class="keyword">delete</span> Bp2;</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出结果：</p>
+<blockquote>
+<p>delete first object:<br>B::~B() is called.<br>A::~A() is called.<br>delete second object:<br>B::~B() is called.<br>A::~A() is called.<br>请按任意键继续. . .</p>
+</blockquote>
+<ul>
+<li>定义了基类虚析构函数，基类指针指向的派生类动态对象也可以正确地用delete析构</li>
+<li>设计类层次结构时，提供一个虚析构函数，能够使派生类对象在不同状态下正确调用析构函数</li>
+</ul>
+<h3 id="纯虚函数和抽象类"><a href="#纯虚函数和抽象类" class="headerlink" title="纯虚函数和抽象类"></a>纯虚函数和抽象类</h3><ul>
+<li>纯虚函数是一个在基类中说明的虚函数，在基类中没有定义，要求任何派生类都定义自己的版本</li>
+<li>纯虚函数为各派生类提供一个公共界面</li>
+<li>纯虚函数说明形式：<code>virtual  类型  函数名（参数表）= 0 ;</code></li>
+<li>一个具有纯虚函数的基类称为抽象类<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">point</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">/*……*/</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">shape</span>；// 抽象类</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    point center;</span><br><span class="line">    ···</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function">point <span class="title">where</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> center;</span><br><span class="line">&#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">move</span><span class="params">(point p )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    enter = p;</span><br><span class="line">    draw ();</span><br><span class="line">&#125;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">rotate</span><span class="params">(<span class="keyword">int</span>)</span> </span>= <span class="number">0</span>;<span class="comment">// 纯虚函数</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span> <span class="params">()</span> </span>= <span class="number">0</span>;<span class="comment">// 纯虚函数</span></span><br><span class="line">&#125;;</span><br><span class="line">···</span><br><span class="line">shape x;<span class="comment">// error，抽象类不能建立对象</span></span><br><span class="line">shape *p;<span class="comment">// ok，可以声明抽象类的指针</span></span><br><span class="line"><span class="function">shape <span class="title">f</span><span class="params">()</span></span>;<span class="comment">// error, 抽象类不能作为返回类型</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">g</span><span class="params">(shape)</span></span>;<span class="comment">// error, 抽象类不能作为参数类型</span></span><br><span class="line"><span class="function">shape &amp; <span class="title">h</span><span class="params">(shape &amp;)</span></span>;<span class="comment">// ok，可以声明抽象类的引用</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>简单图形类例子：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">figure</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">double</span> x, y;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">set_dim</span><span class="params">(<span class="keyword">double</span> i, <span class="keyword">double</span> j = <span class="number">0</span>)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		x = i;</span><br><span class="line">		y = j;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">show_area</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">triangle</span> :</span> <span class="keyword">public</span> figure</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">show_area</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Triangle with high "</span> &lt;&lt; x &lt;&lt; <span class="string">" and base "</span> &lt;&lt; y &lt;&lt; <span class="string">" has an area of "</span> &lt;&lt; x * <span class="number">0.5</span> * y &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">square</span> :</span> <span class="keyword">public</span> figure</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">show_area</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Square with dimension "</span> &lt;&lt; x &lt;&lt; <span class="string">"*"</span> &lt;&lt; y &lt;&lt; <span class="string">" has an area of "</span> &lt;&lt; x * y &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">circle</span> :</span> <span class="keyword">public</span> figure</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">show_area</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Circle with radius "</span> &lt;&lt; x;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">" has an area of "</span> &lt;&lt; <span class="number">3.14</span> * x * x &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	triangle t;	<span class="comment">//派生类对象</span></span><br><span class="line">	square s;</span><br><span class="line">	circle c;</span><br><span class="line">	t.set_dim(<span class="number">10.0</span>, <span class="number">5.0</span>);</span><br><span class="line">	t.show_area();</span><br><span class="line">	s.set_dim(<span class="number">10.0</span>, <span class="number">5.0</span>);</span><br><span class="line">	s.show_area();</span><br><span class="line">	c.set_dim(<span class="number">9.0</span>);</span><br><span class="line">	c.show_area();</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出结果：</p>
+<blockquote>
+<p>Triangle with high 10 and base 5 has an area of 25<br>Square with dimension 10*5 has an area of 50<br>Circle with radius 9 has an area of 254.34<br>请按任意键继续. . .</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	figure *p;	<span class="comment">// 声明抽象类指针</span></span><br><span class="line">	triangle t;</span><br><span class="line">	square s;</span><br><span class="line">	circle c;</span><br><span class="line">	p = &amp;t;</span><br><span class="line">	p-&gt;set_dim(<span class="number">10.0</span>, <span class="number">5.0</span>); 	<span class="comment">// triangle::set_dim()</span></span><br><span class="line">	p-&gt;show_area();</span><br><span class="line">	p = &amp;s;</span><br><span class="line">	p-&gt;set_dim(<span class="number">10.0</span>, <span class="number">5.0</span>);	<span class="comment">// square::set_dim()</span></span><br><span class="line">	p-&gt;show_area();</span><br><span class="line">	p = &amp;c;</span><br><span class="line">	p-&gt;set_dim(<span class="number">9.0</span>);		<span class="comment">// circle::set_dim()</span></span><br><span class="line">	p-&gt;show_area();</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<blockquote>
+<p>Triangle with high 10 and base 5 has an area of 25<br>Square with dimension 10*5 has an area of 50<br>Circle with radius 9 has an area of 254.34<br>请按任意键继续. . .</p>
+</blockquote>
+<p>使用抽象类引用：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Number</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Number(<span class="keyword">int</span> i)</span><br><span class="line">	&#123;</span><br><span class="line">		val = i;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Show</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">int</span> val;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hex_type</span> :</span> <span class="keyword">public</span> Number</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Hex_type(<span class="keyword">int</span> i) : Number(i)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">Show</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hexadecimal:"</span> &lt;&lt; hex &lt;&lt; val &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dec_type</span> :</span> <span class="keyword">public</span> Number</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Dec_type(<span class="keyword">int</span> i) : Number(i)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">Show</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Decimal: "</span> &lt;&lt; dec &lt;&lt; val &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Oct_type</span> :</span> <span class="keyword">public</span> Number</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Oct_type(<span class="keyword">int</span> i) : Number(i)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">Show</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Octal: "</span> &lt;&lt; oct &lt;&lt; val &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">(Number &amp; n)</span><span class="comment">// 抽象类的引用参数</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	n.Show();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">Dec_type <span class="title">n1</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">	fun(n1);	<span class="comment">// Dec_type::Show()</span></span><br><span class="line">	<span class="function">Hex_type <span class="title">n2</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">	fun(n2);	<span class="comment">// Hex_type::Show()</span></span><br><span class="line">	<span class="function">Oct_type <span class="title">n3</span><span class="params">(<span class="number">50</span>)</span></span>;</span><br><span class="line">	fun(n3);	<span class="comment">// Oct_type::Show()</span></span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为：</p>
+<blockquote>
+<p>Decimal: 50<br>Hexadecimal:32<br>Octal: 62<br>请按任意键继续. . .</p>
+</blockquote>
+<h3 id="虚函数与多态的应用"><a href="#虚函数与多态的应用" class="headerlink" title="虚函数与多态的应用"></a>虚函数与多态的应用</h3><ul>
+<li>虚函数和多态性使成员函数根据调用对象的类型产生不同的动作</li>
+<li>多态性特别适合于实现分层结构的软件系统，便于对问题抽象时定义共性，实现时定义区别</li>
+</ul>
+<h4 id="一个实例"><a href="#一个实例" class="headerlink" title="一个实例"></a>一个实例</h4><p>计算雇员工资<br>Employee:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Employee(<span class="keyword">const</span> <span class="keyword">long</span>, <span class="keyword">const</span> <span class="keyword">char</span>*);</span><br><span class="line">	<span class="keyword">virtual</span> ~Employee();<span class="comment">//虚析构函数</span></span><br><span class="line">	<span class="function"><span class="keyword">const</span> <span class="keyword">char</span> * <span class="title">getName</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">const</span> <span class="keyword">long</span> <span class="title">getNumber</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">earnings</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;<span class="comment">//纯虚函数，计算月薪</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> <span class="keyword">const</span></span>;<span class="comment">//虚函数，输出编号、姓名</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">long</span> number;<span class="comment">//编号</span></span><br><span class="line">	<span class="keyword">char</span> * name;<span class="comment">//姓名</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>Manager:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Manager</span> :</span> <span class="keyword">public</span> Employee</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Manager(<span class="keyword">const</span> <span class="keyword">long</span>, <span class="keyword">const</span> <span class="keyword">char</span> *, <span class="keyword">double</span> = <span class="number">0.0</span>);</span><br><span class="line">	~Manager() &#123; &#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setMonthlySalary</span><span class="params">(<span class="keyword">double</span>)</span></span>;<span class="comment">//置月薪</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">earnings</span><span class="params">()</span> <span class="keyword">const</span></span>;<span class="comment">//计算管理人员月薪</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> <span class="keyword">const</span></span>;<span class="comment">//输出管理人员信息</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">double</span> monthlySalary;<span class="comment">//私有数据，月薪</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>HourlyWorker:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HourlyWorker</span> :</span> <span class="keyword">public</span> Employee</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	HourlyWorker(<span class="keyword">const</span> <span class="keyword">long</span>, <span class="keyword">const</span> <span class="keyword">char</span> *, <span class="keyword">double</span> = <span class="number">0.0</span>, <span class="keyword">int</span> = <span class="number">0</span>);</span><br><span class="line">	~HourlyWorker()&#123;&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setWage</span><span class="params">(<span class="keyword">double</span>)</span></span>;<span class="comment">//置时薪</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setHours</span><span class="params">(<span class="keyword">int</span>)</span></span>;<span class="comment">//置工时</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">earnings</span><span class="params">()</span> <span class="keyword">const</span></span>;<span class="comment">//计算计时工月薪</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> <span class="keyword">const</span></span>;<span class="comment">//输出计时工月薪</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">double</span> wage;<span class="comment">//时薪</span></span><br><span class="line">	<span class="keyword">double</span> hours;<span class="comment">//工时</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>PieceWorker:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PieceWorker</span> :</span> <span class="keyword">public</span> Employee</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	PieceWorker(<span class="keyword">const</span> <span class="keyword">long</span>, <span class="keyword">const</span> <span class="keyword">char</span> *, <span class="keyword">double</span> = <span class="number">0.0</span>, <span class="keyword">int</span> = <span class="number">0</span>);</span><br><span class="line">	~PieceWorker() &#123; &#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setWage</span><span class="params">(<span class="keyword">double</span>)</span></span>;<span class="comment">//置每件工件薪金</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setQuantity</span><span class="params">(<span class="keyword">int</span>)</span></span>;<span class="comment">//置工件数</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">earnings</span><span class="params">()</span> <span class="keyword">const</span></span>;<span class="comment">//计算计件薪金</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> <span class="keyword">const</span></span>;<span class="comment">//输出计件薪金</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">double</span> wagePerPiece;<span class="comment">//每件工件薪金</span></span><br><span class="line">	<span class="keyword">int</span> quantity;<span class="comment">//工件数</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>测试用例：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; setiosflags(ios::fixed | ios::showpoint) &lt;&lt; setprecision(<span class="number">2</span>);</span><br><span class="line">	<span class="function">Manager <span class="title">m1</span><span class="params">(<span class="number">10135</span>, <span class="string">"Cheng ShaoHua"</span>, <span class="number">1200</span>)</span></span>;</span><br><span class="line">	<span class="function">Manager <span class="title">m2</span><span class="params">(<span class="number">10201</span>, <span class="string">"Yan HaiFeng"</span>)</span></span>;</span><br><span class="line">	m2.setMonthlySalary(<span class="number">5300</span>);</span><br><span class="line">	<span class="function">HourlyWorker <span class="title">hw1</span><span class="params">(<span class="number">30712</span>, <span class="string">"Zhao XiaoMing"</span>, <span class="number">5</span>, <span class="number">8</span> * <span class="number">20</span>)</span></span>;</span><br><span class="line">	<span class="function">HourlyWorker <span class="title">hw2</span><span class="params">(<span class="number">30649</span>, <span class="string">"Gao DongSheng"</span>)</span></span>;</span><br><span class="line">	hw2.setWage(<span class="number">4.5</span>);</span><br><span class="line">	hw2.setHours(<span class="number">10</span> * <span class="number">30</span>);</span><br><span class="line">	<span class="function">PieceWorker <span class="title">pw1</span><span class="params">(<span class="number">20382</span>, <span class="string">"Xiu LiWei"</span>, <span class="number">0.5</span>, <span class="number">2850</span>)</span></span>;</span><br><span class="line">	<span class="function">PieceWorker <span class="title">pw2</span><span class="params">(<span class="number">20496</span>, <span class="string">"Huang DongLin"</span>)</span></span>;</span><br><span class="line">	pw2.setWage(<span class="number">0.75</span>);</span><br><span class="line">	pw2.setQuantity(<span class="number">1850</span>);</span><br><span class="line">	<span class="comment">// 使用抽象类指针，调用派生类版本的函数</span></span><br><span class="line">	Employee *basePtr;</span><br><span class="line"></span><br><span class="line">	basePtr = &amp;m1;</span><br><span class="line">	basePtr-&gt;print();</span><br><span class="line"></span><br><span class="line">	basePtr = &amp;m2;</span><br><span class="line">	basePtr-&gt;print();</span><br><span class="line"></span><br><span class="line">	basePtr = &amp;hw1;</span><br><span class="line">	basePtr-&gt;print();</span><br><span class="line"></span><br><span class="line">	basePtr = &amp;hw2;</span><br><span class="line">	basePtr-&gt;print();</span><br><span class="line"></span><br><span class="line">	basePtr = &amp;pw1;</span><br><span class="line">	basePtr-&gt;print();</span><br><span class="line"></span><br><span class="line">	basePtr = &amp;pw2;</span><br><span class="line">	basePtr-&gt;print();</span><br><span class="line"></span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="异质链表"><a href="#异质链表" class="headerlink" title="异质链表"></a>异质链表</h4><p>程序中，用基类类型指针，可以生成一个连接不同派生类对象的动态链表，即每个结点指针可以指向类层次中不同的派生类对象。这种结点类型不相同链表称为异质链表<br>e.g.<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Employee(<span class="keyword">const</span> <span class="keyword">long</span>, <span class="keyword">const</span> <span class="keyword">char</span>*);</span><br><span class="line">	<span class="keyword">virtual</span> ~Employee();</span><br><span class="line">	<span class="function"><span class="keyword">const</span> <span class="keyword">char</span> * <span class="title">getName</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">const</span> <span class="keyword">long</span> <span class="title">getNumber</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">earnings</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">	Employee *next;<span class="comment">// 增加一个指针成员</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="keyword">long</span> number;</span><br><span class="line">	<span class="keyword">char</span> * name;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AddFront</span><span class="params">(Employee * &amp;h, Employee * &amp;t)</span><span class="comment">//在表头插入结点</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	t-&gt;next = h;</span><br><span class="line">	h = t;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span><span class="comment">//测试函数</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Employee * empHead = <span class="literal">NULL</span>, *ptr;</span><br><span class="line">	ptr = <span class="keyword">new</span> Manager(<span class="number">10135</span>, <span class="string">"Cheng ShaoHua"</span>, <span class="number">1200</span>);<span class="comment">//建立第一个结点</span></span><br><span class="line">	AddFront(empHead, ptr);<span class="comment">//插入表头</span></span><br><span class="line">	ptr = <span class="keyword">new</span> HourlyWorker(<span class="number">30712</span>, <span class="string">"Zhao XiaoMing"</span>, <span class="number">5</span>, <span class="number">8</span> * <span class="number">20</span>);<span class="comment">//建立第二个结点</span></span><br><span class="line">	AddFront(empHead, ptr);<span class="comment">//插入表头</span></span><br><span class="line">	ptr = <span class="keyword">new</span> PieceWorker(<span class="number">20382</span>, <span class="string">"Xiu LiWei"</span>, <span class="number">0.5</span>, <span class="number">2850</span>);<span class="comment">//建立第三个结点</span></span><br><span class="line">	AddFront(empHead, ptr);<span class="comment">//插入表头</span></span><br><span class="line">	ptr = empHead;</span><br><span class="line">	<span class="keyword">while</span> (ptr)</span><br><span class="line">	&#123;</span><br><span class="line">		ptr-&gt;print();</span><br><span class="line">		ptr = ptr-&gt;next;</span><br><span class="line">	&#125;<span class="comment">//遍历链表，输出全部信息</span></span><br><span class="line">	ptr = empHead;</span><br><span class="line">	<span class="keyword">while</span> (ptr)<span class="comment">//遍历链表，输出姓名和工资</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; ptr-&gt;getName() &lt;&lt; <span class="string">"  "</span> &lt;&lt; ptr-&gt;earnings() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		ptr = ptr-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><h4 id="多态的理论基础"><a href="#多态的理论基础" class="headerlink" title="多态的理论基础"></a>多态的理论基础</h4><ul>
+<li>联编是指一个程序模块、代码之间互相关联的过程。</li>
+<li>静态联编（static binding），是程序的匹配、连接在编译阶段实现，也称为早期匹配。重载函数使用静态联编。</li>
+<li>动态联编是指程序联编推迟到运行时进行，所以又称为晚期联编（迟绑定）。switch 语句和 if 语句是动态联编的例子。</li>
+<li>理论联系实际</li>
+</ul>
+<ol>
+<li>C++与C相同，是静态编译型语言</li>
+<li>在编译时，编译器自动根据指针的类型判断指向的是一个什么样的对象；所以编译器认为父类指针指向的是父类对象。</li>
+<li>由于程序没有运行，所以不可能知道父类指针指向的具体是父类对象还是子类对象<br>从程序安全的角度，编译器假设父类指针只指向父类对象，因此编译的结果为调用父类的成员函数。这种特性就是静态联编。</li>
+</ol>
+<h4 id="多态的c-实现"><a href="#多态的c-实现" class="headerlink" title="多态的c++实现"></a>多态的c++实现</h4><p>virtual关键字，告诉编译器这个函数要支持多态；不要根据指针类型判断如何调用；而是要根据指针所指向的实际对象类型来判断如何调用。冠以virtual关键字的函数叫虚函数；虚函数分为两类：一般虚函数、纯虚函数。</p>
+<h4 id="多态的实现效果"><a href="#多态的实现效果" class="headerlink" title="多态的实现效果"></a>多态的实现效果</h4><p>多态：同样的调用语句有多种不同的表现形态</p>
+<h4 id="多态实现的三个条件"><a href="#多态实现的三个条件" class="headerlink" title="多态实现的三个条件"></a>多态实现的三个条件</h4><p>有继承、有重写、有父类指针（引用）指向子类对象</p>
+<h3 id="重写与重载"><a href="#重写与重载" class="headerlink" title="重写与重载"></a>重写与重载</h3><h4 id="函数重载"><a href="#函数重载" class="headerlink" title="函数重载"></a>函数重载</h4><ul>
+<li>必须在同一个类中进行</li>
+<li>子类无法重载父类的函数，父类同名函数将被名称覆盖</li>
+<li>重载是在编译期间根据参数类型和个数决定函数调用</li>
+</ul>
+<h4 id="函数重写"><a href="#函数重写" class="headerlink" title="函数重写"></a>函数重写</h4><ul>
+<li>必须发生于父类与子类之间</li>
+<li>并且父类与子类中的函数必须有完全相同的原型</li>
+<li>使用virtual声明之后能够产生多态(如果不使用virtual，那叫重定义)</li>
+<li>多态是在运行期间根据具体对象的类型决定函数调用</li>
+</ul>
+<h3 id="编译器是如何实现多态的"><a href="#编译器是如何实现多态的" class="headerlink" title="编译器是如何实现多态的"></a>编译器是如何实现多态的</h3><ol>
+<li>当类中声明虚函数时，编译器会在类中生成一个虚函数表</li>
+<li>虚函数表是一个存储类成员函数指针的数据结构</li>
+<li>虚函数表是由编译器自动生成与维护的</li>
+<li>virtual成员函数会被编译器放入虚函数表中</li>
+<li>存在虚函数时，每个对象中都有一个指向虚函数表的指针</li>
+<li>VPTR一般作为类对象的第一个成员 </li>
+<li>虚函数表指针是在构造函数执行之前被赋值，还是在构造函数被赋值之后被赋</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>虚函数和多态性使软件设计易于扩充。</li>
+<li>派生类重载基类接口相同的虚函数其虚特性不变。</li>
+<li>如果代码关联在编译时确定，称为静态联编。代码在运行时关联称为动态联编。</li>
+<li>基类指针可以指向派生类对象、基类中拥有虚函数，是支持多态性的前提。</li>
+<li>虚析构函数可以正确释放动态派生类对象的资源。</li>
+<li>纯虚函数由派生类定义实现版本。</li>
+<li>具有纯虚函数的类称为抽象类。抽象类只能作为基类，不能建立对象。抽象类指针使得派生的具体类对象具有多态操作能力。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2017/03/01/C++之多态/" title="C++之多态">https://cj5785.com/2017/03/01/C++之多态/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CPP/" rel="tag"># CPP</a>
+          
+            <a href="/tags/多态/" rel="tag"># 多态</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/28/C++之继承中的构造与析构/" rel="next" title="C++之继承中的构造与析构">
+                <i class="fa fa-chevron-left"></i> C++之继承中的构造与析构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/02/C++之多态的实现原理/" rel="prev" title="C++之多态的实现原理">
+                C++之多态的实现原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#静态联编"><span class="nav-number">1.</span> <span class="nav-text">静态联编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类指针的关系"><span class="nav-number">2.</span> <span class="nav-text">类指针的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基类指针引用派生类对象"><span class="nav-number">2.1.</span> <span class="nav-text">基类指针引用派生类对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#派生类指针引用基类对象"><span class="nav-number">2.2.</span> <span class="nav-text">派生类指针引用基类对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚函数和动态联编"><span class="nav-number">3.</span> <span class="nav-text">虚函数和动态联编</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#虚函数和基类指针"><span class="nav-number">3.1.</span> <span class="nav-text">虚函数和基类指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#虚函数的重载特性"><span class="nav-number">3.2.</span> <span class="nav-text">虚函数的重载特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#虚析构函数"><span class="nav-number">3.3.</span> <span class="nav-text">虚析构函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#纯虚函数和抽象类"><span class="nav-number">4.</span> <span class="nav-text">纯虚函数和抽象类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚函数与多态的应用"><span class="nav-number">5.</span> <span class="nav-text">虚函数与多态的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一个实例"><span class="nav-number">5.1.</span> <span class="nav-text">一个实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异质链表"><span class="nav-number">5.2.</span> <span class="nav-text">异质链表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多态"><span class="nav-number">6.</span> <span class="nav-text">多态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#多态的理论基础"><span class="nav-number">6.1.</span> <span class="nav-text">多态的理论基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态的c-实现"><span class="nav-number">6.2.</span> <span class="nav-text">多态的c++实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态的实现效果"><span class="nav-number">6.3.</span> <span class="nav-text">多态的实现效果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态实现的三个条件"><span class="nav-number">6.4.</span> <span class="nav-text">多态实现的三个条件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写与重载"><span class="nav-number">7.</span> <span class="nav-text">重写与重载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#函数重载"><span class="nav-number">7.1.</span> <span class="nav-text">函数重载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数重写"><span class="nav-number">7.2.</span> <span class="nav-text">函数重写</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译器是如何实现多态的"><span class="nav-number">8.</span> <span class="nav-text">编译器是如何实现多态的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2017/03/01/C++之多态/';
+          this.page.identifier = '2017/03/01/C++之多态/';
+          this.page.title = 'C++之多态';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

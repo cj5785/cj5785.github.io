@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="高级UI,属性动画,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在3.0以前，动画效果主要为补间动画(TweenAnimation)和帧动画(FrameAnimation)，从3.0开始加入了属性动画，其本质就是不断地改变控件的属性，从而达到复杂的动画效果，其效果也优于之前的动画效果，而且真正的实现了View动画">
+<meta name="keywords" content="高级UI,属性动画">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级UI之属性动画">
+<meta property="og:url" content="https://cj5785.com/2018/08/24/高级UI之属性动画/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="在3.0以前，动画效果主要为补间动画(TweenAnimation)和帧动画(FrameAnimation)，从3.0开始加入了属性动画，其本质就是不断地改变控件的属性，从而达到复杂的动画效果，其效果也优于之前的动画效果，而且真正的实现了View动画">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98.gif">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-PropertyValuesHolder.gif">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-%E4%BA%8C%E6%AC%A1%E5%87%BD%E6%95%B0.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-%E4%BA%8C%E6%AC%A1%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0.gif">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-AnticipateInterpolator%E5%9B%9E%E8%8D%A1%E7%A7%8B%E5%8D%83%E6%8F%92%E5%80%BC%E5%99%A8%20.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-CycleInterpolator%E6%AD%A3%E5%BC%A6%E5%91%A8%E6%9C%9F%E5%8F%98%E5%8C%96%E6%8F%92%E5%80%BC%E5%99%A8%20.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-OvershootInterpolator.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-DecelerateInterpolator%E5%87%8F%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-AccelerateInterpolator%E5%8A%A0%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-AnticipateOvershootInterpolator.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-BounceInterpolator%E5%BC%B9%E8%B7%B3%E6%8F%92%E5%80%BC%E5%99%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-AccelerateDecelerateInterpolator%E5%8A%A0%E9%80%9F%E5%87%8F%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8%20.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-Interpolator%E5%AF%B9%E8%B1%A1.png">
+<meta property="og:updated_time" content="2018-09-11T07:16:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高级UI之属性动画">
+<meta name="twitter:description" content="在3.0以前，动画效果主要为补间动画(TweenAnimation)和帧动画(FrameAnimation)，从3.0开始加入了属性动画，其本质就是不断地改变控件的属性，从而达到复杂的动画效果，其效果也优于之前的动画效果，而且真正的实现了View动画">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/08/24/高级UI之属性动画/">
+
+
+
+
+
+  <title>高级UI之属性动画 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/08/24/高级UI之属性动画/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">高级UI之属性动画</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-24T21:34:25+08:00">
+                2018-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/高级UI/" itemprop="url" rel="index">
+                    <span itemprop="name">高级UI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/24/高级UI之属性动画/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/08/24/高级UI之属性动画/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在3.0以前，动画效果主要为补间动画(TweenAnimation)和帧动画(FrameAnimation)，从3.0开始加入了属性动画，其本质就是不断地改变控件的属性，从而达到复杂的动画效果，其效果也优于之前的动画效果，而且真正的实现了View动画<br><a id="more"></a></p>
+<h3 id="补间动画-Tween-Animation"><a href="#补间动画-Tween-Animation" class="headerlink" title="补间动画(Tween Animation)"></a>补间动画(Tween Animation)</h3><ol>
+<li>渐变动画支持四种类型：平移（Translate）、旋转（Rotate）、缩放（Scale）、不透明度（Alpha）</li>
+<li>只是显示的位置变动，View的实际位置未改变，表现为View移动到其他地方，点击事件仍在原处才能响应</li>
+<li>组合使用步骤较复杂</li>
+<li>View Animation 也是指此动画</li>
+</ol>
+<h3 id="帧动画-Frame-Animation"><a href="#帧动画-Frame-Animation" class="headerlink" title="帧动画(Frame Animation)"></a>帧动画(Frame Animation)</h3><ol>
+<li>用于生成连续的Gif效果图</li>
+<li>DrawableAnimation也是指此动画</li>
+</ol>
+<h3 id="属性动画-Property-Animation"><a href="#属性动画-Property-Animation" class="headerlink" title="属性动画(Property Animation)"></a>属性动画(Property Animation)</h3><ul>
+<li>支持对所有View能更新的属性的动画(需要属性的setXxx()和getXxx())</li>
+<li>更改的是View实际的属性，所以不会影响其在动画执行后所在位置的正常使用</li>
+<li>Android 3.0（API11）及以后出现的功能，3.0之前的版本可使用github第三方开源库nineoldandroids.jar进行支持</li>
+</ul>
+<h3 id="错误重现"><a href="#错误重现" class="headerlink" title="错误重现"></a>错误重现</h3><p>首先编辑anim动画<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">translate</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:duration</span>=<span class="string">"2000"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:fillAfter</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:fromXDelta</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:fromYDelta</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:toXDelta</span>=<span class="string">"300"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:toYDelta</span>=<span class="string">"500"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>意思是从(0,0)到(300,500)，在2000ms完成，完成以后不再复位<br>然后顺便贴出布局<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">android.support.constraint.ConstraintLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">".MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">ImageButton</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:src</span>=<span class="string">"@mipmap/ic_launcher"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">"startAnimation"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">android.support.constraint.ConstraintLayout</span></span></span><br></pre></td></tr></table></figure></p>
+<p>按下时执行动画<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        Animation animation = AnimationUtils.loadAnimation(<span class="keyword">this</span>, R.anim.translate);</span><br><span class="line">        view.startAnimation(animation);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>得到的效果如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98.gif" alt=""><br>可以看到在执行完动画以后，再点击以前ImageButton所在的位置时，又开始了动画，也就是说View本身是没有变动的</p>
+<h3 id="属性动画使用"><a href="#属性动画使用" class="headerlink" title="属性动画使用"></a>属性动画使用</h3><p>属性动画是真实改变了View的状态，将上面的错误重现使用属性动画，则没有刚才那样的情况发生了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line"><span class="comment">//	Animation animation = AnimationUtils.loadAnimation(this, R.anim.translate);</span></span><br><span class="line"><span class="comment">//	view.startAnimation(animation);</span></span><br><span class="line">	view.setTranslationX(<span class="number">20</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一般会使用动画执行类去设置参数，然后执行<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">	ObjectAnimator animator = ObjectAnimator.ofFloat(view, <span class="string">"translationX"</span>, <span class="number">0F</span>, <span class="number">300F</span>);</span><br><span class="line">	animator.setDuration(<span class="number">2000</span>);</span><br><span class="line">	animator.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>要实现多个动画同时执行，有三种常见方式，一种是使用动画监听，设置一个没有的动画属性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(<span class="keyword">final</span> View view)</span> </span>&#123;</span><br><span class="line">    ObjectAnimator animator = ObjectAnimator.ofFloat(view, <span class="string">""</span>, <span class="number">0F</span>, <span class="number">200F</span>);</span><br><span class="line">    animator.setDuration(<span class="number">2000</span>);</span><br><span class="line">    animator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">float</span> value = (<span class="keyword">float</span>) animation.getAnimatedValue();</span><br><span class="line">            view.setAlpha(value/<span class="number">200</span>);</span><br><span class="line">            view.setScaleX(value/<span class="number">200</span>);</span><br><span class="line">            view.setScaleY(value/<span class="number">200</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    animator.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上述代码等价于<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(<span class="keyword">final</span> View view)</span> </span>&#123;</span><br><span class="line">    ValueAnimator animator = ValueAnimator.ofFloat(<span class="number">0F</span>,<span class="number">200F</span>);</span><br><span class="line">    animator.setDuration(<span class="number">2000</span>);</span><br><span class="line">    animator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">float</span> value = (<span class="keyword">float</span>) animation.getAnimatedValue();</span><br><span class="line">            view.setAlpha(value/<span class="number">200</span>);</span><br><span class="line">            view.setScaleX(value/<span class="number">200</span>);</span><br><span class="line">            view.setScaleY(value/<span class="number">200</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    animator.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另一种是使用PropertyValuesHolder使得多个动画可以同时执行<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(<span class="keyword">final</span> View view)</span> </span>&#123;</span><br><span class="line">PropertyValuesHolder holderAlpha = PropertyValuesHolder.ofFloat(<span class="string">"alpha"</span>,</span><br><span class="line">            <span class="number">1F</span>, <span class="number">0.5F</span>, <span class="number">1F</span>, <span class="number">0.5F</span>, <span class="number">1F</span>);</span><br><span class="line">    PropertyValuesHolder holderScaleX = PropertyValuesHolder.ofFloat(<span class="string">"scaleX"</span>,</span><br><span class="line">            <span class="number">1F</span>, <span class="number">0.5F</span>, <span class="number">1F</span>, <span class="number">0.5F</span>, <span class="number">1F</span>, <span class="number">0.5F</span>, <span class="number">1F</span>);</span><br><span class="line">    PropertyValuesHolder holderScaleY = PropertyValuesHolder.ofFloat(<span class="string">"scaleY"</span>,</span><br><span class="line">            <span class="number">1F</span>, <span class="number">0.5F</span>, <span class="number">1F</span>, <span class="number">0.5F</span>, <span class="number">1F</span>, <span class="number">0.5F</span>, <span class="number">1F</span>);</span><br><span class="line">    PropertyValuesHolder holderTranslationX = PropertyValuesHolder.ofFloat(<span class="string">"translationX"</span>,</span><br><span class="line">            <span class="number">0F</span>, <span class="number">800F</span>);</span><br><span class="line">    PropertyValuesHolder holderTranslationY = PropertyValuesHolder.ofFloat(<span class="string">"translationY"</span>,</span><br><span class="line">            <span class="number">0F</span>, <span class="number">1200F</span>);</span><br><span class="line">    ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(view, holderAlpha,</span><br><span class="line">            holderScaleX, holderScaleY, holderTranslationX, holderTranslationY);</span><br><span class="line">    animator.setDuration(<span class="number">5000</span>);</span><br><span class="line">    animator.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种动画效果还是挺棒的<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-PropertyValuesHolder.gif" alt=""><br>还有一个是使用动画集<br>AnimatorSet主要有三个执行方式，单个动画(<code>play(anim)</code>)，多个动画同时(<code>playTogether(anim1, anim2, anim3)</code>)和多个动画依次执行(<code>playSequentially(anim1, anim2, anim3)</code>)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(<span class="keyword">final</span> View view)</span> </span>&#123;</span><br><span class="line">    ObjectAnimator animatorAlpha = ObjectAnimator.ofFloat(view, <span class="string">"alpha"</span>, <span class="number">1f</span>, <span class="number">0.7f</span>, <span class="number">1f</span>);</span><br><span class="line">    ObjectAnimator animatorScaleX = ObjectAnimator.ofFloat(view, <span class="string">"scaleX"</span>, <span class="number">1f</span>, <span class="number">0.7f</span>, <span class="number">1f</span>);</span><br><span class="line">    ObjectAnimator animatorScaleY = ObjectAnimator.ofFloat(view, <span class="string">"scaleY"</span>, <span class="number">1f</span>, <span class="number">0.7f</span>, <span class="number">1f</span>);</span><br><span class="line">    AnimatorSet animatorSet = <span class="keyword">new</span> AnimatorSet();</span><br><span class="line">    animatorSet.setDuration(<span class="number">500</span>);</span><br><span class="line">    animatorSet.playSequentially(animatorAlpha, animatorScaleX, animatorScaleY);</span><br><span class="line">    animatorSet.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>实现一个y=x<sup>2</sup>效果<br>用windows画图工具做出的草图如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-%E4%BA%8C%E6%AC%A1%E5%87%BD%E6%95%B0.png" alt=""><br>分析：<br>要实现如图所示轨迹，那么在图像移动的中心位置形成一条二次函数，那么平移以后其抛物线的形状也不会变<br>所以选择图像左上角为轨迹点，那么与x轴的交点就为0和父控件宽度减去图像宽度，设为width<br>其最低点的位置为父控件高度减去图像高度，设为height<br>那么得到其关系式为：y=a(x-x<sub>1</sub>)(x-x<sub>2</sub>)，即为<code>y = a * x(x - width)</code><br><code>height = a * (width / 2)(width / 2 - width)</code> 得到 <code>a = -(4 * height) / (width * width)</code><br>即<code>y = (4 * height) / (width * width) * x * (width - x)</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"MainActivity"</span>;</span><br><span class="line">    <span class="keyword">private</span> LinearLayout linearLayout;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(<span class="keyword">final</span> View view)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> width = (<span class="keyword">float</span>)(linearLayout.getWidth() - view.getWidth()) ;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> height = (<span class="keyword">float</span>)(linearLayout.getHeight() - view.getHeight());</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> durtime = <span class="number">5000</span>;</span><br><span class="line">        Log.d(TAG, <span class="string">"startAnimation: width = "</span> + width + <span class="string">",height = "</span> + height + <span class="string">",viewH="</span>+view.getHeight());</span><br><span class="line">        ValueAnimator animator = <span class="keyword">new</span> ValueAnimator();</span><br><span class="line">        animator.setDuration(durtime);</span><br><span class="line">        animator.setObjectValues(<span class="keyword">new</span> PointF(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="comment">//估值器，定义计算规则</span></span><br><span class="line">        animator.setEvaluator(<span class="keyword">new</span> TypeEvaluator&lt;PointF&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> PointF <span class="title">evaluate</span><span class="params">(<span class="keyword">float</span> fraction, PointF startValue, PointF endValue)</span> </span>&#123;</span><br><span class="line">                PointF pointF = <span class="keyword">new</span> PointF();</span><br><span class="line">                <span class="comment">//每个百分点x移动的距离</span></span><br><span class="line">                pointF.x = width * fraction;</span><br><span class="line">                pointF.y = ((<span class="number">4</span> * height) / (width * width)) * pointF.x * (width - pointF.x);</span><br><span class="line">                <span class="keyword">return</span> pointF;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        animator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">                PointF pointF = (PointF) animation.getAnimatedValue();</span><br><span class="line">                view.setX(pointF.x);</span><br><span class="line">                view.setY(pointF.y);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        animator.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>实现效果如下图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-%E4%BA%8C%E6%AC%A1%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0.gif" alt=""></p>
+<h3 id="常见的加速器"><a href="#常见的加速器" class="headerlink" title="常见的加速器"></a>常见的加速器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">animator.setInterpolator(<span class="keyword">new</span> AccelerateInterpolator(<span class="number">5</span>));</span><br><span class="line">animator.setInterpolator(<span class="keyword">new</span> AccelerateDecelerateInterpolator());</span><br><span class="line">animator.setInterpolator(<span class="keyword">new</span> AnticipateInterpolator(<span class="number">8</span>));</span><br><span class="line">animator.setInterpolator(<span class="keyword">new</span> OvershootInterpolator());</span><br><span class="line">animator.setInterpolator(<span class="keyword">new</span> CycleInterpolator(<span class="number">4</span>));</span><br><span class="line">animator.setInterpolator(<span class="keyword">new</span> BounceInterpolator());</span><br><span class="line">···</span><br></pre></td></tr></table></figure>
+<p><code>AnticipateInterpolator</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-AnticipateInterpolator%E5%9B%9E%E8%8D%A1%E7%A7%8B%E5%8D%83%E6%8F%92%E5%80%BC%E5%99%A8%20.png" alt=""><br><code>CycleInterpolator</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-CycleInterpolator%E6%AD%A3%E5%BC%A6%E5%91%A8%E6%9C%9F%E5%8F%98%E5%8C%96%E6%8F%92%E5%80%BC%E5%99%A8%20.png" alt=""><br><code>OvershootInterpolator</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-OvershootInterpolator.png" alt=""><br><code>DecelerateInterpolator</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-DecelerateInterpolator%E5%87%8F%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8.png" alt=""><br><code>AccelerateInterpolator</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-AccelerateInterpolator%E5%8A%A0%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8.png" alt=""><br><code>AnticipateOvershootInterpolator</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-AnticipateOvershootInterpolator.png" alt=""><br><code>BounceInterpolator</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-BounceInterpolator%E5%BC%B9%E8%B7%B3%E6%8F%92%E5%80%BC%E5%99%A8.png" alt=""><br><code>AccelerateDecelerateInterpolator</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-AccelerateDecelerateInterpolator%E5%8A%A0%E9%80%9F%E5%87%8F%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8%20.png" alt=""></p>
+<h3 id="常用API"><a href="#常用API" class="headerlink" title="常用API"></a>常用API</h3><p><code>ObjectAnimator</code>：对象动画执行类<br><code>PropertyValuesHolder</code>: 属性存储器，为两个执行类提供更新多个属性的功能<br><code>AnimatorListener</code>：动画执行监听，在动画开始、重复、结束、取消时进行回调<br><code>Keyframe</code>：为<code>PropertyValuesHolder</code>提供多个关键帧的操作值<br><code>AnimatorSet</code>：一组动画的执行集合类：设置执行的先后顺序，时间等<br><code>TimeInterpolator</code>：时间插值，用于控制动画执行过程<br><code>ValueAnimator</code>：值动画执行类，常配合<code>AnimatorUpdateListener</code>使用<br><code>AnimatorUpdateListener</code>：动画更新监听<br><code>TypeEvaluator</code>：类型估值，用于设置复杂的动画操作属性的值<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-Interpolator%E5%AF%B9%E8%B1%A1.png" alt=""></p>
+<ul>
+<li><code>translationX</code>和<code>translationY</code>：这两个属性控制了View所处的位置，它们的值是由layout容器设置的，是相对于坐标原点（0，0左上角）的一个偏移量</li>
+<li><code>rotation</code>,<code>rotationX</code>和<code>rotationY</code>：控制View绕着轴点（<code>pivotX</code>和<code>pivotY</code>）旋转</li>
+<li><code>scaleX</code>和<code>scaleY</code>：控制View基于<code>pivotX</code>和<code>pivotY</code>的缩放</li>
+<li><code>pivotX</code>和<code>pivotY</code>：旋转的轴点和缩放的基准点，默认是View的中心点</li>
+<li><code>x</code>和<code>y</code>：描述了view在其父容器中的最终位置，是左上角左标和偏移量（<code>translationX</code>，<code>translationY</code>）的和</li>
+<li><code>aplha</code>：透明度，1是完全不透明，0是完全透明</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/08/24/高级UI之属性动画/" title="高级UI之属性动画">https://cj5785.com/2018/08/24/高级UI之属性动画/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/高级UI/" rel="tag"># 高级UI</a>
+          
+            <a href="/tags/属性动画/" rel="tag"># 属性动画</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/23/高级UI之自定义Behavior/" rel="next" title="高级UI之自定义Behavior">
+                <i class="fa fa-chevron-left"></i> 高级UI之自定义Behavior
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/25/高级UI之MD动画/" rel="prev" title="高级UI之MD动画">
+                高级UI之MD动画 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#补间动画-Tween-Animation"><span class="nav-number">1.</span> <span class="nav-text">补间动画(Tween Animation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#帧动画-Frame-Animation"><span class="nav-number">2.</span> <span class="nav-text">帧动画(Frame Animation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性动画-Property-Animation"><span class="nav-number">3.</span> <span class="nav-text">属性动画(Property Animation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误重现"><span class="nav-number">4.</span> <span class="nav-text">错误重现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性动画使用"><span class="nav-number">5.</span> <span class="nav-text">属性动画使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的加速器"><span class="nav-number">6.</span> <span class="nav-text">常见的加速器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用API"><span class="nav-number">7.</span> <span class="nav-text">常用API</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/08/24/高级UI之属性动画/';
+          this.page.identifier = '2018/08/24/高级UI之属性动画/';
+          this.page.title = '高级UI之属性动画';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

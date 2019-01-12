@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="高级UI,Path,PathMeasure,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Path是一个工具类，用来记录线条的轨迹路径，然后通过绘制轨迹路径，可以得到各种各样的图案，而PathMeasure是用来对Path进行测量的工具，再Path的运用中，运用最多的就是贝塞尔曲线，也是本文的重点">
+<meta name="keywords" content="高级UI,Path,PathMeasure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级UI之Path和PathMeasure">
+<meta property="og:url" content="https://cj5785.com/2018/09/03/高级UI之Path和PathMeasure/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="Path是一个工具类，用来记录线条的轨迹路径，然后通过绘制轨迹路径，可以得到各种各样的图案，而PathMeasure是用来对Path进行测量的工具，再Path的运用中，运用最多的就是贝塞尔曲线，也是本文的重点">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E7%BA%BF%E6%80%A7%E5%85%AC%E5%BC%8F.jpg">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E4%BA%8C%E6%AC%A1%E6%96%B9%E5%85%AC%E5%BC%8F.jpg">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E4%B8%89%E6%AC%A1%E6%96%B9%E5%85%AC%E5%BC%8F.jpg">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E4%B8%80%E8%88%AC%E5%8F%82%E6%95%B0%E5%BC%8F.jpg">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-Anroid%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E6%B3%A2%E5%BD%A2%E5%9B%BE.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E6%B3%A2%E5%BD%A2%E5%9B%BE%E5%B0%81%E9%97%AD.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E5%8A%A8%E6%80%81%E6%B3%A2%E6%B5%AA.gif">
+<meta property="og:updated_time" content="2018-09-11T07:20:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高级UI之Path和PathMeasure">
+<meta name="twitter:description" content="Path是一个工具类，用来记录线条的轨迹路径，然后通过绘制轨迹路径，可以得到各种各样的图案，而PathMeasure是用来对Path进行测量的工具，再Path的运用中，运用最多的就是贝塞尔曲线，也是本文的重点">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E7%BA%BF%E6%80%A7%E5%85%AC%E5%BC%8F.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/09/03/高级UI之Path和PathMeasure/">
+
+
+
+
+
+  <title>高级UI之Path和PathMeasure | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/09/03/高级UI之Path和PathMeasure/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">高级UI之Path和PathMeasure</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T14:34:28+08:00">
+                2018-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/高级UI/" itemprop="url" rel="index">
+                    <span itemprop="name">高级UI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/09/03/高级UI之Path和PathMeasure/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/09/03/高级UI之Path和PathMeasure/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Path是一个工具类，用来记录线条的轨迹路径，然后通过绘制轨迹路径，可以得到各种各样的图案，而PathMeasure是用来对Path进行测量的工具，再Path的运用中，运用最多的就是贝塞尔曲线，也是本文的重点<br><a id="more"></a></p>
+<h3 id="贝塞尔曲线"><a href="#贝塞尔曲线" class="headerlink" title="贝塞尔曲线"></a>贝塞尔曲线</h3><p>贝塞尔曲线就是这样的一条曲线，它是依据四个位置任意的点坐标绘制出的一条光滑曲线</p>
+<h4 id="线性公式"><a href="#线性公式" class="headerlink" title="线性公式"></a>线性公式</h4><p>给定点P0、P1，线性贝兹曲线只是一条两点之间的直线。这条线由下式给出：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E7%BA%BF%E6%80%A7%E5%85%AC%E5%BC%8F.jpg" alt=""><br>且其等同于线性插值</p>
+<h4 id="二次方公式"><a href="#二次方公式" class="headerlink" title="二次方公式"></a>二次方公式</h4><p>二次方贝兹曲线的路径由给定点P0、P1、P2的函数B（t）追踪：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E4%BA%8C%E6%AC%A1%E6%96%B9%E5%85%AC%E5%BC%8F.jpg" alt=""><br>TrueType字型就运用了以贝兹样条组成的二次贝兹曲线</p>
+<h4 id="三次方公式"><a href="#三次方公式" class="headerlink" title="三次方公式"></a>三次方公式</h4><p>P0、P1、P2、P3四个点在平面或在三维空间中定义了三次方贝兹曲线。曲线起始于P0走向P1，并从P2的方向来到P3。一般不会经过P1或P2；这两个点只是在那里提供方向资讯。P0和P1之间的间距，决定了曲线在转而趋进P3之前，走向P2方向的“长度有多长”<br>曲线的参数形式为：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E4%B8%89%E6%AC%A1%E6%96%B9%E5%85%AC%E5%BC%8F.jpg" alt=""><br>现代的成象系统，如PostScript、Asymptote和Metafont，运用了以贝兹样条组成的三次贝兹曲线，用来描绘曲线轮廓</p>
+<h4 id="一般参数公式"><a href="#一般参数公式" class="headerlink" title="一般参数公式"></a>一般参数公式</h4><p>阶贝兹曲线可如下推断。给定点P0、P1、…、Pn，其贝兹曲线即：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E8%B4%9D%E5%A1%9E%E5%B0%94%E4%B8%80%E8%88%AC%E5%8F%82%E6%95%B0%E5%BC%8F.jpg" alt=""><br>如上公式可如下递归表达： 用表示由点P0、P1、…、Pn所决定的贝兹曲线</p>
+<h4 id="公式说明"><a href="#公式说明" class="headerlink" title="公式说明"></a>公式说明</h4><ol>
+<li>开始于P0并结束于Pn的曲线，即所谓的端点插值法属性</li>
+<li>曲线是直线的充分必要条件是所有的控制点都位在曲线上。同样的，贝塞尔曲线是直线的充分必要条件是控制点共线</li>
+<li>曲线的起始点（结束点）相切于贝塞尔多边形的第一节（最后一节）</li>
+<li>一条曲线可在任意点切割成两条或任意多条子曲线，每一条子曲线仍是贝塞尔曲线</li>
+<li>一些看似简单的曲线（如圆）无法以贝塞尔曲线精确的描述，或分段成贝塞尔曲线（虽然当每个内部控制点对单位圆上的外部控制点水平或垂直的的距离为时，分成四段的贝兹曲线，可以小于千分之一的最大半径误差近似于圆）</li>
+<li>位于固定偏移量的曲线（来自给定的贝塞尔曲线），又称作偏移曲线（假平行于原来的曲线，如两条铁轨之间的偏移）无法以贝兹曲线精确的形成（某些琐屑实例除外）。无论如何，现存的启发法通常可为实际用途中给出近似值</li>
+</ol>
+<h3 id="Android中的贝塞尔曲线使用"><a href="#Android中的贝塞尔曲线使用" class="headerlink" title="Android中的贝塞尔曲线使用"></a>Android中的贝塞尔曲线使用</h3><p>首先得到贝塞尔曲线的图像及要素<br>然后使用Path绘制<br>Path工具类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Path path = <span class="keyword">new</span> Path();</span><br></pre></td></tr></table></figure></p>
+<p>二阶贝塞尔：其参数第一对是控制点，第二对是结束点<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path.quadTo();</span><br></pre></td></tr></table></figure></p>
+<p>e.g.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">path.moveTo(<span class="number">100</span>, <span class="number">400</span>);</span><br><span class="line">path.quadTo(<span class="number">200</span>, <span class="number">0</span>, <span class="number">500</span>, <span class="number">400</span>);</span><br><span class="line">path.quadTo(<span class="number">700</span>, <span class="number">600</span>, <span class="number">900</span>, <span class="number">400</span>);</span><br><span class="line">canvas.drawPath(path, paint);</span><br></pre></td></tr></table></figure></p>
+<p>三阶贝塞尔<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path.cubicTo();</span><br></pre></td></tr></table></figure></p>
+<p>e.g.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">path.moveTo(<span class="number">100</span>, <span class="number">1000</span>);</span><br><span class="line">path.cubicTo(<span class="number">300</span>, <span class="number">900</span>, <span class="number">600</span>, <span class="number">1200</span>, <span class="number">900</span>, <span class="number">1000</span>);</span><br><span class="line">canvas.drawPath(path, paint);</span><br></pre></td></tr></table></figure></p>
+<p>生成二阶及三阶贝塞尔曲线如下图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-Anroid%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6.png" alt=""></p>
+<h3 id="贝塞尔曲线实现波形图"><a href="#贝塞尔曲线实现波形图" class="headerlink" title="贝塞尔曲线实现波形图"></a>贝塞尔曲线实现波形图</h3><p>在<code>onDraw()</code>里面绘制<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> waveLen = <span class="number">200</span>;</span><br><span class="line"><span class="keyword">int</span> originY = <span class="number">400</span>;</span><br><span class="line">path.moveTo(-waveLen, originY);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = -waveLen; i &lt; getWidth() + waveLen; i += waveLen) &#123;</span><br><span class="line">	<span class="comment">//使用quadTo，绝对位置</span></span><br><span class="line">	<span class="comment">//path.quadTo(i + waveLen / 4, 600, i + waveLen / 2, originY);</span></span><br><span class="line">	<span class="comment">//path.quadTo(i + waveLen * 3 / 4, 200, i + waveLen, originY);</span></span><br><span class="line">	<span class="comment">//canvas.drawPath(path, paint);</span></span><br><span class="line">	<span class="comment">//使用rQuadTo，相对位置</span></span><br><span class="line">	path.rQuadTo(waveLen / <span class="number">4</span>, <span class="number">200</span>, waveLen / <span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">	path.rQuadTo(waveLen / <span class="number">4</span>, -<span class="number">200</span>, waveLen / <span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line">canvas.drawPath(path, paint);</span><br></pre></td></tr></table></figure></p>
+<p>实现效果如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E6%B3%A2%E5%BD%A2%E5%9B%BE.png" alt=""><br>最后封闭空间<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> waveLen = <span class="number">200</span>;</span><br><span class="line"><span class="keyword">int</span> originY = <span class="number">400</span>;</span><br><span class="line">path.moveTo(-waveLen, originY);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = -waveLen; i &lt; getWidth() + waveLen; i += waveLen) &#123;</span><br><span class="line">	<span class="comment">//使用quadTo，绝对位置</span></span><br><span class="line">	<span class="comment">//path.quadTo(i + waveLen / 4, 600, i + waveLen / 2, originY);</span></span><br><span class="line">	<span class="comment">//path.quadTo(i + waveLen * 3 / 4, 200, i + waveLen, originY);</span></span><br><span class="line">	<span class="comment">//canvas.drawPath(path, paint);</span></span><br><span class="line">	<span class="comment">//使用rQuadTo，相对位置</span></span><br><span class="line">	path.rQuadTo(waveLen / <span class="number">4</span>, <span class="number">200</span>, waveLen / <span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">	path.rQuadTo(waveLen / <span class="number">4</span>, -<span class="number">200</span>, waveLen / <span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line">path.lineTo(getWidth(), getHeight());</span><br><span class="line">path.lineTo(<span class="number">0</span>, getHeight());</span><br><span class="line">path.close();</span><br><span class="line">canvas.drawPath(path, paint);</span><br></pre></td></tr></table></figure></p>
+<p>得到图像如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E6%B3%A2%E5%BD%A2%E5%9B%BE%E5%B0%81%E9%97%AD.png" alt=""><br>实现将波纹动起来这里贴出整个自定义View代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WaveView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"cj5785"</span>;</span><br><span class="line">    <span class="keyword">private</span> Path path;</span><br><span class="line">    <span class="keyword">private</span> Paint paint;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> waveLen = <span class="number">200</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> dx;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WaveView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        path = <span class="keyword">new</span> Path();</span><br><span class="line">        paint = <span class="keyword">new</span> Paint();</span><br><span class="line">        paint.setColor(Color.RED);</span><br><span class="line">        paint.setStrokeWidth(<span class="number">8</span>);</span><br><span class="line">        paint.setStyle(Paint.Style.FILL_AND_STROKE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">        <span class="comment">//波形</span></span><br><span class="line">        <span class="keyword">int</span> originY = <span class="number">400</span>;</span><br><span class="line">        path.reset();</span><br><span class="line">        path.moveTo(-waveLen + dx, originY);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = -waveLen; i &lt; getWidth() + waveLen; i += waveLen) &#123;</span><br><span class="line">            <span class="comment">//使用quadTo</span></span><br><span class="line"><span class="comment">//            path.quadTo(i + waveLen / 4, 600, i + waveLen / 2, originY);</span></span><br><span class="line"><span class="comment">//            path.quadTo(i + waveLen * 3 / 4, 200, i + waveLen, originY);</span></span><br><span class="line"><span class="comment">//            canvas.drawPath(path, paint);</span></span><br><span class="line">            <span class="comment">//使用rQuadTo</span></span><br><span class="line">            path.rQuadTo(waveLen / <span class="number">4</span>, <span class="number">200</span>, waveLen / <span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">            path.rQuadTo(waveLen / <span class="number">4</span>, -<span class="number">200</span>, waveLen / <span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//封闭空间</span></span><br><span class="line">        path.lineTo(getWidth(), getHeight());</span><br><span class="line">        path.lineTo(<span class="number">0</span>, getHeight());</span><br><span class="line">        path.close();</span><br><span class="line">        canvas.drawPath(path, paint);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ValueAnimator animator = ValueAnimator.ofInt(<span class="number">0</span>, waveLen);</span><br><span class="line">        animator.setDuration(<span class="number">1000</span>);</span><br><span class="line">        animator.setRepeatCount(ValueAnimator.INFINITE);</span><br><span class="line">        animator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">                dx = (<span class="keyword">int</span>)animation.getAnimatedValue();</span><br><span class="line">                postInvalidate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        animator.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BPath%E5%92%8CPathMeasure-%E5%8A%A8%E6%80%81%E6%B3%A2%E6%B5%AA.gif" alt=""></p>
+<h3 id="PathMeasure"><a href="#PathMeasure" class="headerlink" title="PathMeasure"></a>PathMeasure</h3><p>顾名思义，PathMeasure是一个用来测量Path的类，主要有以下方法</p>
+<h4 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h4><table><tr><td>方法名</td><td>释义</td></tr><tr><td><code>PathMeasure()</code></td><td>创建一个空的<code>PathMeasure</code></td></tr><tr><td><code>PathMeasure(Path path, boolean forceClosed)</code></td><td>创建<code>PathMeasure</code>并关联一个指定的Path(Path需要已经创建完成)</td></tr></table>
+
+<ul>
+<li><p>无参构造函数：<code>PathMeasure ()</code><br>用这个构造函数可创建一个空的<code>PathMeasure</code>，但是使用之前需要先调用<code>setPath</code>方法来与<code>Path</code>进行关联。被关联的<code>Path</code>必须是已经创建好的，如果关联之后<code>Path</code>内容进行了更改，则需要使用<code>setPath</code>方法重新关联</p>
+</li>
+<li><p>有参构造函数：<code>PathMeasure (Path path, boolean forceClosed)</code><br>用这个构造函数是创建一个<code>PathMeasure</code>并关联一个<code>Path</code>， 其实和创建一个空的<code>PathMeasure</code>后调用<code>setPath</code>进行关联效果是一样的，同样，被关联的<code>Path</code>也必须是已经创建好的，如果关联之后Path内容进行了更改，则需要使用<code>setPath</code>方法重新关联<br>该方法有两个参数，第一个参数自然就是被关联的<code>Path</code>了，第二个参数是用来确保<code>Path</code>闭合，如果设置为<code>true</code>，则不论之前<code>Path</code>是否闭合，都会自动闭合该<code>Path</code>(如果<code>Path</code>可以闭合的话)</p>
+</li>
+<li><p>在这里有两点需要明确</p>
+<ul>
+<li>不论<code>forceClosed</code>设置为何种状态(<code>true</code>或者<code>false</code>)， 都不会影响原有<code>Path</code>的状态，即<code>Path</code>与<code>PathMeasure</code>关联之后，之前的的<code>Path</code>不会有任何改变</li>
+<li><code>forceClosed</code>的设置状态可能会影响测量结果，如果<code>Path</code>未闭合但在与<code>PathMeasure</code>关联的时候设置<code>forceClosed</code>为<code>true</code>时，测量结果可能会比<code>Path</code>实际长度稍长一点，获取到到是该<code>Path</code>闭合时的状态</li>
+</ul>
+</li>
+</ul>
+<h4 id="公共方法"><a href="#公共方法" class="headerlink" title="公共方法"></a>公共方法</h4><table><tr><td>返回值</td><td>方法名</td><td>释义</td></tr><tr><td><code>void</code></td><td><code>setPath(Path path, boolean forceClosed)</code></td><td>关联一个Path</td></tr><tr><td><code>boolean</code></td><td><code>isClosed()</code></td><td>是否闭合</td></tr><tr><td><code>float</code></td><td><code>getLength()</code></td><td>获取Path的长度</td></tr><tr><td><code>boolean</code></td><td><code>nextContour()</code></td><td>跳转到下一个轮廓</td></tr><tr><td><code>boolean</code></td><td><code>getSegment(float startD, float stopD, Path dst, boolean startWithMoveTo)</code></td><td>截取片段</td></tr><tr><td><code>boolean</code></td><td><code>getPosTan(float distance, float[] pos, float[] tan)</code></td><td>获取指定长度的位置坐标及该点切线值</td></tr><tr><td><code>boolean</code></td><td><code>getMatrix(float distance, Matrix matrix, int flags)</code></td><td>获取指定长度的位置坐标及该点</td></tr></table>
+
+<ul>
+<li><p><code>setPath</code>是<code>PathMeasure</code>与<code>Path</code>关联的重要方法，效果和构造函数中两个参数的作用是一样的</p>
+</li>
+<li><p><code>isClosed</code>用于判断<code>Path</code>是否闭合，但是如果你在关联<code>Path</code>的时候设置<code>forceClosed</code>为<code>true</code>的话，这个方法的返回值则一定为<code>true</code></p>
+</li>
+<li><p><code>getLength</code>用于获取<code>Path</code>的总长度</p>
+</li>
+<li><p><code>getSegment</code>用于获取<code>Path</code>的一个片段</p>
+<table><tr><td>参数</td><td>作用</td><td>备注</td></tr><tr><td><code>返回值(boolean)</code></td><td>判断截取是否成功</td><td><code>true</code>表示截取成功，结果存入<code>dst</code>中，<code>false</code>截取失败，不会改变<code>dst</code>中内容</td></tr><tr><td><code>startD</code></td><td>开始截取位置距离<code>Path</code>起点的长度</td><td>取值范围:<code>0 &lt;= startD &lt; stopD &lt;= Path</code>总长度</td></tr><tr><td><code>stopD</code></td><td>结束截取位置距离<code>Path</code>起点的长度</td><td>取值范围:<code>0 &lt;= startD &lt; stopD &lt;= Path</code>总长度</td></tr><tr><td><code>dst</code></td><td>截取的 Path 将会添加到<code>dst</code>中</td><td>注意: 是添加，而不是替换</td></tr><tr><td><code>startWithMoveTo</code></td><td>起始点是否使用<code>moveTo</code></td><td>用于保证截取的<code>Path</code>第一个点位置不变</td></tr></table><br>  1. 如果<code>startD</code>、<code>stopD</code>的数值不在取值范围<code>[0, getLength]</code>内，或者<code>startD == stopD</code>则返回值为<code>false</code>，不会改变<code>dst</code>内容<br>  2. 如果在安卓4.4或者之前的版本，在默认开启硬件加速的情况下，更改<code>dst</code>的内容后可能绘制会出现问题，请关闭硬件加速或者给<code>dst</code>添加一个单个操作，例如:<code>dst.rLineTo(0, 0)</code><br>  3. 可以用以下规则来判断<code>startWithMoveTo</code>的取值<br>  <table><tr><td>取值</td><td>主要功用</td></tr><tr><td><code>true</code></td><td>保证截取得到的<code>Path</code>片段不会发生形变</td></tr><tr><td><code>false</code></td><td>保证存储截取片段的<code>Path(dst)</code>的连续性</td></tr></table>
+</li>
+<li><p><code>nextContour</code><br>我们知道<code>Path</code>可以由多条曲线构成，但不论是<code>getLength</code>,<code>getgetSegment</code>或者是其它方法，都只会在其中第一条线段上运行，而这个<code>nextContour</code>就是用于跳转到下一条曲线到方法，如果跳转成功，则返回<code>true</code>，如果跳转失败，则返回<code>false</code></p>
+</li>
+<li><p><code>getPosTan</code>这个方法是用于得到路径上某一长度的位置以及该位置的正切值：</p>
+<table><tr><td>参数</td><td>作用</td><td>备注</td></tr><tr><td><code>返回值(boolean)</code></td><td>判断获取是否成功</td><td><code>true</code>表示成功，数据会存入<code>pos</code>和<code>tan</code>中，<code>false</code>表示失败，<code>pos</code>和<code>tan</code>不会改变</td></tr><tr><td><code>distance</code></td><td>距离<code>Path</code>起点的长度</td><td>取值范围: <code>0 &lt;= distance &lt;= getLength</code></td></tr><tr><td><code>pos</code></td><td>该点的坐标值</td><td>坐标值: <code>(x==[0], y==[1])</code></td></tr><tr><td><code>tan</code></td><td>该点的正切值</td><td>正切值:<code>(x==[0], y==[1])</code></td></tr></table>
+</li>
+<li><p><code>getMatrix</code> 这个方法是用于得到路径上某一长度的位置以及该位置的正切值的矩阵</p>
+<table><tr><td>参数</td><td>作用</td><td>备注</td></tr><tr><td><code>返回值(boolean)</code></td><td>判断获取是否成功</td><td><code>true</code>表示成功，数据会存入<code>matrix</code>中，<code>false</code>失败，<code>matrix</code>内容不会改变</td></tr><tr><td><code>distance</code></td><td>距离<code>Path</code>起点的长度</td><td>取值范围: <code>0 &lt;= distance &lt;= getLength</code></td></tr><tr><td><code>matrix</code></td><td>根据<code>falgs</code>封装好的<code>matrix</code></td><td>会根据<code>flags</code>的设置而存入不同的内容</td></tr><tr><td><code>flags</code></td><td>规定哪些内容会存入到<code>matrix</code>中</td><td>可选择<code>POSITION_MATRIX_FLAG(位置)</code> <code>ANGENT_MATRIX_FLAG(正切)</code></td></tr></table>
+
+</li>
+</ul>
+<h4 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h4><ul>
+<li>构造方法<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">path.reset();</span><br><span class="line">path.lineTo(<span class="number">0</span>, <span class="number">400</span>);</span><br><span class="line">path.lineTo(<span class="number">400</span>, <span class="number">400</span>);</span><br><span class="line">path.lineTo(<span class="number">400</span>, <span class="number">0</span>);</span><br><span class="line">PathMeasure measure1 = <span class="keyword">new</span> PathMeasure(path, <span class="keyword">false</span>);</span><br><span class="line">PathMeasure measure2 = <span class="keyword">new</span> PathMeasure(path, <span class="keyword">true</span>);</span><br><span class="line">Log.d(TAG, <span class="string">"onDraw: measure1="</span> + measure1.getLength());</span><br><span class="line">Log.d(TAG, <span class="string">"onDraw: measure2="</span> + measure2.getLength());</span><br><span class="line">canvas.drawPath(path, paint);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>打印<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D/<span class="string">cj578:</span> <span class="string">onDraw:</span> measure1=<span class="number">1200.0</span></span><br><span class="line">D/<span class="string">cj578:</span> <span class="string">onDraw:</span> measure2=<span class="number">1600.0</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>getLength()</code>与<code>nextContour()</code><br>多路径需要关闭硬件加速<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">path.reset();</span><br><span class="line">path.addRect(-<span class="number">300</span>, -<span class="number">300</span>, <span class="number">300</span>, <span class="number">300</span>, Path.Direction.CCW);</span><br><span class="line">path.addRect(-<span class="number">200</span>, -<span class="number">200</span>, <span class="number">200</span>, <span class="number">200</span>, Path.Direction.CCW);</span><br><span class="line">path.addRect(-<span class="number">100</span>, -<span class="number">100</span>, <span class="number">100</span>, <span class="number">100</span>, Path.Direction.CCW);</span><br><span class="line">canvas.drawPath(path, paint);</span><br><span class="line">PathMeasure measure = <span class="keyword">new</span> PathMeasure(path, <span class="keyword">false</span>);</span><br><span class="line"><span class="keyword">float</span> len1 = measure.getLength();</span><br><span class="line">Log.d(TAG, <span class="string">"onDraw: len1="</span> + len1);</span><br><span class="line"><span class="keyword">int</span> i = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">while</span> (measure.nextContour()) &#123;</span><br><span class="line">    <span class="keyword">float</span> len = measure.getLength();</span><br><span class="line">    Log.d(TAG, <span class="string">"onDraw: len"</span> + i + <span class="string">"="</span> + len);</span><br><span class="line">    i++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>打印<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">D/<span class="string">cj578:</span> <span class="string">onDraw:</span> len1=<span class="number">2400.0</span></span><br><span class="line">D/<span class="string">cj578:</span> <span class="string">onDraw:</span> len2=<span class="number">1600.0</span></span><br><span class="line">D/<span class="string">cj578:</span> <span class="string">onDraw:</span> len3=<span class="number">800.0</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p><code>getSegment()</code>截取片断</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">path.reset();</span><br><span class="line">path.addRect(-<span class="number">300</span>, -<span class="number">300</span>, <span class="number">300</span>, <span class="number">300</span>, Path.Direction.CCW);</span><br><span class="line">PathMeasure measure = <span class="keyword">new</span> PathMeasure(path, <span class="keyword">false</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path();</span><br><span class="line">measure.getSegment(<span class="number">0</span>, <span class="number">1600</span>, dst, <span class="keyword">true</span>);</span><br><span class="line">canvas.drawPath(dst, paint);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>getPosTan()</code>获取位置和正切</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">path.reset();</span><br><span class="line">path.addCircle(<span class="number">0</span>, <span class="number">0</span>, <span class="number">300</span>, Path.Direction.CW);</span><br><span class="line">PathMeasure measure = <span class="keyword">new</span> PathMeasure(path, <span class="keyword">false</span>);</span><br><span class="line"><span class="keyword">float</span>[] pos = <span class="keyword">new</span> <span class="keyword">float</span>[<span class="number">2</span>];</span><br><span class="line"><span class="keyword">float</span>[] tan = <span class="keyword">new</span> <span class="keyword">float</span>[<span class="number">2</span>];</span><br><span class="line">measure.getPosTan(measure.getLength() / <span class="number">4</span>, pos, tan);</span><br><span class="line">Log.d(TAG, <span class="string">"onDraw: pos-x:"</span> + pos[<span class="number">0</span>] + <span class="string">",pos-y:"</span> + pos[<span class="number">1</span>]);</span><br><span class="line">Log.d(TAG, <span class="string">"onDraw: tan-x:"</span> + tan[<span class="number">0</span>] + <span class="string">",tan-y:"</span> + tan[<span class="number">1</span>]);</span><br><span class="line">canvas.drawPath(path, paint);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>打印<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D/<span class="string">cj578:</span> <span class="string">onDraw:</span> pos-<span class="string">x:</span><span class="number">4.2605415E-4</span>,pos-<span class="string">y:</span><span class="number">300.0</span></span><br><span class="line">D/<span class="string">cj578:</span> <span class="string">onDraw:</span> tan-<span class="string">x:</span><span class="number">-1.0</span>,tan-<span class="string">y:</span><span class="number">1.4448632E-6</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/09/03/高级UI之Path和PathMeasure/" title="高级UI之Path和PathMeasure">https://cj5785.com/2018/09/03/高级UI之Path和PathMeasure/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/高级UI/" rel="tag"># 高级UI</a>
+          
+            <a href="/tags/Path/" rel="tag"># Path</a>
+          
+            <a href="/tags/PathMeasure/" rel="tag"># PathMeasure</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/02/高级UI之画板Canvas/" rel="next" title="高级UI之画板Canvas">
+                <i class="fa fa-chevron-left"></i> 高级UI之画板Canvas
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/05/高级UI之UI绘制流程/" rel="prev" title="高级UI之UI绘制流程">
+                高级UI之UI绘制流程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#贝塞尔曲线"><span class="nav-number">1.</span> <span class="nav-text">贝塞尔曲线</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线性公式"><span class="nav-number">1.1.</span> <span class="nav-text">线性公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二次方公式"><span class="nav-number">1.2.</span> <span class="nav-text">二次方公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三次方公式"><span class="nav-number">1.3.</span> <span class="nav-text">三次方公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一般参数公式"><span class="nav-number">1.4.</span> <span class="nav-text">一般参数公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#公式说明"><span class="nav-number">1.5.</span> <span class="nav-text">公式说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android中的贝塞尔曲线使用"><span class="nav-number">2.</span> <span class="nav-text">Android中的贝塞尔曲线使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#贝塞尔曲线实现波形图"><span class="nav-number">3.</span> <span class="nav-text">贝塞尔曲线实现波形图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PathMeasure"><span class="nav-number">4.</span> <span class="nav-text">PathMeasure</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#构造方法"><span class="nav-number">4.1.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#公共方法"><span class="nav-number">4.2.</span> <span class="nav-text">公共方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用示例"><span class="nav-number">4.3.</span> <span class="nav-text">使用示例</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/09/03/高级UI之Path和PathMeasure/';
+          this.page.identifier = '2018/09/03/高级UI之Path和PathMeasure/';
+          this.page.title = '高级UI之Path和PathMeasure';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

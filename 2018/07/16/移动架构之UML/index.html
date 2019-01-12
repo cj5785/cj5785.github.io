@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="移动架构,UML,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="UML(Unified Modeling Language)，UML规范用来描述建模的概念有，类（对象的）、对象、关联、职责、行为、接口、用例、包、顺序、协作，以及状态。这里对UML做一个简单介绍">
+<meta name="keywords" content="移动架构,UML">
+<meta property="og:type" content="article">
+<meta property="og:title" content="移动架构之UML">
+<meta property="og:url" content="https://cj5785.com/2018/07/16/移动架构之UML/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="UML(Unified Modeling Language)，UML规范用来描述建模的概念有，类（对象的）、对象、关联、职责、行为、接口、用例、包、顺序、协作，以及状态。这里对UML做一个简单介绍">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E6%B3%9B%E5%8C%96.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E5%AE%9E%E7%8E%B0.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E5%85%B3%E8%81%941.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E5%85%B3%E8%81%942.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E8%81%9A%E5%90%88.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E7%BB%84%E5%90%88.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E4%BE%9D%E8%B5%96.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E7%B1%BB%E5%9B%BE%E7%9A%84%E5%85%B3%E7%B3%BB%E5%BC%BA%E5%BC%B1%E9%A1%BA%E5%BA%8F.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-%E7%94%9F%E5%91%BD%E7%BA%BF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-%E6%8E%A7%E5%88%B6%E7%84%A6%E7%82%B9.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-%E6%B6%88%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-%E8%87%AA%E5%85%B3%E8%81%94%E6%B6%88%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-Combined%20Fragments.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%8F%82%E4%B8%8E%E8%80%85.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E7%94%A8%E4%BE%8B.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%85%B3%E7%B3%BB.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%85%B3%E8%81%94.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E6%B3%9B%E5%8C%96.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%8C%85%E5%90%AB.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E6%8B%93%E5%B1%95.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%AE%8C%E6%95%B4%E7%94%A8%E4%BE%8B%E5%9B%BE.png">
+<meta property="og:updated_time" content="2018-09-11T07:14:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="移动架构之UML">
+<meta name="twitter:description" content="UML(Unified Modeling Language)，UML规范用来描述建模的概念有，类（对象的）、对象、关联、职责、行为、接口、用例、包、顺序、协作，以及状态。这里对UML做一个简单介绍">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E6%B3%9B%E5%8C%96.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/07/16/移动架构之UML/">
+
+
+
+
+
+  <title>移动架构之UML | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/07/16/移动架构之UML/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">移动架构之UML</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T20:13:51+08:00">
+                2018-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/移动架构/" itemprop="url" rel="index">
+                    <span itemprop="name">移动架构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/16/移动架构之UML/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/07/16/移动架构之UML/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>UML(Unified Modeling Language)，UML规范用来描述建模的概念有，类（对象的）、对象、关联、职责、行为、接口、用例、包、顺序、协作，以及状态。这里对UML做一个简单介绍<br><a id="more"></a></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>UNL虽然有很多功能，但平时有的最多的就是类图，时序图和用例图，那么接下来分别对这三种功能做一个简要概述</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p>在UML类图中，常见的有以下几种关系: 泛化（Generalization）,  实现（Realization）, 关联（Association), 聚合（Aggregation）, 组合(Composition), 依赖(Dependency)</p>
+<h4 id="泛化（Generalization）"><a href="#泛化（Generalization）" class="headerlink" title="泛化（Generalization）"></a>泛化（Generalization）</h4><p>【泛化关系】：是一种继承关系, 表示一般与特殊的关系, 它指定了子类如何特化父类的所有特征和行为. 例如：老虎是动物的一种, 即有老虎的特性也有动物的共性<br>【箭头指向】：带三角箭头的实线，箭头指向父类<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E6%B3%9B%E5%8C%96.png" alt=""></p>
+<h4 id="实现（Realization）"><a href="#实现（Realization）" class="headerlink" title="实现（Realization）"></a>实现（Realization）</h4><p>【实现关系】：是一种类与接口的关系, 表示类是接口所有特征和行为的实现.<br>【箭头指向】：带三角箭头的虚线，箭头指向接口<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E5%AE%9E%E7%8E%B0.png" alt=""></p>
+<h4 id="关联（Association"><a href="#关联（Association" class="headerlink" title="关联（Association)"></a>关联（Association)</h4><p>【关联关系】：是一种拥有的关系, 它使一个类知道另一个类的属性和方法；如：老师与学生，丈夫与妻子<br>关联可以是双向的，也可以是单向的。双向的关联可以有两个箭头或者没有箭头，单向的关联有一个箭头。<br>【代码体现】：成员变量<br>【箭头及指向】：带普通箭头的实心线，指向被拥有者<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E5%85%B3%E8%81%941.png" alt=""><br>上图中，老师与学生是双向关联，老师有多名学生，学生也可能有多名老师。但学生与某课程间的关系为单向关联，一名学生可能要上多门课程，课程是个抽象的东西他不拥有学生<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E5%85%B3%E8%81%942.png" alt=""><br>上图为自身关联</p>
+<h4 id="聚合（Aggregation）"><a href="#聚合（Aggregation）" class="headerlink" title="聚合（Aggregation）"></a>聚合（Aggregation）</h4><p>【聚合关系】：是整体与部分的关系, 且部分可以离开整体而单独存在. 如车和轮胎是整体和部分的关系, 轮胎离开车仍然可以存在.<br>聚合关系是关联关系的一种，是强的关联关系；关联和聚合在语法上无法区分，必须考察具体的逻辑关系。<br>【代码体现】：成员变量<br>【箭头及指向】：带空心菱形的实心线，菱形指向整体<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E8%81%9A%E5%90%88.png" alt=""></p>
+<h4 id="组合-Composition"><a href="#组合-Composition" class="headerlink" title="组合(Composition)"></a>组合(Composition)</h4><p>【组合关系】：是整体与部分的关系, 但部分不能离开整体而单独存在. 如公司和部门是整体和部分的关系, 没有公司就不存在部门.<br>组合关系是关联关系的一种，是比聚合关系还要强的关系，它要求普通的聚合关系中代表整体的对象负责代表部分的对象的生命周期<br>【代码体现】：成员变量<br>【箭头及指向】：带实心菱形的实线，菱形指向整体<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E7%BB%84%E5%90%88.png" alt=""></p>
+<h4 id="依赖-Dependency"><a href="#依赖-Dependency" class="headerlink" title="依赖(Dependency)"></a>依赖(Dependency)</h4><p>【依赖关系】：是一种使用的关系,  即一个类的实现需要另一个类的协助, 所以要尽量不使用双向的互相依赖.<br>【代码表现】：局部变量、方法的参数或者对静态方法的调用<br>【箭头及指向】：带箭头的虚线，指向被使用者<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E4%BE%9D%E8%B5%96.png" alt=""></p>
+<h4 id="各种关系的强弱顺序"><a href="#各种关系的强弱顺序" class="headerlink" title="各种关系的强弱顺序"></a>各种关系的强弱顺序</h4><p>泛化 = 实现 &gt; 组合 &gt; 聚合 &gt; 关联 &gt; 依赖<br>下面这张UML图，比较形象地展示了各种类图关系：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%B1%BB%E5%9B%BE-%E7%B1%BB%E5%9B%BE%E7%9A%84%E5%85%B3%E7%B3%BB%E5%BC%BA%E5%BC%B1%E9%A1%BA%E5%BA%8F.png" alt=""></p>
+<h3 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h3><p>时序图（<code>Sequence Diagram</code>）是显示对象之间交互的图，这些对象是按时间顺序排列的。顺序图中显示的是参与交互的对象及其对象之间消息交互的顺序。时序图中包括的建模元素主要有：角色（<code>Actor</code>）、对象（<code>Object</code>）、生命线（<code>Lifeline</code>）、控制焦点（<code>Focus of control</code>）、消息（<code>Message</code>）等等</p>
+<h4 id="角色（Actor）"><a href="#角色（Actor）" class="headerlink" title="角色（Actor）"></a>角色（Actor）</h4><p>系统角色，可以是人、及其甚至其他的系统或者子系统</p>
+<h4 id="对象（Object）"><a href="#对象（Object）" class="headerlink" title="对象（Object）"></a>对象（Object）</h4><p>对象包括三种命名方式：<br>第一种方式包括对象名和类名<br>第二中方式只显示类名不显示对象名，即表示他是一个匿名对象<br>第三种方式只显示对象名不显示类明</p>
+<h4 id="生命线（Lifeline）"><a href="#生命线（Lifeline）" class="headerlink" title="生命线（Lifeline）"></a>生命线（Lifeline）</h4><p>生命线在顺序图中表示为从对象图标向下延伸的一条虚线，表示对象存在的时间，如下图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-%E7%94%9F%E5%91%BD%E7%BA%BF.png" alt=""></p>
+<h4 id="控制焦点（Focus-of-Control）"><a href="#控制焦点（Focus-of-Control）" class="headerlink" title="控制焦点（Focus of Control）"></a>控制焦点（Focus of Control）</h4><p>控制焦点是顺序图中表示时间段的符号，在这个时间段内对象将执行相应的操作。用小矩形表示。如下图表示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-%E6%8E%A7%E5%88%B6%E7%84%A6%E7%82%B9.png" alt=""></p>
+<h4 id="消息（Message）"><a href="#消息（Message）" class="headerlink" title="消息（Message）"></a>消息（Message）</h4><p>消息一般分为同步消息（<code>Synchronous Message</code>），异步消息（<code>Asynchronous Message</code>）和返回消息（<code>Return Message</code>）.如下图所示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-%E6%B6%88%E6%81%AF.png" alt=""></p>
+<ul>
+<li>同步消息=调用消息（<code>Synchronous Message</code>）<br>消息的发送者把控制传递给消息的接收者，然后停止活动，等待消息的接收者放弃或者返回控制。用来表示同步的意义。</li>
+<li>异步消息（<code>Asynchronous Message</code>）<br>消息发送者通过消息把信号传递给消息的接收者，然后继续自己的活动，不等待接受者返回消息或者控制。异步消息的接收者和发送者是并发工作的。</li>
+<li>返回消息（<code>Return Message</code>）<br>返回消息表示从过程调用返回</li>
+<li>自关联消息（<code>Self-Message</code>）<br>表示方法的自身调用以及一个对象内的一个方法调用另外一个方法<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-%E8%87%AA%E5%85%B3%E8%81%94%E6%B6%88%E6%81%AF.png" alt=""></li>
+<li><code>Combined Fragments</code><br>表示带有一些特定条件发送的消息<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E6%97%B6%E5%BA%8F%E5%9B%BE-Combined%20Fragments.png" alt=""><br>如上图，就表示，循环（<code>loop</code>）发送<code>GetProperty</code>消息获得属性。在使用Astah画时序图时，选择一个<code>Combined Fragments</code>之后，可以在其对应的属性面板更改对应的发送条件。里面介绍了很多，此处列举一二：<br><code>Alternative fragment（denoted &quot;alt&quot;）</code> 与<code>if…then…else</code>对应<br><code>Option fragment (denoted &quot;opt&quot;)</code>与<code>Switch</code>对应<br><code>Parallel fragment (denoted &quot;par&quot;)</code>表示同时发生<br><code>Loop fragment(denoted &quot;loop&quot;)</code> 与<code>for</code>或者<code>Foreach</code>对应</li>
+</ul>
+<h3 id="用例图"><a href="#用例图" class="headerlink" title="用例图"></a>用例图</h3><p>用例图主要用来描述“用户、需求、系统功能单元”之间的关系。它展示一个外部用户能够观察到的系统功能模型图。用例图多用于静态建模阶段（主要是业务建模和需求建模），帮助开发团队以一种可视化的方式理解系统的功能需求</p>
+<h4 id="参与者（Actor）"><a href="#参与者（Actor）" class="headerlink" title="参与者（Actor）"></a>参与者（Actor）</h4><p>在系统外部与系统直接交互的人或事物；需要注意以下两点：<br>1）参与者是角色而不是具体的人，它代表了参与者在与系统打交道的过程中所扮演的角色。所以在系统的实际运作中，一个实际用户可能对应系统的多个参与者。不同的用户也可以只对应于一个参与者，从而代表同一参与者的不同实例<br>2）参与者作为外部用户（而不是内部）与系统发生交互作用，是它的主要特征。<br>在UML中，参与者使用如图所示的一个小人表示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%8F%82%E4%B8%8E%E8%80%85.png" alt=""></p>
+<h4 id="用例（Use-Case）"><a href="#用例（Use-Case）" class="headerlink" title="用例（Use Case）"></a>用例（Use Case）</h4><p>系统外部可见的一个系统功能单元。系统的功能由系统单元所提供，并通过一系列系统单元与一个或多个参与者之间交换的消息所表达。用椭圆表示，椭圆中的文字简述系统的功能<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E7%94%A8%E4%BE%8B.png" alt=""></p>
+<h4 id="关系（Relationship）"><a href="#关系（Relationship）" class="headerlink" title="关系（Relationship）"></a>关系（Relationship）</h4><p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%85%B3%E7%B3%BB.png" alt=""><br>关联（Association）<br>表示参与者与用例之间的交互，通信途径，任何一方都可发送或接受消息<br>箭头指向：指向消息接收方<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%85%B3%E8%81%94.png" alt=""><br>泛化（Inheritance）<br>在编程中，泛化关系是一种很重要的关系，我们随处可见<br>泛化关系是一般和特殊关系，就是通常理解的继承关系，子用例和父用例相似，但表现出更特别的行为；子用例将继承父用例的所有结构、行为和关系。子用例可以使用父用例的一段行为，也可以重载它。父用例通常是抽象的<br>箭头指向（需要特别注意）：指向父用例<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E6%B3%9B%E5%8C%96.png" alt=""><br>包含（Include）<br>包含关系用来把一个较复杂用例所表示功能分解成较小的步骤。包含用例是必须的，如果缺少包含用例，基用例就不完整；包含用例必须被执行。<br>箭头指向：指向分解出来的功能用例<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%8C%85%E5%90%AB.png" alt=""><br>扩展（Extend）<br>扩展关系是指用例功能的延伸，相当于为基础用例提供一个附加功能。扩展用例是可选的，如果缺少扩展用例，不会影响到基用例的完整性。<br>箭头指向（需要特别注意）：指向基用例<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E6%8B%93%E5%B1%95.png" alt=""><br>供一个完整的系统的用例图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E7%A7%BB%E5%8A%A8%E6%9E%B6%E6%9E%84%E4%B9%8BUML-%E7%94%A8%E4%BE%8B%E5%9B%BE-%E5%AE%8C%E6%95%B4%E7%94%A8%E4%BE%8B%E5%9B%BE.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/07/16/移动架构之UML/" title="移动架构之UML">https://cj5785.com/2018/07/16/移动架构之UML/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/移动架构/" rel="tag"># 移动架构</a>
+          
+            <a href="/tags/UML/" rel="tag"># UML</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/15/性能优化之service进程防杀/" rel="next" title="性能优化之service进程防杀">
+                <i class="fa fa-chevron-left"></i> 性能优化之service进程防杀
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/17/移动架构之简单工厂模式/" rel="prev" title="移动架构之简单工厂模式">
+                移动架构之简单工厂模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类图"><span class="nav-number">2.</span> <span class="nav-text">类图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#泛化（Generalization）"><span class="nav-number">2.1.</span> <span class="nav-text">泛化（Generalization）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现（Realization）"><span class="nav-number">2.2.</span> <span class="nav-text">实现（Realization）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关联（Association"><span class="nav-number">2.3.</span> <span class="nav-text">关联（Association)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#聚合（Aggregation）"><span class="nav-number">2.4.</span> <span class="nav-text">聚合（Aggregation）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组合-Composition"><span class="nav-number">2.5.</span> <span class="nav-text">组合(Composition)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#依赖-Dependency"><span class="nav-number">2.6.</span> <span class="nav-text">依赖(Dependency)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#各种关系的强弱顺序"><span class="nav-number">2.7.</span> <span class="nav-text">各种关系的强弱顺序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时序图"><span class="nav-number">3.</span> <span class="nav-text">时序图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#角色（Actor）"><span class="nav-number">3.1.</span> <span class="nav-text">角色（Actor）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象（Object）"><span class="nav-number">3.2.</span> <span class="nav-text">对象（Object）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生命线（Lifeline）"><span class="nav-number">3.3.</span> <span class="nav-text">生命线（Lifeline）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#控制焦点（Focus-of-Control）"><span class="nav-number">3.4.</span> <span class="nav-text">控制焦点（Focus of Control）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#消息（Message）"><span class="nav-number">3.5.</span> <span class="nav-text">消息（Message）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用例图"><span class="nav-number">4.</span> <span class="nav-text">用例图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参与者（Actor）"><span class="nav-number">4.1.</span> <span class="nav-text">参与者（Actor）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例（Use-Case）"><span class="nav-number">4.2.</span> <span class="nav-text">用例（Use Case）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关系（Relationship）"><span class="nav-number">4.3.</span> <span class="nav-text">关系（Relationship）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/07/16/移动架构之UML/';
+          this.page.identifier = '2018/07/16/移动架构之UML/';
+          this.page.title = '移动架构之UML';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

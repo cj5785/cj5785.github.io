@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NDK,so动态库,fmod,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前面将的都是如何使用C/C++文件生成so动态库，那么在使用别人的so动态库的时候应该怎么做呢？这篇文章就是使用一个变声功能的动态库，完成对于以有so动态库的说明。">
+<meta name="keywords" content="NDK,so动态库,fmod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NDK开发之使用现有so动态库">
+<meta property="og:url" content="https://cj5785.com/2018/06/16/NDK开发之使用现有so动态库/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="前面将的都是如何使用C/C++文件生成so动态库，那么在使用别人的so动态库的时候应该怎么做呢？这篇文章就是使用一个变声功能的动态库，完成对于以有so动态库的说明。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg">
+<meta property="og:updated_time" content="2018-09-11T07:00:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NDK开发之使用现有so动态库">
+<meta name="twitter:description" content="前面将的都是如何使用C/C++文件生成so动态库，那么在使用别人的so动态库的时候应该怎么做呢？这篇文章就是使用一个变声功能的动态库，完成对于以有so动态库的说明。">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/06/16/NDK开发之使用现有so动态库/">
+
+
+
+
+
+  <title>NDK开发之使用现有so动态库 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/06/16/NDK开发之使用现有so动态库/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">NDK开发之使用现有so动态库</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-16T21:45:12+08:00">
+                2018-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/NDK/" itemprop="url" rel="index">
+                    <span itemprop="name">NDK</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/16/NDK开发之使用现有so动态库/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/16/NDK开发之使用现有so动态库/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前面将的都是如何使用C/C++文件生成so动态库，那么在使用别人的so动态库的时候应该怎么做呢？这篇文章就是使用一个变声功能的动态库，完成对于以有so动态库的说明。<br><a id="more"></a></p>
+<h3 id="动态库来源"><a href="#动态库来源" class="headerlink" title="动态库来源"></a>动态库来源</h3><ul>
+<li><p>在互联网中，有着许许多多动态库，很多厂商也对外提供动态库供开发者调用，例如高德地图的动态库，做地图开发的时候还是很方便的</p>
+</li>
+<li><p>本文主要讲一个可以使声音改变的动态库，这个动态库主要用于游戏中，游戏引擎中有使用到</p>
+</li>
+<li><p>这就是fmod动态库，首先我们要去下载其动态库文件<br><a href="https://www.fmod.com/" target="_blank" rel="noopener">官网地址</a><br>先要注册才能下载其文件，按照步骤来就好</p>
+</li>
+<li><p>在其下载界面，有<code>FMOD Studio API</code>，这里可以选择版本下载，我写这篇博客的时候，最新版本是<code>1.10.07</code>，在这里就不下载最新的了，我选择的是<code>1.08.28</code>，也就是<code>1.08</code>的最后一个版本。</p>
+</li>
+</ul>
+<h3 id="添加到项目中"><a href="#添加到项目中" class="headerlink" title="添加到项目中"></a>添加到项目中</h3><ul>
+<li><p>解压下载的文件，发现在api文件夹下有三个目录：<code>fsbank</code>，<code>lowlevel</code>，<code>studio</code></p>
+</li>
+<li><p>这里选择<code>lowlevel</code>，这是基于普遍使用选择的，也可以选择<code>studio</code>，其功能更为强大，不过相对地也更需要运算性能</p>
+</li>
+<li><p>在Android项目中新建libs目录，将<code>fmod.jar</code>拷贝至libs目录</p>
+</li>
+<li><p>新建jni目录，将<code>armeabi</code>或<code>armeabi-v7a</code>下的so文件拷贝至jni目录，将<code>lowlevel</code>目录下的<code>inc</code>头文件拷贝至jni文件夹，在这里先实现原声播放的功能，故在<code>lowlevel</code>下的<code>examples</code>下找到<code>play_sound.cpp</code>源文件，将其放在jni目录下，打开文件得知，其依赖的<code>common.h</code>头文件并不在<code>inc</code>中，找到<code>common.h</code>并拷贝至jni中，逐步寻找缺失的依赖文件，导入到jni中，整理完成后的jni文件目录如下：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">│  Android.mk</span><br><span class="line">│  common.cpp</span><br><span class="line">│  common.h</span><br><span class="line">│  common_platform.cpp</span><br><span class="line">│  common_platform.h</span><br><span class="line">│  libfmod.so</span><br><span class="line">│  libfmodL.so</span><br><span class="line">│  play_sound.cpp</span><br><span class="line">└─inc</span><br><span class="line">        fmod.h</span><br><span class="line">        fmod.hpp</span><br><span class="line">        fmod_codec.h</span><br><span class="line">        fmod_common.h</span><br><span class="line">        fmod_dsp.h</span><br><span class="line">        fmod_dsp_effects.h</span><br><span class="line">        fmod_errors.h</span><br><span class="line">        fmod_output.h</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="修改文件使其能够调用"><a href="#修改文件使其能够调用" class="headerlink" title="修改文件使其能够调用"></a>修改文件使其能够调用</h3><ul>
+<li><p>在<code>lowlevel</code>目录下，有Java的调用示例，在这里直接使用这个<code>MainActivity.java</code>进行修改调用</p>
+</li>
+<li><p>阅读<code>MainActivity.java</code>源代码，发现其使用的是动态获取权限，为方便使用，直接在清单文件中生命其权限，将其动态申请注释掉，在动态库加载时候，发现加载了一些没有的动态库，将没有的动态库去掉，加上自己的动态库，注意到jni中的调用方法和现有包名不统一，修改之，并将清单文件中的启动活动包名也修改</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.fmod.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Build;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> android.graphics.Typeface;</span><br><span class="line"><span class="keyword">import</span> android.util.TypedValue;</span><br><span class="line"><span class="keyword">import</span> android.view.MotionEvent;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.view.View.OnTouchListener;</span><br><span class="line"><span class="keyword">import</span> android.widget.LinearLayout;</span><br><span class="line"><span class="keyword">import</span> android.widget.LinearLayout.LayoutParams;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"><span class="keyword">import</span> android.widget.Button;</span><br><span class="line"><span class="keyword">import</span> android.content.pm.PackageManager;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> <span class="keyword">implements</span> <span class="title">OnTouchListener</span>, <span class="title">Runnable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> TextView mTxtScreen;</span><br><span class="line">	<span class="keyword">private</span> Thread mThread;</span><br><span class="line">	</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	<span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">    	<span class="comment">// Create the text area</span></span><br><span class="line">    	mTxtScreen = <span class="keyword">new</span> TextView(<span class="keyword">this</span>);</span><br><span class="line">    	mTxtScreen.setTextSize(TypedValue.COMPLEX_UNIT_SP, <span class="number">10.0f</span>);</span><br><span class="line">    	mTxtScreen.setTypeface(Typeface.MONOSPACE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Create the buttons</span></span><br><span class="line">        Button[] buttons = <span class="keyword">new</span> Button[<span class="number">9</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; buttons.length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">        	buttons[i] = <span class="keyword">new</span> Button(<span class="keyword">this</span>);</span><br><span class="line">        	buttons[i].setText(getButtonLabel(i));</span><br><span class="line">        	buttons[i].setOnTouchListener(<span class="keyword">this</span>);</span><br><span class="line">        	buttons[i].setId(i);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Create the button row layouts</span></span><br><span class="line">        LinearLayout llTopRowButtons = <span class="keyword">new</span> LinearLayout(<span class="keyword">this</span>);</span><br><span class="line">        llTopRowButtons.setOrientation(LinearLayout.HORIZONTAL);</span><br><span class="line">        LinearLayout llMiddleRowButtons = <span class="keyword">new</span> LinearLayout(<span class="keyword">this</span>);</span><br><span class="line">        llMiddleRowButtons.setOrientation(LinearLayout.HORIZONTAL);</span><br><span class="line">        LinearLayout llBottomRowButtons = <span class="keyword">new</span> LinearLayout(<span class="keyword">this</span>);</span><br><span class="line">        llBottomRowButtons.setOrientation(LinearLayout.HORIZONTAL);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Create the main view layout</span></span><br><span class="line">        LinearLayout llView = <span class="keyword">new</span> LinearLayout(<span class="keyword">this</span>);</span><br><span class="line">        llView.setOrientation(LinearLayout.VERTICAL);       </span><br><span class="line"></span><br><span class="line">        <span class="comment">// Create layout parameters</span></span><br><span class="line">        LinearLayout.LayoutParams lpLayout = <span class="keyword">new</span> LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, <span class="number">1.0f</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Set up the view hierarchy</span></span><br><span class="line">        llTopRowButtons.addView(buttons[<span class="number">0</span>], lpLayout);</span><br><span class="line">        llTopRowButtons.addView(buttons[<span class="number">6</span>], lpLayout);</span><br><span class="line">        llTopRowButtons.addView(buttons[<span class="number">1</span>], lpLayout);</span><br><span class="line">        llMiddleRowButtons.addView(buttons[<span class="number">4</span>], lpLayout);</span><br><span class="line">        llMiddleRowButtons.addView(buttons[<span class="number">8</span>], lpLayout);</span><br><span class="line">        llMiddleRowButtons.addView(buttons[<span class="number">5</span>], lpLayout);</span><br><span class="line">        llBottomRowButtons.addView(buttons[<span class="number">2</span>], lpLayout);</span><br><span class="line">        llBottomRowButtons.addView(buttons[<span class="number">7</span>], lpLayout);</span><br><span class="line">        llBottomRowButtons.addView(buttons[<span class="number">3</span>], lpLayout);</span><br><span class="line">        llView.addView(mTxtScreen, lpLayout);</span><br><span class="line">        llView.addView(llTopRowButtons);</span><br><span class="line">        llView.addView(llMiddleRowButtons);</span><br><span class="line">        llView.addView(llBottomRowButtons);</span><br><span class="line">        </span><br><span class="line">        setContentView(llView);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Request necessary permissions</span></span><br><span class="line"><span class="comment">//        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.M)</span></span><br><span class="line"><span class="comment">//        &#123;</span></span><br><span class="line"><span class="comment">//            String[] perms = &#123; "android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE" &#125;;</span></span><br><span class="line"><span class="comment">//            if (checkSelfPermission(perms[0]) == PackageManager.PERMISSION_DENIED ||</span></span><br><span class="line"><span class="comment">//                checkSelfPermission(perms[1]) == PackageManager.PERMISSION_DENIED)</span></span><br><span class="line"><span class="comment">//            &#123;</span></span><br><span class="line"><span class="comment">//                requestPermissions(perms, 200);</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"></span><br><span class="line">        org.fmod.FMOD.init(<span class="keyword">this</span>);</span><br><span class="line">        </span><br><span class="line">        mThread = <span class="keyword">new</span> Thread(<span class="keyword">this</span>, <span class="string">"Example Main"</span>);</span><br><span class="line">        mThread.start();</span><br><span class="line">        </span><br><span class="line">        setStateCreate();</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	<span class="keyword">super</span>.onStart();</span><br><span class="line">    	setStateStart();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	setStateStop();</span><br><span class="line">    	<span class="keyword">super</span>.onStop();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	setStateDestroy();</span><br><span class="line">    	</span><br><span class="line">    	<span class="keyword">try</span></span><br><span class="line">    	&#123;</span><br><span class="line">    		mThread.join();</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="keyword">catch</span> (InterruptedException e) &#123; &#125;</span><br><span class="line">    	</span><br><span class="line">    	org.fmod.FMOD.close();</span><br><span class="line">    	</span><br><span class="line">    	<span class="keyword">super</span>.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View view, MotionEvent motionEvent)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (motionEvent.getAction() == MotionEvent.ACTION_DOWN)</span><br><span class="line">		&#123;</span><br><span class="line">			buttonDown(view.getId());	</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (motionEvent.getAction() == MotionEvent.ACTION_UP)</span><br><span class="line">		&#123;</span><br><span class="line">			buttonUp(view.getId());	</span><br><span class="line">		&#125;			</span><br><span class="line">	    </span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">        main();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateScreen</span><span class="params">(<span class="keyword">final</span> String text)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		runOnUiThread(<span class="keyword">new</span> Runnable()</span><br><span class="line">		&#123;</span><br><span class="line">	        <span class="meta">@Override</span></span><br><span class="line">	        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	        </span>&#123;</span><br><span class="line">	            mTxtScreen.setText(text);</span><br><span class="line">	        &#125;</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">native</span> String <span class="title">getButtonLabel</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">buttonDown</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">buttonUp</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">setStateCreate</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">setStateStart</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">setStateStop</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">setStateDestroy</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">static</span> </span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="comment">/*</span></span><br><span class="line"><span class="comment">    	 * To simplify our examples we try to load all possible FMOD</span></span><br><span class="line"><span class="comment">    	 * libraries, the Android.mk will copy in the correct ones</span></span><br><span class="line"><span class="comment">    	 * for each example. For real products you would just load</span></span><br><span class="line"><span class="comment">    	 * 'fmod' and if you use the FMOD Studio tool you would also</span></span><br><span class="line"><span class="comment">    	 * load 'fmodstudio'.</span></span><br><span class="line"><span class="comment">    	 */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//    	// Try debug libraries...</span></span><br><span class="line"><span class="comment">//    	try &#123; System.loadLibrary("fmodD");</span></span><br><span class="line"><span class="comment">//    		  System.loadLibrary("fmodstudioD"); &#125;</span></span><br><span class="line"><span class="comment">//    	catch (UnsatisfiedLinkError e) &#123; &#125;</span></span><br><span class="line"><span class="comment">//    	// Try logging libraries...</span></span><br><span class="line"><span class="comment">//    	try &#123; System.loadLibrary("fmodL");</span></span><br><span class="line"><span class="comment">//    		  System.loadLibrary("fmodstudioL"); &#125;</span></span><br><span class="line"><span class="comment">//    	catch (UnsatisfiedLinkError e) &#123; &#125;</span></span><br><span class="line"><span class="comment">//		// Try release libraries...</span></span><br><span class="line"><span class="comment">//		try &#123; System.loadLibrary("fmod");</span></span><br><span class="line"><span class="comment">//		      System.loadLibrary("fmodstudio"); &#125;</span></span><br><span class="line"><span class="comment">//		catch (UnsatisfiedLinkError e) &#123; &#125;</span></span><br><span class="line"><span class="comment">//    	</span></span><br><span class="line"><span class="comment">//    	System.loadLibrary("stlport_shared");</span></span><br><span class="line"><span class="comment">//        System.loadLibrary("example");</span></span><br><span class="line">    	</span><br><span class="line">    	<span class="keyword">try</span> &#123; </span><br><span class="line">    		System.loadLibrary(<span class="string">"fmod"</span>);</span><br><span class="line">    		System.loadLibrary(<span class="string">"fmodL"</span>); </span><br><span class="line">    	&#125; <span class="keyword">catch</span> (UnsatisfiedLinkError e) &#123;</span><br><span class="line">    		e.printStackTrace();</span><br><span class="line">    	&#125;</span><br><span class="line">    	System.loadLibrary(<span class="string">"VoiceChangeTest"</span>);</span><br><span class="line">    &#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>使用<code>Android Tools</code>添加本地支持</p>
+</li>
+<li><p>修改<code>Android.mk</code>文件，并记录动态库的文件名，将其加载至<code>MainActivity.java</code></p>
+</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH := <span class="variable">$(<span class="built_in">call</span> my-<span class="built_in">dir</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(CLEAR_VARS)</span></span><br><span class="line"></span><br><span class="line">LOCAL_MODULE    := VoiceChangeTest</span><br><span class="line">LOCAL_SRC_FILES := play_sound.cpp</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(BUILD_SHARED_LIBRARY)</span></span><br></pre></td></tr></table></figure>
+<h3 id="编译项目"><a href="#编译项目" class="headerlink" title="编译项目"></a>编译项目</h3><ul>
+<li><p>此时便可以编译项目了，编译时候会提示有些文件找不到，那是因为包含文件路径不对造成的，此时修改包含文件路径即可</p>
+</li>
+<li><p>文件包含错误解决以后，再次编译，发现很多函数找不到，此时是因为编译时候那些函数的实现没有编译到项目，修改<code>Android.mk</code>文件，加入依赖实现</p>
+</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH := <span class="variable">$(<span class="built_in">call</span> my-<span class="built_in">dir</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(CLEAR_VARS)</span></span><br><span class="line">LOCAL_MODULE := fmod</span><br><span class="line">LOCAL_SRC_FILES := libfmod.so</span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(PREBUILT_SHARED_LIBRARY)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(CLEAR_VARS)</span></span><br><span class="line">LOCAL_MODULE := fmodL</span><br><span class="line">LOCAL_SRC_FILES := libfmodL.so</span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(PREBUILT_SHARED_LIBRARY)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(CLEAR_VARS)</span></span><br><span class="line">LOCAL_MODULE    := VoiceChangeTest</span><br><span class="line">LOCAL_SRC_FILES := play_sound.cpp \</span><br><span class="line">			common_platform.cpp \</span><br><span class="line">			common.cpp</span><br><span class="line">LOCAL_SHARED_LIBRARIES := fmod fmodL</span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(BUILD_SHARED_LIBRARY)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>另外，由于用到了STL库，需要在配置里说明，在jni下新建<code>Application.mk</code>文件，写入以下配置</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">APP_STL := gnustl_static</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>至此，项目修改完毕，便可以生成apk了。运行界面如下：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg" alt=""></p>
+</li>
+</ul>
+<h3 id="仿QQ变声效果实现"><a href="#仿QQ变声效果实现" class="headerlink" title="仿QQ变声效果实现"></a>仿QQ变声效果实现</h3><p>在大致了解fmod以后，就可以做一些基于fmod的项目了，正好QQ有一个变声的功能，这里就使用fmod去实现</p>
+<h4 id="采集素材"><a href="#采集素材" class="headerlink" title="采集素材"></a>采集素材</h4><p>直接将QQ安装包解压，就可以得到图片素材，将其加入到素材中</p>
+<h4 id="编辑界面"><a href="#编辑界面" class="headerlink" title="编辑界面"></a>编辑界面</h4><p>编写界面，这里直接采用他人布局好的文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">RelativeLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">LinearLayout</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"fill_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_alignParentBottom</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:orientation</span>=<span class="string">"vertical"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:background</span>=<span class="string">"#FFF"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:paddingBottom</span>=<span class="string">"20dp"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">LinearLayout</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:orientation</span>=<span class="string">"horizontal"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginTop</span>=<span class="string">"20dp"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">LinearLayout</span> </span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:id</span>=<span class="string">"@+id/btn_normal"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">style</span>=<span class="string">"@style/AudioImgStyle"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:src</span>=<span class="string">"@drawable/record"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:onClick</span>=<span class="string">"mFix"</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">TextView</span> </span></span><br><span class="line"><span class="tag">                    <span class="attr">style</span>=<span class="string">"@style/AudioTextStyle"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:text</span>=<span class="string">"原声"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">LinearLayout</span> </span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:id</span>=<span class="string">"@+id/btn_luoli"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">style</span>=<span class="string">"@style/AudioImgStyle"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:src</span>=<span class="string">"@drawable/luoli"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:onClick</span>=<span class="string">"mFix"</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">TextView</span> </span></span><br><span class="line"><span class="tag">                    <span class="attr">style</span>=<span class="string">"@style/AudioTextStyle"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:text</span>=<span class="string">"萝莉"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line">            </span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">LinearLayout</span> </span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:id</span>=<span class="string">"@+id/btn_dashu"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">style</span>=<span class="string">"@style/AudioImgStyle"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:src</span>=<span class="string">"@drawable/dashu"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:onClick</span>=<span class="string">"mFix"</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">TextView</span> </span></span><br><span class="line"><span class="tag">                    <span class="attr">style</span>=<span class="string">"@style/AudioTextStyle"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:text</span>=<span class="string">"大叔"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="tag">&lt;<span class="name">LinearLayout</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:orientation</span>=<span class="string">"horizontal"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginTop</span>=<span class="string">"20dp"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">LinearLayout</span> </span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:id</span>=<span class="string">"@+id/btn_jingsong"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">style</span>=<span class="string">"@style/AudioImgStyle"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:src</span>=<span class="string">"@drawable/jingsong"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:onClick</span>=<span class="string">"mFix"</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">TextView</span> </span></span><br><span class="line"><span class="tag">                    <span class="attr">style</span>=<span class="string">"@style/AudioTextStyle"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:text</span>=<span class="string">"惊悚"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">LinearLayout</span> </span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:id</span>=<span class="string">"@+id/btn_gaoguai"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">style</span>=<span class="string">"@style/AudioImgStyle"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:src</span>=<span class="string">"@drawable/gaoguai"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:onClick</span>=<span class="string">"mFix"</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">TextView</span> </span></span><br><span class="line"><span class="tag">                    <span class="attr">style</span>=<span class="string">"@style/AudioTextStyle"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:text</span>=<span class="string">"搞怪"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">LinearLayout</span> </span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:id</span>=<span class="string">"@+id/btn_kongling"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">style</span>=<span class="string">"@style/AudioImgStyle"</span></span></span><br><span class="line"><span class="tag">	                <span class="attr">android:src</span>=<span class="string">"@drawable/kongling"</span> </span></span><br><span class="line"><span class="tag">	                <span class="attr">android:onClick</span>=<span class="string">"mFix"</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">TextView</span> </span></span><br><span class="line"><span class="tag">                    <span class="attr">style</span>=<span class="string">"@style/AudioTextStyle"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:text</span>=<span class="string">"空灵"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>style文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"AppBaseTheme"</span> <span class="attr">parent</span>=<span class="string">"android:Theme.Light"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">        &lt;!--</span></span><br><span class="line"><span class="undefined">            Theme customizations available in newer API levels can go in</span></span><br><span class="line"><span class="undefined">            res/values-vXX/styles.xml, while customizations related to</span></span><br><span class="line"><span class="undefined">            backward-compatibility can go here.</span></span><br><span class="line"><span class="undefined">        --&gt;</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Application theme. --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"AppTheme"</span> <span class="attr">parent</span>=<span class="string">"AppBaseTheme"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="xml">        <span class="comment">&lt;!-- All customizations that are NOT specific to a particular API-level can go here. --&gt;</span></span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"AudioImgStyle"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:layout_width"</span>&gt;</span>wrap_content<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:layout_height"</span>&gt;</span>wrap_content<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:layout_marginLeft"</span>&gt;</span>25dp<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:layout_marginRight"</span>&gt;</span>25dp<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"AudioTextStyle"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:layout_width"</span>&gt;</span>wrap_content<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:layout_height"</span>&gt;</span>wrap_content<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:layout_marginTop"</span>&gt;</span>5dp<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:layout_gravity"</span>&gt;</span>center_horizontal<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="编辑java代码"><a href="#编辑java代码" class="headerlink" title="编辑java代码"></a>编辑java代码</h4><p>主活动<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.fmod.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.fmod.FMOD;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.os.Environment;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QQActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">		FMOD.init(<span class="keyword">this</span>);</span><br><span class="line">		setContentView(R.layout.activity_main);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mFix</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">		String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + <span class="string">"test.wav"</span>;</span><br><span class="line">		Log.e(<span class="string">"java cj5785"</span>, path);</span><br><span class="line">		<span class="keyword">switch</span> (v.getId()) &#123;</span><br><span class="line">		<span class="keyword">case</span> R.id.btn_normal:</span><br><span class="line">			Log.d(<span class="string">"cj5785"</span>, <span class="string">"normal"</span>);</span><br><span class="line">			QQVoice.fix(path, QQVoice.MODE_NORMAL);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.btn_luoli:</span><br><span class="line">			Log.d(<span class="string">"cj5785"</span>, <span class="string">"luoli"</span>);</span><br><span class="line">			QQVoice.fix(path, QQVoice.MODE_LUOLI);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.btn_dashu:</span><br><span class="line">			Log.d(<span class="string">"cj5785"</span>, <span class="string">"dashu"</span>);</span><br><span class="line">			QQVoice.fix(path, QQVoice.MODE_DASHU);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.btn_jingsong:</span><br><span class="line">			Log.d(<span class="string">"cj5785"</span>, <span class="string">"jingsong"</span>);</span><br><span class="line">			QQVoice.fix(path, QQVoice.MODE_JINGSONG);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.btn_gaoguai:</span><br><span class="line">			Log.d(<span class="string">"cj5785"</span>, <span class="string">"gaoguai"</span>);</span><br><span class="line">			QQVoice.fix(path, QQVoice.MODE_GAOGUAI);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> R.id.btn_kongling:</span><br><span class="line">			Log.d(<span class="string">"cj5785"</span>, <span class="string">"kongling"</span>);</span><br><span class="line">			QQVoice.fix(path, QQVoice.MODE_KONGLING);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.onDestroy();</span><br><span class="line">		FMOD.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>工具类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.fmod.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QQVoice</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//音效的类型</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_NORMAL = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_LUOLI = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_DASHU = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_JINGSONG = <span class="number">3</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_GAOGUAI = <span class="number">4</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_KONGLING = <span class="number">5</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">fix</span><span class="params">(String path, <span class="keyword">int</span> type)</span></span>;</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		System.loadLibrary(<span class="string">"fmod"</span>);</span><br><span class="line">		System.loadLibrary(<span class="string">"fmodL"</span>);</span><br><span class="line">		System.loadLibrary(<span class="string">"QQVoice"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="native方法实现"><a href="#native方法实现" class="headerlink" title="native方法实现"></a>native方法实现</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"inc/fmod.hpp"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"org_fmod_example_QQVoice.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;android/log.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGD(FORMAT,...) __android_log_print(ANDROID_LOG_DEBUG,<span class="meta-string">"cj5785"</span>,FORMAT,##__VA_ARGS__);</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGE(FORMAT,...) __android_log_print(ANDROID_LOG_ERROR,<span class="meta-string">"cj5785"</span>,FORMAT,##__VA_ARGS__);</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MODE_NORMAL 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MODE_LUOLI 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MODE_DASHU 2</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MODE_JINGSONG 3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MODE_GAOGUAI 4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MODE_KONGLING 5</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> FMOD;</span><br><span class="line"></span><br><span class="line">JNIEXPORT <span class="keyword">void</span> JNICALL Java_org_fmod_example_QQVoice_fix</span><br><span class="line">  (JNIEnv *env, jclass jcls, jstring jstr_path, jint type)</span><br><span class="line">&#123;</span><br><span class="line">	System *system;</span><br><span class="line">	Sound *sound;</span><br><span class="line">	Channel *channel;</span><br><span class="line">	DSP *dsp;</span><br><span class="line">	<span class="keyword">bool</span> playing = <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">float</span> frequency = <span class="number">0.0F</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *path_cstr = env-&gt;GetStringUTFChars(jstr_path, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">try</span>&#123;</span><br><span class="line">		<span class="comment">//初始化</span></span><br><span class="line">		System_Create(&amp;system);</span><br><span class="line">		system-&gt;init(<span class="number">32</span>, FMOD_INIT_NORMAL, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">//创建声音</span></span><br><span class="line">		system-&gt;createSound(path_cstr, FMOD_DEFAULT, <span class="literal">NULL</span>, &amp;sound);</span><br><span class="line">		<span class="keyword">switch</span> (type)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">//原声</span></span><br><span class="line">			<span class="keyword">case</span> MODE_NORMAL:</span><br><span class="line">				LOGD(<span class="string">"%s"</span>, <span class="string">"NORMAL"</span>);</span><br><span class="line">				system-&gt;playSound(sound, <span class="number">0</span>, <span class="literal">false</span>, &amp;channel);</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="comment">//萝莉</span></span><br><span class="line">			<span class="keyword">case</span> MODE_LUOLI:</span><br><span class="line">				LOGD(<span class="string">"%s"</span>, <span class="string">"LUOLI"</span>);</span><br><span class="line">				system-&gt;playSound(sound, <span class="number">0</span>, <span class="literal">false</span>, &amp;channel);</span><br><span class="line">				system-&gt;createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &amp;dsp);</span><br><span class="line">				<span class="comment">//设置音调</span></span><br><span class="line">				dsp-&gt;setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH, <span class="number">2.5</span>);</span><br><span class="line">				<span class="comment">//添加至channel</span></span><br><span class="line">				channel-&gt;addDSP(<span class="number">0</span>, dsp);</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="comment">//大叔</span></span><br><span class="line">			<span class="keyword">case</span> MODE_DASHU:</span><br><span class="line">				LOGD(<span class="string">"%s"</span>, <span class="string">"DASHU"</span>);</span><br><span class="line">				system-&gt;playSound(sound, <span class="number">0</span>, <span class="literal">false</span>, &amp;channel);</span><br><span class="line">				system-&gt;createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &amp;dsp);</span><br><span class="line">				<span class="comment">//设置音调</span></span><br><span class="line">				dsp-&gt;setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH, <span class="number">0.7</span>);</span><br><span class="line">				<span class="comment">//添加至channel</span></span><br><span class="line">				channel-&gt;addDSP(<span class="number">0</span>, dsp);</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="comment">//惊悚</span></span><br><span class="line">			<span class="keyword">case</span> MODE_JINGSONG:</span><br><span class="line">				LOGD(<span class="string">"%s"</span>, <span class="string">"JINGSONG"</span>);</span><br><span class="line">				system-&gt;playSound(sound, <span class="number">0</span>, <span class="literal">false</span>, &amp;channel);</span><br><span class="line">				system-&gt;createDSPByType(FMOD_DSP_TYPE_TREMOLO, &amp;dsp);</span><br><span class="line">				dsp-&gt;setParameterFloat(FMOD_DSP_TREMOLO_SKEW, <span class="number">0.5</span>);</span><br><span class="line">				channel-&gt;addDSP(<span class="number">0</span>, dsp);</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="comment">//搞怪</span></span><br><span class="line">			<span class="keyword">case</span> MODE_GAOGUAI:</span><br><span class="line">				LOGD(<span class="string">"%s"</span>, <span class="string">"GAOGUAI"</span>);</span><br><span class="line">				system-&gt;playSound(sound, <span class="number">0</span>, <span class="literal">false</span>, &amp;channel);</span><br><span class="line">				<span class="comment">//提高说话速度</span></span><br><span class="line">				channel-&gt;getFrequency(&amp;frequency);</span><br><span class="line">				frequency *= <span class="number">2.3</span>;</span><br><span class="line">				channel-&gt;setFrequency(frequency);</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="comment">//空灵</span></span><br><span class="line">			<span class="keyword">case</span> MODE_KONGLING:</span><br><span class="line">				LOGD(<span class="string">"%s"</span>, <span class="string">"KONGLING"</span>);</span><br><span class="line">				system-&gt;playSound(sound, <span class="number">0</span>, <span class="literal">false</span>, &amp;channel);</span><br><span class="line">				system-&gt;createDSPByType(FMOD_DSP_TYPE_ECHO, &amp;dsp);</span><br><span class="line">				dsp-&gt;setParameterFloat(FMOD_DSP_ECHO_DELAY, <span class="number">300</span>);</span><br><span class="line">				dsp-&gt;setParameterFloat(FMOD_DSP_ECHO_FEEDBACK, <span class="number">50</span>);</span><br><span class="line">				channel-&gt;addDSP(<span class="number">0</span>, dsp);</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;<span class="keyword">catch</span>(...)&#123;</span><br><span class="line">		LOGE(<span class="string">"s"</span>, <span class="string">"异常状况发生"</span>);</span><br><span class="line">		<span class="keyword">goto</span> End;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	system-&gt;update();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span>(playing)</span><br><span class="line">	&#123;</span><br><span class="line">		channel-&gt;isPlaying(&amp;playing);</span><br><span class="line">		usleep(<span class="number">1000</span> * <span class="number">1000</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">goto</span> End;</span><br><span class="line">End:</span><br><span class="line">	<span class="comment">//释放资源</span></span><br><span class="line">	env-&gt;ReleaseStringUTFChars(jstr_path, path_cstr);</span><br><span class="line">	sound-&gt;release();</span><br><span class="line">	system-&gt;close();</span><br><span class="line">	system-&gt;release();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="mk文件修改"><a href="#mk文件修改" class="headerlink" title="mk文件修改"></a>mk文件修改</h4><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH := <span class="variable">$(<span class="built_in">call</span> my-<span class="built_in">dir</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(CLEAR_VARS)</span></span><br><span class="line">LOCAL_MODULE := fmod</span><br><span class="line">LOCAL_SRC_FILES := libfmod.so</span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(PREBUILT_SHARED_LIBRARY)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(CLEAR_VARS)</span></span><br><span class="line">LOCAL_MODULE := fmodL</span><br><span class="line">LOCAL_SRC_FILES := libfmodL.so</span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(PREBUILT_SHARED_LIBRARY)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(CLEAR_VARS)</span></span><br><span class="line">LOCAL_MODULE    := QQVoice</span><br><span class="line">LOCAL_SRC_FILES := QQVoice.cpp</span><br><span class="line">LOCAL_SHARED_LIBRARIES := fmod fmodL</span><br><span class="line">LOCAL_LDLIBS := -llog</span><br><span class="line">LOCAL_CPP_FEATURES := exceptions</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(BUILD_SHARED_LIBRARY)</span></span><br></pre></td></tr></table></figure>
+<h4 id="jni目录结构"><a href="#jni目录结构" class="headerlink" title="jni目录结构"></a>jni目录结构</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">│  Android.mk</span><br><span class="line">│  Application.mk</span><br><span class="line">│  common.cpp</span><br><span class="line">│  common.h</span><br><span class="line">│  common_platform.cpp</span><br><span class="line">│  common_platform.h</span><br><span class="line">│  effects.cpp</span><br><span class="line">│  libfmod.so</span><br><span class="line">│  libfmodL.so</span><br><span class="line">│  org_fmod_example_QQVoice.h</span><br><span class="line">│  QQVoice.cpp</span><br><span class="line">└─inc</span><br><span class="line">        fmod.h</span><br><span class="line">        fmod.hpp</span><br><span class="line">        fmod_codec.h</span><br><span class="line">        fmod_common.h</span><br><span class="line">        fmod_dsp.h</span><br><span class="line">        fmod_dsp_effects.h</span><br><span class="line">        fmod_errors.h</span><br><span class="line">        fmod_output.h</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/06/16/NDK开发之使用现有so动态库/" title="NDK开发之使用现有so动态库">https://cj5785.com/2018/06/16/NDK开发之使用现有so动态库/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NDK/" rel="tag"># NDK</a>
+          
+            <a href="/tags/so动态库/" rel="tag"># so动态库</a>
+          
+            <a href="/tags/fmod/" rel="tag"># fmod</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/15/NDK开发之增量更新/" rel="next" title="NDK开发之增量更新">
+                <i class="fa fa-chevron-left"></i> NDK开发之增量更新
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/17/ffmpeg之初识ffmpeg/" rel="prev" title="ffmpeg之初识ffmpeg">
+                ffmpeg之初识ffmpeg <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态库来源"><span class="nav-number">1.</span> <span class="nav-text">动态库来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加到项目中"><span class="nav-number">2.</span> <span class="nav-text">添加到项目中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改文件使其能够调用"><span class="nav-number">3.</span> <span class="nav-text">修改文件使其能够调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译项目"><span class="nav-number">4.</span> <span class="nav-text">编译项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#仿QQ变声效果实现"><span class="nav-number">5.</span> <span class="nav-text">仿QQ变声效果实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#采集素材"><span class="nav-number">5.1.</span> <span class="nav-text">采集素材</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编辑界面"><span class="nav-number">5.2.</span> <span class="nav-text">编辑界面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编辑java代码"><span class="nav-number">5.3.</span> <span class="nav-text">编辑java代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#native方法实现"><span class="nav-number">5.4.</span> <span class="nav-text">native方法实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mk文件修改"><span class="nav-number">5.5.</span> <span class="nav-text">mk文件修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jni目录结构"><span class="nav-number">5.6.</span> <span class="nav-text">jni目录结构</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/06/16/NDK开发之使用现有so动态库/';
+          this.page.identifier = '2018/06/16/NDK开发之使用现有so动态库/';
+          this.page.title = 'NDK开发之使用现有so动态库';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

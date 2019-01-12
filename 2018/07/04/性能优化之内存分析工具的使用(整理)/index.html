@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="性能优化,内存分析工具,使用,整理,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前文讲到了内存泄漏的原因，那么要怎么定位内存泄漏呢？这里列出了常用的分析工具及其使用方法">
+<meta name="keywords" content="性能优化,内存分析工具,使用,整理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="性能优化之内存分析工具的使用(整理)">
+<meta property="og:url" content="https://cj5785.com/2018/07/04/性能优化之内存分析工具的使用(整理)/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="前文讲到了内存泄漏的原因，那么要怎么定位内存泄漏呢？这里列出了常用的分析工具及其使用方法">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Dump%E5%90%AF%E5%8A%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%20B%E5%8C%BA%E5%9F%9F.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%20C%E5%8C%BA%E5%9F%9F.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%20C%E5%B1%95%E5%BC%80%E5%8C%BA%E5%9F%9F.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Android%20Profiler.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Android%20Profiler%E5%85%B7%E4%BD%93%E5%88%86%E6%9E%90%E7%95%8C%E9%9D%A2.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-MAT%20Android%E8%BD%AC%E5%8C%961.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-MAT%20%E7%95%8C%E9%9D%A2.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Viewer%E9%9D%A2%E6%9D%BF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Viewer%E9%9D%A2%E6%9D%BF%E6%80%BB%E8%A7%88.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Viewer%E8%AF%A6%E6%83%85.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Viewer%E6%9F%B1%E7%8A%B6%E5%9B%BE.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20Tracker%E5%90%AF%E5%8A%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20Tracker%E6%95%B0%E6%8D%AE%E9%9D%A2%E6%9D%BF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20Tracker%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D%E4%BF%A1%E6%81%AF%E9%9D%A2%E6%9D%BF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF%E5%BA%95%E9%83%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF%E5%BA%95%E9%83%A8%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E9%A1%BA%E5%BA%8F.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerB%E6%A0%87%E8%AF%86.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E8%B5%B7%E7%82%B9.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E8%B5%B7%E7%82%B9%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E6%9F%A5%E7%9C%8B%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E5%8F%8C%E5%87%BB%E6%9F%A5%E7%9C%8B.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E5%86%85%E5%AD%98%E5%AE%8C%E6%95%B4%E8%B7%AF%E5%BE%84.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E6%9F%B1%E7%8A%B6%E5%9B%BE.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E6%9F%B1%E7%8A%B6%E5%9B%BE%E8%B5%B7%E7%82%B9.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E6%9F%B1%E7%8A%B6%E5%9B%BE%E6%9F%A5%E7%9C%8B%E5%88%86%E6%94%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E6%9F%B1%E7%8A%B6%E5%9B%BE%E5%88%87%E6%8D%A2.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%B7%BB%E5%8A%A0Application%E5%AD%90%E7%B1%BB.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%B3%A8%E5%86%8CExampleApplication.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E5%AE%89%E8%A3%85%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%BC%94%E7%A4%BA.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%BC%94%E7%A4%BA1.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E5%B7%A5%E5%85%B7%E5%90%AF%E5%8A%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E5%B7%A5%E5%85%B7%E9%9D%A2%E6%9D%BF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%97%B6%E9%97%B4%E7%BA%BF%E9%9D%A2%E6%9D%BF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%98%BE%E7%A4%BA%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%98%BE%E7%A4%BA%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%94%BE%E5%A4%A7%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%96%B9%E6%B3%95%E7%9A%84%E8%A1%A8%E7%A4%BA.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E5%87%BD%E6%95%B0%E5%B1%95%E5%BC%80.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E8%AE%A1%E7%AE%97.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceViewParents.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceViewChildren.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceViewParents%20while%20recursive.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceViewChildren%20while%20recursive.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Link%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Link%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90%E7%95%8C%E9%9D%A2.png">
+<meta property="og:updated_time" content="2018-09-11T07:07:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="性能优化之内存分析工具的使用(整理)">
+<meta name="twitter:description" content="前文讲到了内存泄漏的原因，那么要怎么定位内存泄漏呢？这里列出了常用的分析工具及其使用方法">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Dump%E5%90%AF%E5%8A%A8.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/07/04/性能优化之内存分析工具的使用(整理)/">
+
+
+
+
+
+  <title>性能优化之内存分析工具的使用(整理) | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/07/04/性能优化之内存分析工具的使用(整理)/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">性能优化之内存分析工具的使用(整理)</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T20:25:34+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/性能优化/" itemprop="url" rel="index">
+                    <span itemprop="name">性能优化</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/04/性能优化之内存分析工具的使用(整理)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/07/04/性能优化之内存分析工具的使用(整理)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前文讲到了内存泄漏的原因，那么要怎么定位内存泄漏呢？这里列出了常用的分析工具及其使用方法<br><a id="more"></a><br>以下<code>Heap Snapshot</code>、<code>MAT</code>、<code>Heap Viewer</code>、<code>Allaction Tracking</code>、<code>LeakCanary</code>和<code>TraceView</code>资料均来源于网络</p>
+<h3 id="Heap-Snapshot"><a href="#Heap-Snapshot" class="headerlink" title="Heap Snapshot"></a>Heap Snapshot</h3><p>获取Java堆内存详细信息，可以分析出内存泄漏的问题<br>在2.X版本中，<code>Android Studio</code>使用的分析工具<br>点击<code>Monitor</code>便可查看<code>CPU</code>，<code>Memory</code>，<code>Network</code>，<code>GPU</code>的情况<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Dump%E5%90%AF%E5%8A%A8.png" alt=""><br>其打开面板如下：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF.png" alt=""><br>该面板里的信息可以有三种类型:<code>app heap/image heap/zygote heap</code><br>分别代表app堆内存信息，图片堆内存信息，<code>zygote</code>进程的堆内存信息<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF.png" alt=""></p>
+<h4 id="A区域"><a href="#A区域" class="headerlink" title="A区域"></a>A区域</h4><p>列举了堆内存中所有的类,一下是列表中列名:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:left">意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Total Count</code></td>
+<td style="text-align:left">内存中该类的对象个数</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Heap Count</code></td>
+<td style="text-align:left">堆内存中该类的对象个数</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Sizeof</code></td>
+<td style="text-align:left">物理大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Shallow size</code></td>
+<td style="text-align:left">该对象本身占有内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Retained Size</code></td>
+<td style="text-align:left">释放该对象后，节省的内存大小</td>
+</tr>
+</tbody>
+</table>
+<h4 id="B区域"><a href="#B区域" class="headerlink" title="B区域"></a>B区域</h4><p>当我们点击某个类时，右边的B区域会显示该类的实例化对象，这里面会显示有多少个实体，以及详细信息<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%20B%E5%8C%BA%E5%9F%9F.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>depth</code></td>
+<td>深度</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Shallow Size</code></td>
+<td>对象本身内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Dominating Size</code></td>
+<td>管辖的内存大小</td>
+</tr>
+</tbody>
+</table>
+<p>当你点击某个对象时，将展开该对象内部含有哪些对象，同时C区域也会显示哪些对象引用了该对象</p>
+<h4 id="C区域"><a href="#C区域" class="headerlink" title="C区域"></a>C区域</h4><p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%20C%E5%8C%BA%E5%9F%9F.png" alt=""><br>点击查看<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Snapshot%20C%E5%B1%95%E5%BC%80%E5%8C%BA%E5%9F%9F.png" alt=""><br>某对象引用树对象，在这里面能看出其没谁引用了，比如在内存泄漏中，可以看出来它被谁引用，比如上图，引用树的第一行，可以看出来，该对象被<code>Object[12]</code>对象引用，索引值为1，那我们展开后，可以看到，该<code>Object[12]</code>是一个<code>ArrayList</code></p>
+<p>在3.X版本，<code>Android Studio</code>采用了新的分析工具，但其使用都是类似的<br>其启动界面如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Android%20Profiler.png" alt=""><br>分析界面如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Android%20Profiler%E5%85%B7%E4%BD%93%E5%88%86%E6%9E%90%E7%95%8C%E9%9D%A2.png" alt=""></p>
+<h3 id="MAT"><a href="#MAT" class="headerlink" title="MAT"></a>MAT</h3><p>下载：<a href="http://eclipse.org/mat/downloads.php" target="_blank" rel="noopener">http://eclipse.org/mat/downloads.php</a><br>MAT工具全称为<code>Memory Analyzer Tool</code>，一款详细分析Java堆内存的工具，该工具非常强大，为了使用该工具，我们需要<code>hprof</code>文件。但是该文件不能直接被MAT使用，需要进行一步转化，可以使用<code>hprof-conv</code>命令来转化，但是<code>Android Studio</code>可以直接转化,转化方法如下<br>选择一个<code>hprof</code>文件，点击右键选择<code>Export to standard .hprof</code>选项<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-MAT%20Android%E8%BD%AC%E5%8C%961.png" alt=""><br>MAT工具所需的文件就生成了，下面我们用MAT来打开该工具: </p>
+<ol>
+<li>打开MAT后选择<code>File -&gt; Open File</code>选择我们刚才生成的<code>hprof</code>文件</li>
+<li>选择该文件后，MAT会有几秒种的时间解析该文件，有的<code>hprof</code>文件可能过大，会有更长的时间解析，解析后，展现在我们的面前的界面如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-MAT%20%E7%95%8C%E9%9D%A2.png" alt=""><br>这是个总览界面，会大体给出一些分析后初步的结论</li>
+</ol>
+<ul>
+<li><code>Overview</code>视图<br>该视图会首页总结出当前这个<code>Heap dump</code>占用了多大的内存，其中涉及的类有多少，对象有多少，类加载器，如果有没有回收的对象，会有一个连接，可以直接参看(图中的<code>Unreachable Objects Histogram</code>)。<br>比如该例子中显示了<code>Heap dump</code>占用了41M的内存，5400个类，96700个对象，6个类加载器。<br>然后还会有各种分类信息:<ul>
+<li><code>Biggest Objects by Retained Size</code><br>会列举出Retained Size值最大的几个值，你可以将鼠标放到饼图中的扇叶上，可以在右侧看出详细信息，在这里可以找到我们关心的内容</li>
+<li><code>histogram视图</code><br>histogram视图主要是查看某个类的实例个数，比如我们在检查内存泄漏时候，要判断是否频繁创建了对象，就可以来看对象的个数来看。也可以通过排序看出占用内存大的对象，默认是类名形式展示，也可以选择不同的显示方式</li>
+<li><code>Dominator tree视图</code><br>该视图会以占用总内存的百分比来列举所有实例对象，注意这个地方是对象而不是类了，这个视图是用来发现大内存对象的。这些对象都可以展开查看更详细的信息，可以看到该对象内部包含的对象</li>
+<li><code>Leaks suspects视图</code><br>这个视图会展示一些可能的内存泄漏的点</li>
+</ul>
+</li>
+</ul>
+<p>在<code>Navigation History</code>中可以选择<code>Histogram</code>，然后右键加入对比，实现多个<code>histogram</code>数据的对比结果，从而分析内存泄漏的可能性</p>
+<h3 id="Heap-Viewer"><a href="#Heap-Viewer" class="headerlink" title="Heap Viewer"></a>Heap Viewer</h3><p>实时查看App分配的内存大小和空闲内存大小<br>发现<code>Memory Leaks</code></p>
+<ul>
+<li>使用条件<br>5.0以上的系统，包括5.0<br>开发者选项可用</li>
+</ul>
+<p>在2.x的<code>Android Studio</code>中，<br>可以直接在<code>Android studio</code>工具栏中直接点击小机器人启动<br>还可以在<code>Android studio</code>的菜单栏中<code>Tools</code><br>或者是在sdk的<code>tools</code>工具下打开<br>在3.x的IDE中，默认已经找不到启动图标，但在<code>tools</code>目录下依旧可以打开使用</p>
+<p><code>Heap Viewer</code>面板如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Viewer%E9%9D%A2%E6%9D%BF.png" alt=""><br>按上图的标记顺序按下，我们就能看到内存的具体数据，右边面板中数值会在每次GC时发生改变，包括App自动触发或者你来手动触发<br>总览:<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Viewer%E9%9D%A2%E6%9D%BF%E6%80%BB%E8%A7%88.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">列名</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Heap Size</code></td>
+<td>堆栈分配给App的内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Allocated</code></td>
+<td>已分配使用的内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Free</code></td>
+<td>空闲的内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%Used</code></td>
+<td><code>Allocated/Heap Size</code>,使用率</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Objects</code></td>
+<td>对象数量</td>
+</tr>
+</tbody>
+</table>
+<p>详情:<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Viewer%E8%AF%A6%E6%83%85.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">类型</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>free</code></td>
+<td>空闲的对象</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>data object</code></td>
+<td>数据对象,类类型对象，最主要的观察对象</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>class object</code></td>
+<td>类类型的引用对象</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>1-byte array(byte[],boolean[])</code></td>
+<td>一个字节的数组对象</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>2-byte array(short[],char[])</code></td>
+<td>两个字节的数组对象</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>4-byte array(long[],double[])</code></td>
+<td>4个字节的数组对象</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>non-Java object</code></td>
+<td>非Java对象</td>
+</tr>
+</tbody>
+</table>
+<p>下面是每一个对象都有的列名含义</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">列名</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Count</code></td>
+<td>数量</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Total Size</code></td>
+<td>总共占用的内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Smallest</code></td>
+<td>将对象占用内存的大小从小往大排，排在第一个的对象占用内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Largest</code></td>
+<td>将对象占用内存的大小从小往大排，排在最后一个的对象占用的内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Median</code></td>
+<td>将对象占用内存的大小从小往大排，拍在中间的对象占用的内存大小</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Average</code></td>
+<td>平均值</td>
+</tr>
+</tbody>
+</table>
+<p>当我们点击某一行时，可以看到如下的柱状图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Heap%20Viewer%E6%9F%B1%E7%8A%B6%E5%9B%BE.png" alt=""><br>横坐标是对象的内存大小，这些值随着不同对象是不同的，纵坐标是在某个内存大小上的对象的数量</p>
+<p>使用：在需要检测内存泄漏的用例执行过后，手动GC下，然后观察<code>data object</code>一栏的<code>total size</code>(也可以观察<code>Heap Size/Allocated</code>内存的情况)，看看内存是不是会回到一个稳定值，多次操作后，只要内存是稳定在某个值，那么说明没有内存溢出的，如果发现内存在每次GC后，都在增长，不管是慢增长还是快速增长，都说明有内存泄漏的可能性</p>
+<h3 id="Allaction-Tracking"><a href="#Allaction-Tracking" class="headerlink" title="Allaction Tracking"></a>Allaction Tracking</h3><p>追踪内存分配信息。可以很直观地看到某个操作的内存是如何进行一步一步地分配的<br><code>Allocation Tracker(AS)</code>工具比<code>Allocation Tracker(Eclipse)</code>工具强大的地方是更炫酷，更清晰，但是能做的事情都是一样的</p>
+<p><code>Allocation Tracker</code>启动<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20Tracker%E5%90%AF%E5%8A%A8.png" alt=""><br>在内存图中点击途中标红的部分，启动追踪，再次点击就是停止追踪，随后自动生成一个alloc结尾的文件，这个文件就记录了这次追踪到的所有数据，然后会在右上角打开一个数据面板<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20Tracker%E6%95%B0%E6%8D%AE%E9%9D%A2%E6%9D%BF.png" alt=""><br>面板左上角是所有历史数据文件列表，后面是详细信息，好，现在我们来看详细介绍信息面板<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20Tracker%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D%E4%BF%A1%E6%81%AF%E9%9D%A2%E6%9D%BF.png" alt=""><br>下面我们用字母来分段介绍</p>
+<ul>
+<li>A:查看方式选项<br>A标识的是一个选择框，有2个选项<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86.png" alt=""><br><code>Group by Method</code>:用方法来分类我们的内存分配<br><code>Group by Allocator</code>:用内存分配器来分类我们的内存分配<br>不同的选项，在D区显示的信息会不同，默认会以<code>Group by Method</code>来组织，我们来看看详细信息:<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF.png" alt=""><br>从上图可以看出，首先以线程对象分类，默认以分配顺序来排序，当然你可以更改，只需在<code>Size</code>上点击一下就会倒序，如果以<code>Count</code>排序也是一样，<code>Size</code>就是内存大小，<code>Count</code>就是分配了多少次内存，点击一下线程就会查看每个线程里所有分配内存的方法，并且可以一步一步迭代到最底部<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF%E5%BA%95%E9%83%A8.png" alt=""><br>当你以<code>Group by Allocator</code>来查看内存分配的情况时，详细信息区域就会变成如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF%E5%BA%95%E9%83%A8%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF.png" alt=""><br>默认还是以内存分配顺序来排序，但是是以每个分配者第一次分配内存的顺序<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerA%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E9%A1%BA%E5%BA%8F.png" alt=""><br>这种方式显示的好处，是我们很好的定位我们自己的代码的分析信息，比如上图中，以包名来找到我们的程序，在这次追踪中包民根目录一共有五个类作为分配器分配了<code>78-4-1=73</code>次内存</li>
+<li>B:<code>Jump To Source</code>按钮<br>如果我们想看内存分配的实际在源码中发生的地方，可以选择需要跳转的对象，点击该按钮就能发现我们的源码，但是前提是你有源码<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerB%E6%A0%87%E8%AF%86.png" alt=""><br>如果你能跳转到源码，<code>Jump To Source</code>按钮才是可用的，都是跳转到类</li>
+<li>C:统计图标按钮<br>该按钮比较酷炫，如果点击该按钮，会弹出一个新窗口，里面是一个酷炫的统计图标，有柱状图和轮胎图两种图形可供选择，默认是轮胎图，其中分配比例可以选择分配次数和占用内存大小，默认是大小<code>Size</code></li>
+<li>轮胎图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE.png" alt=""><br>轮胎图是以圆心为起点，最外层是其内存实际分配的对象，每一个同心圆可能被分割成多个部分，代表了其不同的子孙，每一个同心圆代表他的一个后代，每个分割的部分代表了某一带人有多人，你双击某个同心圆中某个分割的部分，会变成以你点击的那一代为圆心再向外展开。如果想回到原始状态，双击圆心就可以了。<br>1.起点<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E8%B5%B7%E7%82%B9.png" alt=""><br>圆心是我们的起点处，如果你把鼠标放到我图中标注的区域，会在右边显示当前指示的是什么线程(<code>Thread1</code>)以及具体信息(分配了<code>8821</code>次，分配了<code>564.18k</code>的内存)，但是红框标注的区域并不代表<code>Thread1</code>，而是第一个同心圆中占比最大的那个线程，所以我们现在把鼠标放到第一个同心圆上，可以看出来，我们划过同心圆的轨迹时可以看到右边的树枝变化了好几个值<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E8%B5%B7%E7%82%B9%E4%BF%A1%E6%81%AF.png" alt=""><br>2.查看某一个扇面<br>我们刚打开是全局信息，我们如果想看其中某个线程，详细信息，可以顺着某个扇面向外围滑动，当然如果你觉得不还是不清晰，可以双击该扇面全面展现该扇面的信息<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E6%9F%A5%E7%9C%8B%E4%BF%A1%E6%81%AF.png" alt=""><br>在某个地方双击时，新的轮胎图是以双击点为圆心，你如果想到刚才的圆，双击圆心空白处就可以<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E5%8F%8C%E5%87%BB%E6%9F%A5%E7%9C%8B.png" alt=""><br>3.一个内存的完整路径<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E8%BD%AE%E8%83%8E%E5%9B%BE%E5%86%85%E5%AD%98%E5%AE%8C%E6%95%B4%E8%B7%AF%E5%BE%84.png" alt=""></li>
+<li>柱状图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E6%9F%B1%E7%8A%B6%E5%9B%BE.png" alt=""><br>柱状图以左边为起始点，从左到右的顺序是某个的堆栈信息顺序，纵坐标上的宽度是以其<code>Count/Size</code>的大小决定的。柱状图的内容其实和轮胎图没什么特别的地方<br>1.起点<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E6%9F%B1%E7%8A%B6%E5%9B%BE%E8%B5%B7%E7%82%B9.png" alt=""><br>2.查看某一个分支<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E6%9F%B1%E7%8A%B6%E5%9B%BE%E6%9F%A5%E7%9C%8B%E5%88%86%E6%94%AF.png" alt=""><br>3.Count/Size切换<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Allocation%20TrackerC%E6%A0%87%E8%AF%86%E6%9F%B1%E7%8A%B6%E5%9B%BE%E5%88%87%E6%8D%A2.png" alt=""></li>
+</ul>
+<h3 id="LeakCanary"><a href="#LeakCanary" class="headerlink" title="LeakCanary"></a>LeakCanary</h3><p>可以直接在手机端查看内存泄露的工具<br>实现原理：本质上还是用命令控制生成<code>hprof</code>文件分析检查内存泄露</p>
+<h4 id="添加LeakCanary依赖包"><a href="#添加LeakCanary依赖包" class="headerlink" title="添加LeakCanary依赖包"></a>添加LeakCanary依赖包</h4><p><a href="https://github.com/square/leakcanary" target="_blank" rel="noopener">https://github.com/square/leakcanary</a><br>在主模块app下的<code>build.gradle</code>下添加如下依赖<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">debugCompile</span> <span class="string">'com.squareup.leakcanary:leakcanary-android:1.3.1'</span></span><br><span class="line">releaseCompile <span class="string">'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96.png" alt=""></p>
+<h4 id="开启LeakCanary"><a href="#开启LeakCanary" class="headerlink" title="开启LeakCanary"></a>开启LeakCanary</h4><p>添加<code>Application</code>子类<br>首先创建一个<code>ExampleApplication</code>，该类继承于<code>Application</code>,在该类的onCreate方法中添加如下代码开启<code>LeakCanary</code>监控:<br><code>LeakCanary.install(this);</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%B7%BB%E5%8A%A0Application%E5%AD%90%E7%B1%BB.png" alt=""></p>
+<h4 id="在配置文件中注册ExampleApplication"><a href="#在配置文件中注册ExampleApplication" class="headerlink" title="在配置文件中注册ExampleApplication"></a>在配置文件中注册ExampleApplication</h4><p>在<code>AndroidManifest.xml</code>中的<code>application</code>标签中添加如下信息:<br><code>android:name=&quot;.ExampleApplication&quot;</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%B3%A8%E5%86%8CExampleApplication.png" alt=""></p>
+<p>这个时候安装应用到手机，会自动安装一个Leaks应用，如下图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E5%AE%89%E8%A3%85%E4%BF%A1%E6%81%AF.png" alt=""></p>
+<h4 id="制造一个内存泄漏的点"><a href="#制造一个内存泄漏的点" class="headerlink" title="制造一个内存泄漏的点"></a>制造一个内存泄漏的点</h4><p>建立一个ActivityManager类，单例模式，里面有一个数组用来保存Activity：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.android.sunshine.app;</span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> android.util.SparseArray;</span><br><span class="line"><span class="keyword">import</span> android.view.animation.AccelerateInterpolator;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActivityManager</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> SparseArray&lt;Activity&gt; container = <span class="keyword">new</span> SparseArray&lt;Activity&gt;();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> key = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ActivityManager mInstance;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">ActivityManager</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ActivityManager <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(mInstance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            mInstance = <span class="keyword">new</span> ActivityManager();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mInstance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addActivity</span><span class="params">(Activity activity)</span></span>&#123;</span><br><span class="line">        container.put(key++,activity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后在DetailActivity中的onCreate方法中将当前activity添加到ActivityManager的数组中:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_detail);</span><br><span class="line">    ActivityManager.getInstance().addActivity(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">if</span> (savedInstanceState == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// Create the detail fragment and add it to the activity</span></span><br><span class="line">        <span class="comment">// using a fragment transaction.</span></span><br><span class="line"></span><br><span class="line">        Bundle arguments = <span class="keyword">new</span> Bundle();</span><br><span class="line">        arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());</span><br><span class="line"></span><br><span class="line">        DetailFragment fragment = <span class="keyword">new</span> DetailFragment();</span><br><span class="line">        fragment.setArguments(arguments);</span><br><span class="line"></span><br><span class="line">        getSupportFragmentManager().beginTransaction()</span><br><span class="line">                .add(R.id.weather_detail_container, fragment)</span><br><span class="line">                .commit();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们从首页跳转到详情页的时候会进入<code>DetailActivity</code>的<code>onCreate</code>的方法，然后就将当前<code>activity</code>添加到了数组中，当返回时，我们没把他从数组中删除。再次进入的时候，会创建新的<code>activity</code>并添加到数组中，但是之前的<code>activity</code>仍然被引用，无法释放，但是这个<code>activity</code>不会再被使用，这个时候就造成了内存泄漏。我们来看看<code>LeakCanary</code>是如何报出这个问题的</p>
+<h4 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h4><p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%BC%94%E7%A4%BA.png" alt=""><br>解析的过程有点耗时，所以需要等待一会才会在Leaks应用中，当我们点开某一个信息时，会看到详细的泄漏信息<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-LeakCanary%E6%BC%94%E7%A4%BA1.png" alt=""></p>
+<h3 id="TraceView"><a href="#TraceView" class="headerlink" title="TraceView"></a>TraceView</h3><p>从代码层面分析性能问题，针对每个方法来分析，比如当我们发现我们的应用出现卡顿的时候，我们可以来分析出现卡顿时在方法的调用上有没有很耗时的操作，关注以下两个问题：</p>
+<ul>
+<li>调用次数不多，但是每一次执行都很耗时</li>
+<li>方法耗时不大，但是调用次数太多<br>简单一点来说就是我们能找到频繁被调用的方法，也能找到执行非常耗时的方法，前者可能会造成cpu频繁调用，手机发烫的问题，后者就是卡顿的问题</li>
+</ul>
+<h4 id="TraceView工具启动"><a href="#TraceView工具启动" class="headerlink" title="TraceView工具启动"></a>TraceView工具启动</h4><p>打开Monitor,点击图中的标注的按钮，启动追踪<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E5%B7%A5%E5%85%B7%E5%90%AF%E5%8A%A8.png" alt=""></p>
+<h4 id="TraceView工具面板"><a href="#TraceView工具面板" class="headerlink" title="TraceView工具面板"></a>TraceView工具面板</h4><p>打开App操作你的应用后，再次点击的话就停止追踪并且自动打开traceview分析面板<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E5%B7%A5%E5%85%B7%E9%9D%A2%E6%9D%BF.png" alt=""><br><code>traceview</code>的面板分上下两个部分:</p>
+<ul>
+<li>时间线面板以每个线程为一行，右边是该线程在整个过程中方法执行的情况</li>
+<li>分析面板是以表格的形式展示所有线程的方法的各项指标</li>
+</ul>
+<h4 id="时间线面板"><a href="#时间线面板" class="headerlink" title="时间线面板"></a>时间线面板</h4><p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%97%B6%E9%97%B4%E7%BA%BF%E9%9D%A2%E6%9D%BF.png" alt=""><br>左边是线程信息,main线程就是Android应用的主线程，这个线程是都会有的，其他的线程可能因操作不同而发生改变.每个线程的右边对应的是该线程中每个方法的执行信息，左边为第一个方法执行开始，最右边为最后一个方法执行结束，其中的每一个小立柱就代表一次方法的调用，你可以把鼠标放到立柱上，就会显示该方法调用的详细信息<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%98%BE%E7%A4%BA%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8.png" alt=""><br>你可以随意滑动你的鼠标，滑倒哪里，左上角就会显示该方法调用的信息。<br>1.如果你想在分析面板中详细查看该方法，可以双击该立柱，分析面板自动跳转到该方法<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%98%BE%E7%A4%BA%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF.png" alt=""><br>2.放大某个区域<br>刚打开的面板中，是我们采集信息的总览，但是一些局部的细节我们看不太清，没关系，该工具支持我们放大某个特殊的时间段<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%94%BE%E5%A4%A7%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F.png" alt=""><br>如果想回到最初的状态，双击时间线就可以<br>3.每一个方法的表示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E6%96%B9%E6%B3%95%E7%9A%84%E8%A1%A8%E7%A4%BA.png" alt=""><br>可以看出来，每一个方法都是用一个凹型结构来表示，坐标的凸起部分表示方法的开始，右边的凸起部分表示方法的结束，中间的直线表示方法的持续</p>
+<h4 id="分析面板"><a href="#分析面板" class="headerlink" title="分析面板"></a>分析面板</h4><p>面板列名含义如下</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Name</code></td>
+<td>方法的详细信息，包括包名和参数信息</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Cpu Time</code></td>
+<td>Cpu执行该方法该方法及其子方法所花费的时间</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Cpu Time %</code></td>
+<td>Cpu执行该方法该方法及其子方法所花费占Cpu总执行时间的百分比</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Cpu Time</code></td>
+<td>Cpu执行该方法所话费的时间</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Cpu Time %</code></td>
+<td>Cpu执行该方法所话费的时间占Cpu总时间的百分比</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Real Time</code></td>
+<td>该方法及其子方法执行所话费的实际时间，从执行该方法到结束一共花了多少时间</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Real Time %</code></td>
+<td>上述时间占总的运行时间的百分比</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Real Time %</code></td>
+<td>该方法自身的实际允许时间</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Real Time</code></td>
+<td>上述时间占总的允许时间的百分比</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Calls+Recur</code></td>
+<td>调用次数+递归次数，只在方法中显示，在子展开后的父类和子类方法这一栏被下面的数据代替</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Calls/Total</code></td>
+<td>调用次数和总次数的占比</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Cpu Time/Call</code></td>
+<td>Cpu执行时间和调用次数的百分比，代表该函数消耗cpu的平均时间</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Real Time/Call</code></td>
+<td>实际时间于调用次数的百分比，该表该函数平均执行时间</td>
+</tr>
+</tbody>
+</table>
+<p>你可以点击某个函数展开更详细的信息<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E5%87%BD%E6%95%B0%E5%B1%95%E5%BC%80.png" alt=""><br>展开后，大多数有以下两个类别:</p>
+<ul>
+<li><code>Parents</code>:调用该方法的父类方法</li>
+<li><code>Children</code>:该方法调用的子类方法</li>
+</ul>
+<p>如果该方法含有递归调用，可能还会多出两个类别:</p>
+<ul>
+<li><code>Parents while recursive</code>:递归调用时所涉及的父类方法</li>
+<li><code>Children while recursive</code>:递归调用时所涉及的子类方法</li>
+</ul>
+<p>首先我们来看当前方法的信息</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">列</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Name</code></td>
+<td><code>24 android/widget/FrameLayout.draw(L android/graphics/Canvas;)V</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Cpu%</code></td>
+<td><code>20.9%</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Cpu Time</code></td>
+<td><code>375.201</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Cpu Time %</code></td>
+<td><code>0.0%</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Cpu Time</code></td>
+<td><code>0.000</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Real Time %</code></td>
+<td><code>1.1%</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Real Time</code></td>
+<td><code>580.668</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Real Time %</code></td>
+<td><code>0.0%</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Real Time</code></td>
+<td><code>0.000</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Calls+Recur</code></td>
+<td><code>177+354</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Cpu Time/Call</code></td>
+<td><code>0.707</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Real Time/Call</code></td>
+<td><code>1.094</code></td>
+</tr>
+</tbody>
+</table>
+<p>根据下图中的toplevel可以看出总的cpu执行时间为<code>1797.167ms</code>，当前方法占用cpu的时间为<code>375.201</code>，<code>375.201/1797.167=0.2087</code>，和我们的<code>Incl Cpu Time%</code>是吻合的。当前方法消耗的时间为<code>580.668</code>，而<code>toplevel</code>的时间为<code>53844.141ms</code>,<code>580.668/53844.141=1.07%</code>,和<code>Incl Real Time %</code>也是吻合的。在来看调用次数为<code>177</code>，递归次数为<code>354</code>，和为<code>177+354=531</code>，<code>375.201/531 = 0.7065</code>和<code>Cpu Time/Call</code>也是吻合的，<code>580.668/531=1.0935</code>,和<code>Real Time/Call</code>一栏也是吻合的<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceView%E8%AE%A1%E7%AE%97.png" alt=""></p>
+<ul>
+<li><code>Parents</code><br>现在我们来看该方法的<code>Parents</code>一栏<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceViewParents.png" alt=""></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">列</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Name</code></td>
+<td><code>22 com/android/internal/policy/impl/PhoneWindow$DecorView.draw(Landroid/graphics/Canvas;)V</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Cpu%</code></td>
+<td><code>100%</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Cpu Time</code></td>
+<td><code>375.201</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Cpu Time %</code></td>
+<td><code>无</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Cpu Time</code></td>
+<td><code>无</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Real Time %</code></td>
+<td><code>100%</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Incl Real Time</code></td>
+<td><code>580.668</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Real Time %</code></td>
+<td><code>无</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Excl Real Time</code></td>
+<td><code>无</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Call/Total</code></td>
+<td><code>177/531</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Cpu Time/Call</code></td>
+<td><code>无</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Real Time/Call</code></td>
+<td><code>无</code></td>
+</tr>
+</tbody>
+</table>
+<p>其中的<code>Incl Cpu Time%</code>变成了<code>100%</code>，因为在这个地方，总时间为当前方法的执行时间，这个时候的<code>Incl Cpu Time%</code>只是计算该方法调用的总时间中被各父类方法调用的时间占比，比如<code>Parents</code>有2个父类方法，那就能看出每个父类方法调用该方法的时间分布。因为我们父类只有一个，所以肯定是<code>100%</code>，<code>Incl Real Time</code>一栏也是一样的，重点是<code>Call/Total</code>，之前我们看当前方式时，这一栏的列名为<code>Call+Recur</code>，而现在变成了<code>Call/Total</code>,这个里面的数值变成了<code>177/531</code>，因为总次数为<code>531</code>次，父类调用了<code>177</code>次，其他<code>531</code>次是递归调用。这一数据能得到的信息是，当前方法被调用了多少次，其中有多少次是父类方法调用的</p>
+<ul>
+<li><p><code>Children</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceViewChildren.png" alt=""><br>可以看出来，我们的子类有2个，一个是自身，一个是<code>23android/view/View.draw(L android/graphics/Canvas;)V</code>，<code>self</code>代表自身方法中的语句执行情况，由上面可以看出来，该方法没有多余语句，直接调用了其子类方法。另外一个子类方法，可以看出被当前方法调用了177次，但是该方法被其他方法调用过，因为他的总调用次数为892次，你可以点击进入子类方法的详细信息中</p>
+</li>
+<li><p><code>Parents while recursive</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceViewParents%20while%20recursive.png" alt=""><br>列举了递归调用当前方法的父类方法，以及其递归次数的占比，犹豫我们当前的方法递归了<code>354</code>次，以上三个父类方法递归的次数分别为<code>348+4+2=354</code>次</p>
+</li>
+<li><p><code>Children while recursive</code><br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-TraceViewChildren%20while%20recursive.png" alt=""><br>列举了当递归调用时调用的子类方法</p>
+</li>
+</ul>
+<h3 id="Lint分析工具"><a href="#Lint分析工具" class="headerlink" title="Lint分析工具"></a>Lint分析工具</h3><p>检测资源文件是否有没有用到的资源。<br>检测常见内存泄露<br>安全问题<br>SDK版本安全问题<br>是否有费的代码没有用到<br>代码的规范—甚至驼峰命名法也会检测<br>自动生成的罗列出来<br>没用的导包<br>可能的bug</p>
+<p><code>Analyze -&gt; Inspect Code</code>便可执行检查<br>可以检查project，Module和指定文件<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Link%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.png" alt=""><br>详细信息<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8-Link%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90%E7%95%8C%E9%9D%A2.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/07/04/性能优化之内存分析工具的使用(整理)/" title="性能优化之内存分析工具的使用(整理)">https://cj5785.com/2018/07/04/性能优化之内存分析工具的使用(整理)/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/性能优化/" rel="tag"># 性能优化</a>
+          
+            <a href="/tags/内存分析工具/" rel="tag"># 内存分析工具</a>
+          
+            <a href="/tags/使用/" rel="tag"># 使用</a>
+          
+            <a href="/tags/整理/" rel="tag"># 整理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/03/性能优化之内存泄漏/" rel="next" title="性能优化之内存泄漏">
+                <i class="fa fa-chevron-left"></i> 性能优化之内存泄漏
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/05/性能优化之内存泄露常见例子/" rel="prev" title="性能优化之内存泄露常见例子">
+                性能优化之内存泄露常见例子 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Heap-Snapshot"><span class="nav-number">1.</span> <span class="nav-text">Heap Snapshot</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A区域"><span class="nav-number">1.1.</span> <span class="nav-text">A区域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B区域"><span class="nav-number">1.2.</span> <span class="nav-text">B区域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C区域"><span class="nav-number">1.3.</span> <span class="nav-text">C区域</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAT"><span class="nav-number">2.</span> <span class="nav-text">MAT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Heap-Viewer"><span class="nav-number">3.</span> <span class="nav-text">Heap Viewer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Allaction-Tracking"><span class="nav-number">4.</span> <span class="nav-text">Allaction Tracking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeakCanary"><span class="nav-number">5.</span> <span class="nav-text">LeakCanary</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加LeakCanary依赖包"><span class="nav-number">5.1.</span> <span class="nav-text">添加LeakCanary依赖包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开启LeakCanary"><span class="nav-number">5.2.</span> <span class="nav-text">开启LeakCanary</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在配置文件中注册ExampleApplication"><span class="nav-number">5.3.</span> <span class="nav-text">在配置文件中注册ExampleApplication</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#制造一个内存泄漏的点"><span class="nav-number">5.4.</span> <span class="nav-text">制造一个内存泄漏的点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#演示"><span class="nav-number">5.5.</span> <span class="nav-text">演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TraceView"><span class="nav-number">6.</span> <span class="nav-text">TraceView</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TraceView工具启动"><span class="nav-number">6.1.</span> <span class="nav-text">TraceView工具启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TraceView工具面板"><span class="nav-number">6.2.</span> <span class="nav-text">TraceView工具面板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#时间线面板"><span class="nav-number">6.3.</span> <span class="nav-text">时间线面板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析面板"><span class="nav-number">6.4.</span> <span class="nav-text">分析面板</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lint分析工具"><span class="nav-number">7.</span> <span class="nav-text">Lint分析工具</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/07/04/性能优化之内存分析工具的使用(整理)/';
+          this.page.identifier = '2018/07/04/性能优化之内存分析工具的使用(整理)/';
+          this.page.title = '性能优化之内存分析工具的使用(整理)';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

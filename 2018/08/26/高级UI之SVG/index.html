@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="高级UI,SVG,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="栅格图可以实现图片的清晰显示，但这也意味着如果要在各种设备上使用栅格图，那么在使用的时候就会产生为了适配各种尺寸的设备而增加大量不同规格的栅格图，这也直接导致了资源文件体积的增大，矢量图就不存在这个问题，这里就介绍一种矢量图–SVG">
+<meta name="keywords" content="高级UI,SVG">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级UI之SVG">
+<meta property="og:url" content="https://cj5785.com/2018/08/26/高级UI之SVG/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="栅格图可以实现图片的清晰显示，但这也意味着如果要在各种设备上使用栅格图，那么在使用的时候就会产生为了适配各种尺寸的设备而增加大量不同规格的栅格图，这也直接导致了资源文件体积的增大，矢量图就不存在这个问题，这里就介绍一种矢量图–SVG">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E5%8A%A8%E6%80%81%E4%BD%BF%E7%94%A8%E6%95%88%E6%9E%9C.gif">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E7%94%9F%E6%88%90SVG.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E7%94%9F%E6%88%90android%E5%8F%AF%E7%94%A8.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-svg%E5%AF%BC%E5%85%A5studio.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-studio%E7%94%9F%E6%88%90.png">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E4%BD%BF%E7%94%A8%E6%95%88%E6%9E%9C.gif">
+<meta property="og:updated_time" content="2018-09-11T07:19:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高级UI之SVG">
+<meta name="twitter:description" content="栅格图可以实现图片的清晰显示，但这也意味着如果要在各种设备上使用栅格图，那么在使用的时候就会产生为了适配各种尺寸的设备而增加大量不同规格的栅格图，这也直接导致了资源文件体积的增大，矢量图就不存在这个问题，这里就介绍一种矢量图–SVG">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E5%8A%A8%E6%80%81%E4%BD%BF%E7%94%A8%E6%95%88%E6%9E%9C.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/08/26/高级UI之SVG/">
+
+
+
+
+
+  <title>高级UI之SVG | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/08/26/高级UI之SVG/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">高级UI之SVG</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T17:24:40+08:00">
+                2018-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/高级UI/" itemprop="url" rel="index">
+                    <span itemprop="name">高级UI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/26/高级UI之SVG/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/08/26/高级UI之SVG/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>栅格图可以实现图片的清晰显示，但这也意味着如果要在各种设备上使用栅格图，那么在使用的时候就会产生为了适配各种尺寸的设备而增加大量不同规格的栅格图，这也直接导致了资源文件体积的增大，矢量图就不存在这个问题，这里就介绍一种矢量图–SVG<br><a id="more"></a></p>
+<h3 id="SVG的简介"><a href="#SVG的简介" class="headerlink" title="SVG的简介"></a>SVG的简介</h3><blockquote>
+<p>SVG可缩放矢量图形（<code>Scalable Vector Graphics</code>）是基于可扩展标记语言（XML），用于描述二维矢量图形的一种图形格式。SVG是W3C(<code>World Wide Web ConSortium</code>即<code>国际互联网标准组织</code>)在2000年8月制定的一种新的二维矢量图形格式，也是规范中的网络矢量图形标准。SVG严格遵从XML语法，并用文本格式的描述性语言来描述图像内容，因此是一种和图像分辨率无关的矢量图形格式<br>SVG优势</p>
+<ul>
+<li>可被非常多的工具读取和修改（比如记事本）</li>
+<li>与 JPEG 和 GIF 图像比起来，尺寸更小，且可压缩性更强。</li>
+<li>是可伸缩的</li>
+<li>图像可在任何的分辨率下被高质量地打印</li>
+<li>可在图像质量不下降的情况下被放大</li>
+<li>图像中的文本是可选的，同时也是可搜索的（很适合制作地图）</li>
+<li>可以与 Java 技术一起运行</li>
+<li>是开放的标准</li>
+<li>文件是纯粹的 XML</li>
+</ul>
+</blockquote>
+<p>以上内容引用自百度百科和W3C<br>Android中的矢量图为<code>Vector Drawable</code>，可以说Vector就是Android中的SVG实现(并不是支持全部的SVG语法,现已支持的完全足够用了)，其最低支持2.1（23.2+），不过这种支持是将SVG转化为PNG，在5.0及以上就直接使用SVG</p>
+<h3 id="Vector-Drawable"><a href="#Vector-Drawable" class="headerlink" title="Vector Drawable"></a>Vector Drawable</h3><p>Android 5.0发布的时候，Google提供了Vector的支持，即：Vector Drawable类<br>Vector Drawable相对于普通的Drawable来说，有以下几个好处</p>
+<ol>
+<li>Vector图像可以自动进行适配，不需要通过分辨率来设置不同的图片</li>
+<li>Vector图像可以大幅减少图像的体积，同样一张图，用Vector来实现，可能只有PNG的几十分之一</li>
+<li>使用简单，很多设计工具，都可以直接导出SVG图像，从而转换成Vector图像 功能强大</li>
+<li>不用写很多代码就可以实现非常复杂的动画 成熟、稳定，前端已经非常广泛的进行使用了</li>
+</ol>
+<p>Vector 语法简介<br>通过使用它的Path标签，几乎可以实现SVG中的其它所有标签，虽然可能会复杂一点，但这些东西都是可以通过工具来完成的，所以，不用担心写起来会很复杂<br>Path指令解析如下所示：<br><code>M = moveto(M X,Y)</code>：将画笔移动到指定的坐标位置，相当于<code>android Path</code>里的<code>moveTo()</code><br><code>L = lineto(L X,Y)</code>：画直线到指定的坐标位置，相当于<code>android Path</code>里的<code>lineTo()</code><br><code>H = horizontal lineto(H X)</code>：画水平线到指定的X坐标位置<br><code>V = vertical lineto(V Y)</code>：画垂直线到指定的Y坐标位置<br><code>C = curveto(C X1,Y1,X2,Y2,ENDX,ENDY)</code>：三次贝赛曲线<br><code>S = smooth curveto(S X2,Y2,ENDX,ENDY)</code>：同样三次贝塞尔曲线，更平滑<br><code>Q = quadratic Belzier curve(Q X,Y,ENDX,ENDY)</code>：二次贝赛曲线<br><code>T = smooth quadratic Belzier curveto(T ENDX,ENDY)</code>：映射 同样二次贝塞尔曲线，更平滑<br><code>A = elliptical Arc(A RX,RY,XROTATION,FLAG1,FLAG2,X,Y)</code>：弧线，相当于<code>arcTo()</code><br><code>Z = closepath()</code>：关闭路径（会自动绘制连接起点和终点）<br>注意: <code>M</code>处理时，只是移动了画笔，没有画任何东西</p>
+<ol>
+<li>关于这些语法，开发者不需要全部精通，而是能够看懂即可，这些path标签及数据生成都可以交给工具来实现（一般美工来帮你搞定！PS、Illustrator等等都支持导出SVG图片）</li>
+<li>程序员：没必要去学习使用这些设计工具，开发者可以利用一些工具，自己转换一些比较基础的图像，如：<a href="http://inloop.github.io/svg2android/" target="_blank" rel="noopener">http://inloop.github.io/svg2android/</a> </li>
+<li>还可以使用SVG的编辑器来进行SVG图像的编写，例如：<a href="http://editor.method.ac/" target="_blank" rel="noopener">http://editor.method.ac/</a> （绝配！可以先用 <a href="http://editor.method.ac/" target="_blank" rel="noopener">http://editor.method.ac/</a> 生成SVG图片，然后用 <a href="http://inloop.github.io/svg2android/" target="_blank" rel="noopener">http://inloop.github.io/svg2android/</a> 生成 VectorDrawable xml代码）</li>
+<li>使用AndroidStudio插件完成SVG添加（<code>Vector Asset Studio</code>）AS会自动生成兼容性图片(高版本会生成xxx.xml的SVG图片；低版本会自动生成xxx.png图片)</li>
+<li>有些网站可以找到SVG资源，SVG下载地址： <a href="http://www.shejidaren.com/8000-flat-icons.html" target="_blank" rel="noopener">http://www.shejidaren.com/8000-flat-icons.html</a> ，<a href="http://www.flaticon.com/" target="_blank" rel="noopener">http://www.flaticon.com/</a></li>
+</ol>
+<h3 id="静态Vector图像"><a href="#静态Vector图像" class="headerlink" title="静态Vector图像"></a>静态Vector图像</h3><h4 id="生成图片"><a href="#生成图片" class="headerlink" title="生成图片"></a>生成图片</h4><p>例如：我们用as生成的一个图片如下<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">vector</span> <span class="attr">android:alpha</span>=<span class="string">"0.78"</span> <span class="attr">android:height</span>=<span class="string">"24dp"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:viewportHeight</span>=<span class="string">"24.0"</span> <span class="attr">android:viewportWidth</span>=<span class="string">"24.0"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:width</span>=<span class="string">"24dp"</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">path</span> <span class="attr">android:fillColor</span>=<span class="string">"#FF000000"</span> <span class="attr">android:pathData</span>=<span class="string">"M19.35,10.04C18.67,6.59 15.64,4 12,4 9.11,4 6.6,5.64 5.35,8.04 2.34,8.36 0,10.91 0,14c0,3.31 2.69,6 6,6h13c2.76,0 5,-2.24 5,-5 0,-2.64 -2.05,-4.78 -4.65,-4.96zM14,13v4h-4v-4H7l5,-5 5,5h-3z"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">vector</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>和 （一个矩形）<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">vector</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:width</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:height</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:viewportHeight</span>=<span class="string">"500"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:viewportWidth</span>=<span class="string">"500"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">path</span></span></span><br><span class="line"><span class="tag">		<span class="attr">android:name</span>=<span class="string">"square"</span></span></span><br><span class="line"><span class="tag">		<span class="attr">android:fillColor</span>=<span class="string">"#000000"</span></span></span><br><span class="line"><span class="tag">		<span class="attr">android:pathData</span>=<span class="string">"M100,100 L400,100 L400,400 L100,400 z"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">vector</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>解释头部的几个标签：<br><code>android:width \ android:height</code>:定义图片的宽高<br><code>android:viewportHeight \ android:viewportWidth</code>:定义图像被划分的比例大小，例如例子中的500，即把200dp大小的图像划分成500份，后面Path标签中的坐标，就全部使用的是这里划分后的坐标系统<br>这样做有一个非常好的作用，就是将图像大小与图像分离，后面可以随意修改图像大小，而不需要修改PathData中的坐标</p>
+<h4 id="使用图片，就当普通的图片使用就可以了。"><a href="#使用图片，就当普通的图片使用就可以了。" class="headerlink" title="使用图片，就当普通的图片使用就可以了。"></a>使用图片，就当普通的图片使用就可以了。</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:id</span>=<span class="string">"@+id/iv"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">app:src</span>=<span class="string">"@drawable/vector_image"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>或者代码设置<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ImageView iv = (ImageView) findViewById(R.id.iv);</span><br><span class="line">iv.setImageResource(R.drawable.vector_image);</span><br><span class="line">iv.setBackgroundResource(R.drawable.vector_image)</span><br></pre></td></tr></table></figure></p>
+<p>如果是Button，可以设置selector（写两个SVG的Drawable）<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">selector</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/selector1"</span> <span class="attr">android:state_pressed</span>=<span class="string">"true"</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/selector2"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">selector</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="动态Vector"><a href="#动态Vector" class="headerlink" title="动态Vector"></a>动态Vector</h3><p>动态Vector才是Android Vector Drawable的精髓所在<br>具体可参见 <a href="http://www.jianshu.com/p/e3614e7abc03" target="_blank" rel="noopener">http://www.jianshu.com/p/e3614e7abc03</a><br>git项目位置：<a href="https://github.com/xuyisheng/VectorDemo" target="_blank" rel="noopener">https://github.com/xuyisheng/VectorDemo</a><br>animated-vector: 只能5.+才能使用<br>如果是两个SVG进行动画，要注意两个SVG的节点一定要一样多（命令数要一样）<br>下面举一个例子<br>初始状况<code>path_tick.xml</code>，这里定义了一张vector图片<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">vector</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:width</span>=<span class="string">"120dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:height</span>=<span class="string">"120dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:viewportHeight</span>=<span class="string">"24"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:viewportWidth</span>=<span class="string">"24"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">group</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">path</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:name</span>=<span class="string">"tickCrossGroup"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:pathData</span>=<span class="string">"M19.6,7 L10.4,16.2 M4.8,13.4 L9,17.6"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:strokeColor</span>=<span class="string">"#000"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:strokeWidth</span>=<span class="string">"2"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">group</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">vector</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>动画集合<code>anim_path_tick2cross.xml</code>，指定具体动画过程<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"300"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:propertyName</span>=<span class="string">"pathData"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:valueFrom</span>=<span class="string">"M19.6,7 L10.4,16.2 M4.8,13.4 L9,17.6"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:valueTo</span>=<span class="string">"M17.6,6.4 L6.4,17.6 M6.4,6.4 L17.6,17.6"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:valueType</span>=<span class="string">"pathType"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>移动方式<code>path_tick2cross_anim.xml</code><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animated-vector</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:drawable</span>=<span class="string">"@drawable/path_tick"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">"tickCrossGroup"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:animation</span>=<span class="string">"@anim/anim_path_tick2cross"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">animated-vector</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后使用一个ImageView设置src<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">"startAnim"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:src</span>=<span class="string">"@drawable/path_tick2cross_anim"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>设置点击事件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAnim</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">    ImageView iv = (ImageView) view;</span><br><span class="line">    Drawable drawable = iv.getDrawable();</span><br><span class="line">    <span class="keyword">if</span>(drawable <span class="keyword">instanceof</span> Animatable)&#123;</span><br><span class="line">        ((Animatable)drawable).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>效果如下图<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E5%8A%A8%E6%80%81%E4%BD%BF%E7%94%A8%E6%95%88%E6%9E%9C.gif" alt=""></p>
+<h3 id="VectorDrawable的性能问题："><a href="#VectorDrawable的性能问题：" class="headerlink" title="VectorDrawable的性能问题："></a>VectorDrawable的性能问题：</h3><ul>
+<li><code>Bitmap</code>的绘制效率并不一定会比<code>Vector</code>高，它们有一定的平衡点，当<code>Vector</code>比较简单时，其效率是一定比<code>Bitmap</code>高的，所以，为了保证<code>Vector</code>的高效率，<code>Vector</code>需要更加简单，<code>PathData</code>更加标准、精简，当<code>Vector</code>图像变得非常复杂时，就需要使用<code>Bitmap</code>来代替了</li>
+<li><code>Vector</code>适用于<code>ICON</code>、<code>Button</code>、<code>ImageView</code>的图标等小的<code>ICON</code>，或者是需要的动画效果，由于<code>Bitmap</code>在<code>GPU</code>中有缓存功能，而<code>Vector</code>并没有，所以<code>Vector</code>图像不能做频繁的重绘</li>
+<li><code>Vector</code>图像过于复杂时，不仅仅要注意绘制效率，初始化效率也是需要考虑的重要因素</li>
+</ul>
+<h3 id="使用实例"><a href="#使用实例" class="headerlink" title="使用实例"></a>使用实例</h3><p>首先在 <a href="https://editor.method.ac/" target="_blank" rel="noopener">https://editor.method.ac/</a> 生成一张svg格式的图片，然后下载下来，可以看到下载下来的是一个svg格式的文件<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E7%94%9F%E6%88%90SVG.png" alt=""><br>然后将下载的svg格式文件拖入到 <a href="http://inloop.github.io/svg2android/" target="_blank" rel="noopener">http://inloop.github.io/svg2android/</a> 中，此时便生成了android可用的图片格式<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E7%94%9F%E6%88%90android%E5%8F%AF%E7%94%A8.png" alt=""><br>在这个网站使用的时候，能看到Android Studio已经集成了这个功能，也就是说Android Studio可以直接使用工具转化SVG，这个后面讲<br>经过上述步骤，便已经生成Android可用的svg了，此时将其内容拷贝到项目中<br>此时在预览时侯就能看到生成的图像了<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-svg%E5%AF%BC%E5%85%A5studio.png" alt=""><br>导入的svg和平时的png使用方法一样，就当成一张png来使用就可以了<br>再来看看Android Studio是怎么转换SVG的，<code>New -&gt; Vector Asset -&gt; local file</code><br>然后就可以生成Android可用的资源了，刚才我导出的那张SVG，在网站上转换没问题，但这这里却转换不成功，说明在这个功能上，Studio还有一定欠缺，当已经够用了<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-studio%E7%94%9F%E6%88%90.png" alt=""><br>详细说明参照<a href="https://developer.android.com/studio/write/vector-asset-studio#svg" target="_blank" rel="noopener">Android官网</a><br>其实<code>ic_launcher_background.xml</code>这个文件也是使用的这种方式<br>使用时候发现，仍有地方会报错，这其实是引用链接出的错，经过思考，这里直接在网站上复制而不要下载就可以解决这个情况<br><figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">error: </span>'url(#gridpattern)' is incompatible with attribute android:fillColor (attr) color.</span><br></pre></td></tr></table></figure></p>
+<p>将其适当修改便可以了<br>将<code>android:fillColor=&quot;url(#gridpattern)&quot;</code>改为合适的填充颜色<br>顺利使用<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8BSVG-%E4%BD%BF%E7%94%A8%E6%95%88%E6%9E%9C.gif" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/08/26/高级UI之SVG/" title="高级UI之SVG">https://cj5785.com/2018/08/26/高级UI之SVG/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/高级UI/" rel="tag"># 高级UI</a>
+          
+            <a href="/tags/SVG/" rel="tag"># SVG</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/25/高级UI之MD动画/" rel="next" title="高级UI之MD动画">
+                <i class="fa fa-chevron-left"></i> 高级UI之MD动画
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/27/高级UI之自定义动画框架/" rel="prev" title="高级UI之自定义动画框架">
+                高级UI之自定义动画框架 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SVG的简介"><span class="nav-number">1.</span> <span class="nav-text">SVG的简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vector-Drawable"><span class="nav-number">2.</span> <span class="nav-text">Vector Drawable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态Vector图像"><span class="nav-number">3.</span> <span class="nav-text">静态Vector图像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成图片"><span class="nav-number">3.1.</span> <span class="nav-text">生成图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用图片，就当普通的图片使用就可以了。"><span class="nav-number">3.2.</span> <span class="nav-text">使用图片，就当普通的图片使用就可以了。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态Vector"><span class="nav-number">4.</span> <span class="nav-text">动态Vector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VectorDrawable的性能问题："><span class="nav-number">5.</span> <span class="nav-text">VectorDrawable的性能问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用实例"><span class="nav-number">6.</span> <span class="nav-text">使用实例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/08/26/高级UI之SVG/';
+          this.page.identifier = '2018/08/26/高级UI之SVG/';
+          this.page.title = '高级UI之SVG';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

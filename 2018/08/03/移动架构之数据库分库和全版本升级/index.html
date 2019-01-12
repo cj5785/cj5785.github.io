@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="移动架构,分库,数据库全版本,升级,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在项目中，往往涉及到数据库的版本升级，通常会有两种升级方式，一种是纯代码实现，一种是脚本实现，这里使用脚本升级，这样的升级方式更便于维护">
+<meta name="keywords" content="移动架构,分库,数据库全版本,升级">
+<meta property="og:type" content="article">
+<meta property="og:title" content="移动架构之数据库分库和全版本升级">
+<meta property="og:url" content="https://cj5785.com/2018/08/03/移动架构之数据库分库和全版本升级/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="在项目中，往往涉及到数据库的版本升级，通常会有两种升级方式，一种是纯代码实现，一种是脚本实现，这里使用脚本升级，这样的升级方式更便于维护">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-11T07:10:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="移动架构之数据库分库和全版本升级">
+<meta name="twitter:description" content="在项目中，往往涉及到数据库的版本升级，通常会有两种升级方式，一种是纯代码实现，一种是脚本实现，这里使用脚本升级，这样的升级方式更便于维护">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/08/03/移动架构之数据库分库和全版本升级/">
+
+
+
+
+
+  <title>移动架构之数据库分库和全版本升级 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/08/03/移动架构之数据库分库和全版本升级/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">移动架构之数据库分库和全版本升级</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-03T22:39:43+08:00">
+                2018-08-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/移动架构/" itemprop="url" rel="index">
+                    <span itemprop="name">移动架构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/03/移动架构之数据库分库和全版本升级/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/08/03/移动架构之数据库分库和全版本升级/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在项目中，往往涉及到数据库的版本升级，通常会有两种升级方式，一种是纯代码实现，一种是脚本实现，这里使用脚本升级，这样的升级方式更便于维护<br><a id="more"></a></p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>全版本升级，重点在于数据的迁移，这里使用备份原数据库，新建数据库，增删字段，复制数据库的升级思路，其版本控制在脚本中声明，代码在写好之后基本是不会变动的，更利于维护</p>
+<h3 id="SQLite修改表语句"><a href="#SQLite修改表语句" class="headerlink" title="SQLite修改表语句"></a>SQLite修改表语句</h3><ul>
+<li><p>创建表 <code>CREATE TABLE 表名 (列名 数据类型 限定符...)</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">Table</span> (<span class="keyword">ID</span> <span class="built_in">INTEGER</span>,<span class="keyword">NAME</span> <span class="built_in">TEXT</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改表 <code>ALTER TABLE ...</code><br>命令允许用户重命名或添加新的字段在已有表中，不能从表中删除字段。并且只能在表的末尾添加字段</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tTable <span class="keyword">RENAME</span> <span class="keyword">TO</span> MyTable;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加一列 <code>ALTER TABLE 表名 ADD COLUMN 列名 数据类型 限定符</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> MyTable <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> AGE <span class="built_in">INTEGER</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除表 <code>DROP TABLE 表名</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> MyTable;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>更改表结构的方法：</p>
+<ol>
+<li>当表中没有任何数据时<br>删除表<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> MyTable;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>创建表<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> MyTable ...</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>当表中有数据时<br>将表名改为临时表<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> MyTable <span class="keyword">RENAME</span> <span class="keyword">TO</span> _temp_MyTable;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>创建新表<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> MyTable (....);</span><br></pre></td></tr></table></figure></p>
+<p>导入数据<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> MyTable <span class="keyword">SELECT</span> .., .. ,<span class="string">"用空来补充原来不存在的数据"</span> <span class="keyword">FROM</span> _temp_MyTable;</span><br></pre></td></tr></table></figure></p>
+<p>删除临时表<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> _temp_MyTable;</span><br></pre></td></tr></table></figure></p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>这里沿用设计的数据库，数据库分库已经在项目中包含了<br>修改BaseDaoFactory，使其支持数据库分库<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseDaoFactory</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"BaseDaoFactory"</span>;</span><br><span class="line">    <span class="keyword">private</span> String sqliteDatabasePath;</span><br><span class="line">    <span class="keyword">private</span> SQLiteDatabase sqLiteDatabase;</span><br><span class="line">    <span class="keyword">private</span> SQLiteDatabase userDatabase;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, BaseDao&gt; map = Collections.synchronizedMap(<span class="keyword">new</span> HashMap&lt;String, BaseDao&gt;());</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> BaseDaoFactory instance = <span class="keyword">new</span> BaseDaoFactory();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BaseDaoFactory <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">BaseDaoFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        File file = <span class="keyword">new</span> File(Environment.getExternalStorageDirectory(), <span class="string">"update"</span>);</span><br><span class="line">        <span class="keyword">if</span> (!file.exists()) &#123;</span><br><span class="line">            file.mkdirs();</span><br><span class="line">        &#125;</span><br><span class="line">        sqliteDatabasePath = file.getAbsolutePath() + <span class="string">"/user.db"</span>;</span><br><span class="line">        openDatabase();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> &lt;T extends BaseDao&lt;M&gt;, M&gt; <span class="function">T <span class="title">getDataHelper</span><span class="params">(Class&lt;T&gt; clazz, Class&lt;M&gt; entityClass)</span> </span>&#123;</span><br><span class="line">        BaseDao baseDao = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (map.get(clazz.getSimpleName()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> (T) map.get(clazz.getSimpleName());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            baseDao = clazz.newInstance();</span><br><span class="line">            baseDao.init(entityClass, sqLiteDatabase);</span><br><span class="line">            map.put(clazz.getSimpleName(), baseDao);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (T) baseDao;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> &lt;T extends BaseDao&lt;M&gt;, M&gt; <span class="function">T <span class="title">getUserHelper</span><span class="params">(Class&lt;T&gt; clazz, Class&lt;M&gt; entityClass)</span> </span>&#123;</span><br><span class="line">        openUserDatabase(getPath());</span><br><span class="line">        BaseDao baseDao = <span class="keyword">null</span>;</span><br><span class="line">        <span class="comment">//反射得到对象类型</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            baseDao = clazz.newInstance();</span><br><span class="line">            baseDao.init(entityClass, userDatabase);</span><br><span class="line">            map.put(clazz.getSimpleName(), baseDao);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (T) baseDao;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">openDatabase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//打开数据库，如果不存在则创建</span></span><br><span class="line">        sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(sqliteDatabasePath, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPath</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        UserDao userDao = BaseDaoFactory.getInstance().getDataHelper(UserDao.class, User.class);</span><br><span class="line">        <span class="keyword">if</span> (userDao == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        User currentUser = userDao.getCurrentUser();</span><br><span class="line">        <span class="keyword">if</span> (currentUser == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        File file = <span class="keyword">new</span> File(Environment.getExternalStorageDirectory(), <span class="string">"update"</span>);</span><br><span class="line">        <span class="keyword">if</span> (!file.exists()) &#123;</span><br><span class="line">            file.mkdirs();</span><br><span class="line">        &#125;</span><br><span class="line">        File childFile = <span class="keyword">new</span> File(file.getAbsolutePath(), currentUser.getUser_id());</span><br><span class="line">        <span class="keyword">if</span>(!childFile.exists())&#123;</span><br><span class="line">            childFile.mkdirs();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> file.getAbsolutePath() + <span class="string">"/"</span> + currentUser.getUser_id() + <span class="string">"/logic.db"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">openUserDatabase</span><span class="params">(String userDBPath)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//打开数据库，如果不存在则创建</span></span><br><span class="line">        userDatabase = SQLiteDatabase.openOrCreateDatabase(userDBPath, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建数据库脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateDb</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//数据库表名</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建表的sql语句集合</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; sqlCreates;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CreateDb</span><span class="params">(Element ele)</span> </span>&#123;</span><br><span class="line">        name = ele.getAttribute(<span class="string">"name"</span>);</span><br><span class="line">        sqlCreates = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        NodeList sqls = ele.getElementsByTagName(<span class="string">"sql_createTable"</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sqls.getLength(); i++) &#123;</span><br><span class="line">            String sqlCreate = sqls.item(i).getTextContent();</span><br><span class="line">            <span class="keyword">this</span>.sqlCreates.add(sqlCreate);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">getSqlCreates</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sqlCreates;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSqlCreates</span><span class="params">(List&lt;String&gt; sqlCreates)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.sqlCreates = sqlCreates;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>数据库升级创建表脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateVersion</span> </span>&#123;</span><br><span class="line">    <span class="comment">//版本信息</span></span><br><span class="line">    <span class="keyword">private</span> String version;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建数据库表脚本</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;CreateDb&gt; createDbs;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CreateVersion</span><span class="params">(Element ele)</span> </span>&#123;</span><br><span class="line">        version = ele.getAttribute(<span class="string">"version"</span>);</span><br><span class="line">        createDbs = <span class="keyword">new</span> ArrayList&lt;CreateDb&gt;();</span><br><span class="line">        NodeList cs = ele.getElementsByTagName(<span class="string">"createDb"</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cs.getLength(); i++) &#123;</span><br><span class="line">            Element ci = (Element) (cs.item(i));</span><br><span class="line">            CreateDb cd = <span class="keyword">new</span> CreateDb(ci);</span><br><span class="line">            <span class="keyword">this</span>.createDbs.add(cd);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getVersion</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setVersion</span><span class="params">(String version)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.version = version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;CreateDb&gt; <span class="title">getCreateDbs</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> createDbs;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCreateDbs</span><span class="params">(List&lt;CreateDb&gt; createDbs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.createDbs = createDbs;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>复制单个文件(可更名复制)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileUtil</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CopySingleFile</span><span class="params">(String oldPathFile, String newPathFile)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">int</span> bytesum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">int</span> byteread = <span class="number">0</span>;</span><br><span class="line">            File oldfile = <span class="keyword">new</span> File(oldPathFile);</span><br><span class="line">            File newFile = <span class="keyword">new</span> File(newPathFile);</span><br><span class="line">            File parentFile = newFile.getParentFile();</span><br><span class="line">            <span class="keyword">if</span> (!parentFile.exists()) &#123;</span><br><span class="line">                parentFile.mkdirs();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//文件存在时</span></span><br><span class="line">            <span class="keyword">if</span> (oldfile.exists()) &#123;</span><br><span class="line">                InputStream inStream = <span class="keyword">new</span> FileInputStream(oldPathFile);</span><br><span class="line">                FileOutputStream fs = <span class="keyword">new</span> FileOutputStream(newPathFile);</span><br><span class="line">                <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">                <span class="keyword">while</span> ((byteread = inStream.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                    bytesum += byteread; <span class="comment">//字节数 文件大小</span></span><br><span class="line">                    fs.write(buffer, <span class="number">0</span>, byteread);</span><br><span class="line">                &#125;</span><br><span class="line">                inStream.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>更新数据库脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UpdateDb</span> </span>&#123;</span><br><span class="line">    <span class="comment">//数据库名称</span></span><br><span class="line">    <span class="keyword">private</span> String dbName;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; sqlBefores;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; sqlAfters;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UpdateDb</span><span class="params">(Element ele)</span> </span>&#123;</span><br><span class="line">        dbName = ele.getAttribute(<span class="string">"name"</span>);</span><br><span class="line">        sqlBefores = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        sqlAfters = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        NodeList sqlsBefore = ele.getElementsByTagName(<span class="string">"sql_before"</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sqlsBefore.getLength(); i++) &#123;</span><br><span class="line">            String sql_before = sqlsBefore.item(i).getTextContent();</span><br><span class="line">            <span class="keyword">this</span>.sqlBefores.add(sql_before);</span><br><span class="line">        &#125;</span><br><span class="line">        NodeList sqlsAfter = ele.getElementsByTagName(<span class="string">"sql_after"</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sqlsAfter.getLength(); i++) &#123;</span><br><span class="line">            String sql_after = sqlsAfter.item(i).getTextContent();</span><br><span class="line">            <span class="keyword">this</span>.sqlAfters.add(sql_after);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDbName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> dbName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDbName</span><span class="params">(String dbName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.dbName = dbName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">getSqlBefores</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sqlBefores;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSqlBefores</span><span class="params">(List&lt;String&gt; sqlBefores)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.sqlBefores = sqlBefores;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">getSqlAfters</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sqlAfters;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSqlAfters</span><span class="params">(List&lt;String&gt; sqlAfters)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.sqlAfters = sqlAfters;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>升级更新数据库<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UpdateDbXml</span> </span>&#123;</span><br><span class="line">    <span class="comment">//升级脚本列表</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;UpdateStep&gt; updateSteps;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//升级版本</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;CreateVersion&gt; createVersions;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UpdateDbXml</span><span class="params">(Document document)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 获取升级脚本</span></span><br><span class="line">        NodeList updateSteps = document.getElementsByTagName(<span class="string">"updateStep"</span>);</span><br><span class="line">        <span class="keyword">this</span>.updateSteps = <span class="keyword">new</span> ArrayList&lt;UpdateStep&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; updateSteps.getLength(); i++) &#123;</span><br><span class="line">            Element ele = (Element) (updateSteps.item(i));</span><br><span class="line">            UpdateStep step = <span class="keyword">new</span> UpdateStep(ele);</span><br><span class="line">            <span class="keyword">this</span>.updateSteps.add(step);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//获取各升级版本</span></span><br><span class="line">        NodeList createVersions = document.getElementsByTagName(<span class="string">"createVersion"</span>);</span><br><span class="line">        <span class="keyword">this</span>.createVersions = <span class="keyword">new</span> ArrayList&lt;CreateVersion&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; createVersions.getLength(); i++) &#123;</span><br><span class="line">            Element ele = (Element) (createVersions.item(i));</span><br><span class="line">            CreateVersion cv = <span class="keyword">new</span> CreateVersion(ele);</span><br><span class="line">            <span class="keyword">this</span>.createVersions.add(cv);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;UpdateStep&gt; <span class="title">getUpdateSteps</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> updateSteps;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUpdateSteps</span><span class="params">(List&lt;UpdateStep&gt; updateSteps)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.updateSteps = updateSteps;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;CreateVersion&gt; <span class="title">getCreateVersions</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> createVersions;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCreateVersions</span><span class="params">(List&lt;CreateVersion&gt; createVersions)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.createVersions = createVersions;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>数据库升级脚本信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UpdateStep</span> </span>&#123;</span><br><span class="line">    <span class="comment">//旧版本</span></span><br><span class="line">    <span class="keyword">private</span> String versionFrom;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//新版本</span></span><br><span class="line">    <span class="keyword">private</span> String versionTo;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//更新数据库脚本</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;UpdateDb&gt; updateDbs;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UpdateStep</span><span class="params">(Element ele)</span> </span>&#123;</span><br><span class="line">        versionFrom = ele.getAttribute(<span class="string">"versionFrom"</span>);</span><br><span class="line">        versionTo = ele.getAttribute(<span class="string">"versionTo"</span>);</span><br><span class="line">        updateDbs = <span class="keyword">new</span> ArrayList&lt;UpdateDb&gt;();</span><br><span class="line">        NodeList dbs = ele.getElementsByTagName(<span class="string">"updateDb"</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; dbs.getLength(); i++) &#123;</span><br><span class="line">            Element db = (Element) (dbs.item(i));</span><br><span class="line">            UpdateDb updateDb = <span class="keyword">new</span> UpdateDb(db);</span><br><span class="line">            <span class="keyword">this</span>.updateDbs.add(updateDb);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;UpdateDb&gt; <span class="title">getUpdateDbs</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> updateDbs;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUpdateDbs</span><span class="params">(List&lt;UpdateDb&gt; updateDbs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.updateDbs = updateDbs;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getVersionFrom</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> versionFrom;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setVersionFrom</span><span class="params">(String versionFrom)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.versionFrom = versionFrom;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getVersionTo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> versionTo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setVersionTo</span><span class="params">(String versionTo)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.versionTo = versionTo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>数据库脚本管理<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UpdateManager</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"UpdateManager"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String INFO_FILE_DIV = <span class="string">"/"</span>;</span><br><span class="line">    <span class="keyword">private</span> List&lt;User&gt; userList;</span><br><span class="line">    <span class="keyword">private</span> File parentFile = <span class="keyword">new</span> File(Environment.getExternalStorageDirectory(), <span class="string">"update"</span>);</span><br><span class="line">    <span class="keyword">private</span> File bakFile = <span class="keyword">new</span> File(parentFile, <span class="string">"backDb"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UpdateManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!parentFile.exists()) &#123;</span><br><span class="line">            parentFile.mkdirs();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!bakFile.exists()) &#123;</span><br><span class="line">            bakFile.mkdirs();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkThisVersionTable</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        UserDao userDao = BaseDaoFactory.getInstance().getDataHelper(UserDao.class, User.class);</span><br><span class="line">        userList = userDao.query(<span class="keyword">new</span> User());</span><br><span class="line">        UpdateDbXml xml = readDbXml(context);</span><br><span class="line">        String thisVersion = getVersionName(context);</span><br><span class="line">        CreateVersion thisCreateVersion = analyseCreateVersion(xml, thisVersion);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            executeCreateVersion(thisCreateVersion, <span class="keyword">true</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//开始升级</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startUpdateDb</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        UpdateDbXml updateDbxml = readDbXml(context);</span><br><span class="line">        <span class="keyword">if</span> (getLocalVersionInfo()) &#123;</span><br><span class="line">            <span class="comment">//拿到当前版本</span></span><br><span class="line">            String thisVersion = getVersionName(context);</span><br><span class="line">            <span class="comment">//拿到上一个版本</span></span><br><span class="line">            String lastVersion = lastBackupVersion;</span><br><span class="line">            UpdateStep updateStep = analyseUpdateStep(updateDbxml, lastVersion, thisVersion);</span><br><span class="line">            <span class="keyword">if</span> (updateStep == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            List&lt;UpdateDb&gt; updateDbs = updateStep.getUpdateDbs();</span><br><span class="line">            CreateVersion createVersion = analyseCreateVersion(updateDbxml, thisVersion);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//更新每个用户的数据库</span></span><br><span class="line">                <span class="keyword">for</span> (User user : userList) &#123;</span><br><span class="line">                    String logicDbDir = parentFile.getAbsolutePath() + <span class="string">"/update"</span> + <span class="string">"/"</span> + user.getUser_id() + <span class="string">"/logic.db"</span>;</span><br><span class="line"></span><br><span class="line">                    String logicCopy = bakFile.getAbsolutePath() + <span class="string">"/"</span> + user.getUser_id() + <span class="string">"/logic.db"</span>;</span><br><span class="line">                    FileUtil.CopySingleFile(logicDbDir, logicCopy);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//备份总数据库</span></span><br><span class="line">                String user = parentFile.getAbsolutePath() + <span class="string">"/user.db"</span>;</span><br><span class="line">                String user_bak = bakFile.getAbsolutePath() + <span class="string">"/user.db"</span>;</span><br><span class="line">                FileUtil.CopySingleFile(user, user_bak);</span><br><span class="line">                <span class="comment">// 第二步:执行sql_before语句，删除以及备份相关旧表</span></span><br><span class="line">                executeDb(updateDbs, -<span class="number">1</span>);</span><br><span class="line">                <span class="comment">// 第三步:检查新表，创建新表</span></span><br><span class="line">                executeCreateVersion(createVersion, <span class="keyword">false</span>);</span><br><span class="line">                Log.d(TAG, <span class="string">"第三步检查新表完成!"</span>);</span><br><span class="line">                <span class="comment">// 第四步:从备份表中恢复数据，恢复后删除备份表</span></span><br><span class="line">                executeDb(updateDbs, <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 第五步:升级成功，删除备份数据库</span></span><br><span class="line">            <span class="keyword">if</span> (userList != <span class="keyword">null</span> &amp;&amp; !userList.isEmpty()) &#123;</span><br><span class="line">                <span class="keyword">for</span> (User user : userList) &#123;</span><br><span class="line">                    String logicDbDir = parentFile.getAbsolutePath() + <span class="string">"/update"</span> + <span class="string">"/"</span> + user.getUser_id() + <span class="string">".db"</span>;</span><br><span class="line">                    File file = <span class="keyword">new</span> File(logicDbDir);</span><br><span class="line">                    <span class="keyword">if</span> (file.exists()) &#123;</span><br><span class="line">                        file.delete();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            File userFileBak = <span class="keyword">new</span> File(bakFile.getAbsolutePath() + <span class="string">"user_bak.db"</span>);</span><br><span class="line">            <span class="keyword">if</span> (userFileBak.exists()) &#123;</span><br><span class="line">                userFileBak.delete();</span><br><span class="line">            &#125;</span><br><span class="line">            Log.d(TAG, <span class="string">"升级成功"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据建表脚本,核实一遍应该存在的表</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">executeCreateVersion</span><span class="params">(CreateVersion createVersion, <span class="keyword">boolean</span> isLogic)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (createVersion == <span class="keyword">null</span> || createVersion.getCreateDbs() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"createVersion or createDbs is null;"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (CreateDb cd : createVersion.getCreateDbs()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cd == <span class="keyword">null</span> || cd.getName() == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"db or dbName is null when createVersion;"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="string">"logic"</span>.equals(cd.getName())) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 创建数据库表sql</span></span><br><span class="line">            List&lt;String&gt; sqls = cd.getSqlCreates();</span><br><span class="line">            SQLiteDatabase sqlitedb = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 逻辑层数据库要做多用户升级</span></span><br><span class="line">                <span class="keyword">if</span> (userList != <span class="keyword">null</span> &amp;&amp; !userList.isEmpty()) &#123;</span><br><span class="line">                    <span class="comment">// 多用户建新表</span></span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; userList.size(); i++) &#123;</span><br><span class="line">                        <span class="comment">// 获取db</span></span><br><span class="line">                        sqlitedb = getDb(cd, userList.get(i).getUser_id());</span><br><span class="line">                        executeSql(sqlitedb, sqls);</span><br><span class="line">                        sqlitedb.close();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                <span class="comment">// 关闭数据库</span></span><br><span class="line">                <span class="keyword">if</span> (sqlitedb != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    sqlitedb.close();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//执行针对db升级的sql集合 type：小于0为建表前，大于0为建表后</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">executeDb</span><span class="params">(List&lt;UpdateDb&gt; updateDbs, <span class="keyword">int</span> type)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (updateDbs == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"updateDbs is null;"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (UpdateDb db : updateDbs) &#123;</span><br><span class="line">            <span class="keyword">if</span> (db == <span class="keyword">null</span> || db.getDbName() == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"db or dbName is null;"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            List&lt;String&gt; sqls = <span class="keyword">null</span>;</span><br><span class="line">            <span class="comment">//更改表</span></span><br><span class="line">            <span class="keyword">if</span> (type &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                sqls = db.getSqlBefores();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                sqls = db.getSqlAfters();</span><br><span class="line">            &#125;</span><br><span class="line">            SQLiteDatabase sqlitedb = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 逻辑层数据库要做多用户升级</span></span><br><span class="line">                <span class="keyword">if</span> (userList != <span class="keyword">null</span> &amp;&amp; !userList.isEmpty()) &#123;</span><br><span class="line">                    <span class="comment">// 多用户表升级</span></span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; userList.size(); i++) &#123;</span><br><span class="line">                        sqlitedb = getDb(db, userList.get(i).getUser_id());</span><br><span class="line">                        executeSql(sqlitedb, sqls);</span><br><span class="line">                        sqlitedb.close();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">null</span> != sqlitedb) &#123;</span><br><span class="line">                    sqlitedb.close();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//执行sql语句</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">executeSql</span><span class="params">(SQLiteDatabase sqlitedb, List&lt;String&gt; sqls)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 检查参数</span></span><br><span class="line">        <span class="keyword">if</span> (sqls == <span class="keyword">null</span> || sqls.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 事务</span></span><br><span class="line">        sqlitedb.beginTransaction();</span><br><span class="line">        <span class="keyword">for</span> (String sql : sqls) &#123;</span><br><span class="line">            sql = sql.replaceAll(<span class="string">"\r\n"</span>, <span class="string">" "</span>);</span><br><span class="line">            sql = sql.replaceAll(<span class="string">"\n"</span>, <span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">if</span> (!<span class="string">""</span>.equals(sql.trim())) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">// Logger.i(TAG, "执行sql：" + sql, false);</span></span><br><span class="line">                    sqlitedb.execSQL(sql);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        sqlitedb.setTransactionSuccessful();</span><br><span class="line">        sqlitedb.endTransaction();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//新表插入数据</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> UpdateStep <span class="title">analyseUpdateStep</span><span class="params">(UpdateDbXml xml, String lastVersion, String thisVersion)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (lastVersion == <span class="keyword">null</span> || thisVersion == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 更新脚本</span></span><br><span class="line">        UpdateStep thisStep = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (xml == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        List&lt;UpdateStep&gt; steps = xml.getUpdateSteps();</span><br><span class="line">        <span class="keyword">if</span> (steps == <span class="keyword">null</span> || steps.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (UpdateStep step : steps) &#123;</span><br><span class="line">            <span class="keyword">if</span> (step.getVersionFrom() == <span class="keyword">null</span> || step.getVersionTo() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 升级来源以逗号分隔</span></span><br><span class="line">                String[] lastVersionArray = step.getVersionFrom().split(<span class="string">","</span>);</span><br><span class="line">                <span class="keyword">if</span> (lastVersionArray != <span class="keyword">null</span> &amp;&amp; lastVersionArray.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lastVersionArray.length; i++) &#123;</span><br><span class="line">                        <span class="comment">// 有一个配到update节点即升级数据</span></span><br><span class="line">                        <span class="keyword">if</span> (lastVersion.equalsIgnoreCase(lastVersionArray[i]) &amp;&amp; step.getVersionTo().equalsIgnoreCase(thisVersion)) &#123;</span><br><span class="line">                            thisStep = step;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> thisStep;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据xml对象获取对应要修改的db文件</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> SQLiteDatabase <span class="title">getDb</span><span class="params">(UpdateDb db, String userId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getDb(db.getDbName(), userId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> SQLiteDatabase <span class="title">getDb</span><span class="params">(CreateDb db, String userId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getDb(db.getName(), userId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建数据库,获取数据库对应的SQLiteDatabase</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> SQLiteDatabase <span class="title">getDb</span><span class="params">(String dbname, String userId)</span> </span>&#123;</span><br><span class="line">        String dbfilepath = <span class="keyword">null</span>;</span><br><span class="line">        SQLiteDatabase sqlitedb = <span class="keyword">null</span>;</span><br><span class="line">        File file = <span class="keyword">new</span> File(parentFile, userId);</span><br><span class="line">        <span class="keyword">if</span> (!file.exists()) &#123;</span><br><span class="line">            file.mkdirs();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (dbname.equalsIgnoreCase(<span class="string">"logic"</span>)) &#123;</span><br><span class="line">            dbfilepath = file.getAbsolutePath() + <span class="string">"/logic.db"</span>;<span class="comment">// logic对应的数据库路径</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dbname.equalsIgnoreCase(<span class="string">"user"</span>)) &#123;</span><br><span class="line">            dbfilepath = Environment.getExternalStorageDirectory().getAbsolutePath() + <span class="string">"/user.db"</span>;<span class="comment">// service对应的数据库</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (dbfilepath != <span class="keyword">null</span>) &#123;</span><br><span class="line">            File f = <span class="keyword">new</span> File(dbfilepath);</span><br><span class="line">            f.mkdirs();</span><br><span class="line">            <span class="keyword">if</span> (f.isDirectory()) &#123;</span><br><span class="line">                f.delete();</span><br><span class="line">            &#125;</span><br><span class="line">            sqlitedb = SQLiteDatabase.openOrCreateDatabase(dbfilepath, <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sqlitedb;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//解析出对应版本的建表脚本</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> CreateVersion <span class="title">analyseCreateVersion</span><span class="params">(UpdateDbXml xml, String version)</span> </span>&#123;</span><br><span class="line">        CreateVersion cv = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (xml == <span class="keyword">null</span> || version == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> cv;</span><br><span class="line">        &#125;</span><br><span class="line">        List&lt;CreateVersion&gt; createVersions = xml.getCreateVersions();</span><br><span class="line">        <span class="keyword">if</span> (createVersions != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (CreateVersion item : createVersions) &#123;</span><br><span class="line">                <span class="comment">// 如果表相同则要支持xml中逗号分隔</span></span><br><span class="line">                String[] createVersion = item.getVersion().trim().split(<span class="string">","</span>);</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; createVersion.length; i++) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (createVersion[i].trim().equalsIgnoreCase(version)) &#123;</span><br><span class="line">                        cv = item;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cv;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//读取升级xml</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> UpdateDbXml <span class="title">readDbXml</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        InputStream is = <span class="keyword">null</span>;</span><br><span class="line">        Document document = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            is = context.getAssets().open(<span class="string">"updateXml.xml"</span>);</span><br><span class="line">            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();</span><br><span class="line">            document = builder.parse(is);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (is != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    is.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (document == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        UpdateDbXml xml = <span class="keyword">new</span> UpdateDbXml(document);</span><br><span class="line">        <span class="keyword">return</span> xml;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取APK版本号</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getVersionName</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        String versionName = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), <span class="number">0</span>);</span><br><span class="line">            versionName = info.versionName;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (PackageManager.NameNotFoundException e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> versionName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//保存下载APK版本信息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">saveVersionInfo</span><span class="params">(Context context, String newVersion)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> ret = <span class="keyword">false</span>;</span><br><span class="line">        FileWriter writer = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            writer = <span class="keyword">new</span> FileWriter(<span class="keyword">new</span> File(parentFile, <span class="string">"update.txt"</span>), <span class="keyword">false</span>);</span><br><span class="line">            writer.write(<span class="string">"V003"</span> + INFO_FILE_DIV + <span class="string">"V002"</span>);</span><br><span class="line">            writer.flush();</span><br><span class="line">            ret = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (writer != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    writer.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取本地版本相关信息</span></span><br><span class="line">    <span class="keyword">private</span> String existVersion;</span><br><span class="line">    <span class="keyword">private</span> String lastBackupVersion;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">getLocalVersionInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> ret = <span class="keyword">false</span>;</span><br><span class="line">        File file = <span class="keyword">new</span> File(parentFile, <span class="string">"update.txt"</span>);</span><br><span class="line">        <span class="keyword">if</span> (file.exists()) &#123;</span><br><span class="line">            <span class="keyword">int</span> byteread = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] tempbytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">100</span>];</span><br><span class="line">            StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">            InputStream in = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                in = <span class="keyword">new</span> FileInputStream(file);</span><br><span class="line">                <span class="keyword">while</span> ((byteread = in.read(tempbytes)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                    stringBuilder.append(<span class="keyword">new</span> String(tempbytes, <span class="number">0</span>, byteread));</span><br><span class="line">                &#125;</span><br><span class="line">                String[] infos = stringBuilder.toString().split(INFO_FILE_DIV);</span><br><span class="line">                <span class="keyword">if</span> (infos.length == <span class="number">2</span>) &#123;</span><br><span class="line">                    existVersion = infos[<span class="number">0</span>];</span><br><span class="line">                    lastBackupVersion = infos[<span class="number">1</span>];</span><br><span class="line">                    ret = <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">null</span> != in) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        in.close();</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                    in = <span class="keyword">null</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>模拟用户登录<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DbTable</span>(<span class="string">"tb_user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String user_id;</span><br><span class="line">    <span class="keyword">public</span> Integer status;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getStatus</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStatus</span><span class="params">(Integer status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.status = status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUser_id</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> user_id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUser_id</span><span class="params">(String user_id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.user_id = user_id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.password = password;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDao</span> <span class="keyword">extends</span> <span class="title">BaseDao</span>&lt;<span class="title">User</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"UserDao"</span>;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">createTable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"create table if not exists tb_user( name TEXT, password TEXT, user_id Text,status Integer);"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">insert</span><span class="params">(User entity)</span> </span>&#123;</span><br><span class="line">        List&lt;User&gt; list = query(<span class="keyword">new</span> User());</span><br><span class="line">        User where = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (User user : list) &#123;</span><br><span class="line">            where = <span class="keyword">new</span> User();</span><br><span class="line">            where.setUser_id(user.getUser_id());</span><br><span class="line">            user.setStatus(<span class="number">0</span>);</span><br><span class="line">            update(user, where);</span><br><span class="line">        &#125;</span><br><span class="line">        Log.d(TAG, <span class="string">"用户"</span> + entity.getName() + <span class="string">"登录"</span>);</span><br><span class="line">        entity.setStatus(<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.insert(entity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//得到当前登录的User</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">getCurrentUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        User user = <span class="keyword">new</span> User();</span><br><span class="line">        user.setStatus(<span class="number">1</span>);</span><br><span class="line">        List&lt;User&gt; list = query(user);</span><br><span class="line">        <span class="keyword">if</span> (list.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> list.get(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>模拟用户下载数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DbTable</span>(<span class="string">"tb_photo"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Photo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String time;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String path;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTime</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> time;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTime</span><span class="params">(String time)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.time = time;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPath</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> path;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPath</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.path = path;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhotoDao</span> <span class="keyword">extends</span> <span class="title">BaseDao</span>&lt;<span class="title">Photo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">createTable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"create table if not exists tb_photo(\n"</span> +</span><br><span class="line">                <span class="string">"                time TEXT,\n"</span> +</span><br><span class="line">                <span class="string">"                path TEXT,\n"</span> +</span><br><span class="line">                <span class="string">"                to_user TEXT\n"</span> +</span><br><span class="line">                <span class="string">"                )"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    UpdateManager updateManager;</span><br><span class="line">    UserDao baseDao;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        updateManager = <span class="keyword">new</span> UpdateManager();</span><br><span class="line">        baseDao = BaseDaoFactory.getInstance().getDataHelper(UserDao.class, User.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">login</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        User user = <span class="keyword">new</span> User();</span><br><span class="line">        user.setName(<span class="string">"V00"</span> + (i++));</span><br><span class="line">        user.setPassword(<span class="string">"123456"</span>);</span><br><span class="line">        user.setName(<span class="string">"jack"</span> + i);</span><br><span class="line">        user.setUser_id(<span class="string">"N000"</span> + i);</span><br><span class="line">        baseDao.insert(user);</span><br><span class="line">        updateManager.checkThisVersionTable(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        Photo photo = <span class="keyword">new</span> Photo();</span><br><span class="line">        photo.setPath(<span class="string">"data/data/my.jpg"</span>);</span><br><span class="line">        SimpleDateFormat dateFormat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd-HH-mm-ss"</span>);</span><br><span class="line">        photo.setTime(dateFormat.format(<span class="keyword">new</span> Date()));</span><br><span class="line">        PhotoDao photoDao = BaseDaoFactory.getInstance().getUserHelper(PhotoDao.class, Photo.class);</span><br><span class="line">        photoDao.insert(photo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//写入版本</span></span><br><span class="line">        updateManager.saveVersionInfo(<span class="keyword">this</span>, <span class="string">"V002"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        updateManager.checkThisVersionTable(<span class="keyword">this</span>);</span><br><span class="line">        updateManager.startUpdateDb(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Assets文件夹加入升级脚本<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 请保证该文档一定是 UTF-8编码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">updateXml</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">createVersion</span> <span class="attr">version</span>=<span class="string">"V003"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">createDb</span> <span class="attr">name</span>=<span class="string">"user"</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 设备与软件关联信息 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">sql_createTable</span>&gt;</span></span><br><span class="line">                create table if not exists tb_user(</span><br><span class="line">                name TEXT,</span><br><span class="line">                password TEXT,</span><br><span class="line">                loginName TEXT,</span><br><span class="line">                lastLoginTime,</span><br><span class="line">                user_id Integer primary key</span><br><span class="line">                );</span><br><span class="line">            <span class="tag">&lt;/<span class="name">sql_createTable</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">createDb</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">createDb</span> <span class="attr">name</span>=<span class="string">"logic"</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 设备与软件关联信息 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">sql_createTable</span>&gt;</span></span><br><span class="line">                create table if not exists tb_photo(</span><br><span class="line">                time TEXT,</span><br><span class="line">                path TEXT,</span><br><span class="line">                to_user TEXT,</span><br><span class="line">                sendTime TEXT</span><br><span class="line">                );</span><br><span class="line">            <span class="tag">&lt;/<span class="name">sql_createTable</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">createDb</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">createVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">updateStep</span></span></span><br><span class="line"><span class="tag">        <span class="attr">versionFrom</span>=<span class="string">"V002"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">versionTo</span>=<span class="string">"V003"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">updateDb</span> <span class="attr">name</span>=<span class="string">"logic"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">sql_before</span>&gt;</span>alter table tb_photo rename to bak_tb_photo;<span class="tag">&lt;/<span class="name">sql_before</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">sql_after</span>&gt;</span></span><br><span class="line">                insert into tb_photo(time,</span><br><span class="line">                path)</span><br><span class="line">                select time,path</span><br><span class="line">                from bak_tb_photo;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">sql_after</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">sql_after</span>&gt;</span></span><br><span class="line">                drop table if exists bak_tb_photo;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">sql_after</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">updateDb</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">updateDb</span> <span class="attr">name</span>=<span class="string">"user"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">sql_before</span>&gt;</span>alter table tb_user rename to bak_t_user;<span class="tag">&lt;/<span class="name">sql_before</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">sql_after</span>&gt;</span></span><br><span class="line">                insert into tb_user(name,</span><br><span class="line">                password)</span><br><span class="line">                select name,password</span><br><span class="line">                from bak_tb_user;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">sql_after</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">sql_after</span>&gt;</span></span><br><span class="line">                drop table if exists bak_t_user;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">sql_after</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">updateDb</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">updateStep</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">updateXml</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>注意当前版本与升级脚本的一致</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/08/03/移动架构之数据库分库和全版本升级/" title="移动架构之数据库分库和全版本升级">https://cj5785.com/2018/08/03/移动架构之数据库分库和全版本升级/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/移动架构/" rel="tag"># 移动架构</a>
+          
+            <a href="/tags/分库/" rel="tag"># 分库</a>
+          
+            <a href="/tags/数据库全版本/" rel="tag"># 数据库全版本</a>
+          
+            <a href="/tags/升级/" rel="tag"># 升级</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/02/移动架构之网络访问框架设计/" rel="next" title="移动架构之网络访问框架设计">
+                <i class="fa fa-chevron-left"></i> 移动架构之网络访问框架设计
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/04/移动架构之图片加载框架设计/" rel="prev" title="移动架构之图片加载框架设计">
+                移动架构之图片加载框架设计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLite修改表语句"><span class="nav-number">2.</span> <span class="nav-text">SQLite修改表语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/08/03/移动架构之数据库分库和全版本升级/';
+          this.page.identifier = '2018/08/03/移动架构之数据库分库和全版本升级/';
+          this.page.title = '移动架构之数据库分库和全版本升级';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

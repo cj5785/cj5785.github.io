@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AndroidMainfest,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="基于TV settings和SettingsProvider  Android启动模式对activity行为的影响AndroidManifest.xml文件详解Manifest文件中,application和activity标签属性详解android之manifest.xml内provider详解">
+<meta name="keywords" content="AndroidMainfest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AndroidMainfest详解">
+<meta property="og:url" content="https://cj5785.com/2017/08/18/AndroidMainfest详解/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="基于TV settings和SettingsProvider  Android启动模式对activity行为的影响AndroidManifest.xml文件详解Manifest文件中,application和activity标签属性详解android之manifest.xml内provider详解">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-08T12:51:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AndroidMainfest详解">
+<meta name="twitter:description" content="基于TV settings和SettingsProvider  Android启动模式对activity行为的影响AndroidManifest.xml文件详解Manifest文件中,application和activity标签属性详解android之manifest.xml内provider详解">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2017/08/18/AndroidMainfest详解/">
+
+
+
+
+
+  <title>AndroidMainfest详解 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2017/08/18/AndroidMainfest详解/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">AndroidMainfest详解</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-18T21:07:49+08:00">
+                2017-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/18/AndroidMainfest详解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/08/18/AndroidMainfest详解/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>基于TV settings和SettingsProvider</p>
+<blockquote>
+<p><a href="http://blog.csdn.net/lincyang/article/details/6893852" target="_blank" rel="noopener">Android启动模式对activity行为的影响</a><br><a href="http://blog.csdn.net/u012481172/article/details/51143683" target="_blank" rel="noopener">AndroidManifest.xml文件详解</a><br><a href="http://blog.csdn.net/u014136472/article/details/49851387" target="_blank" rel="noopener">Manifest文件中,application和activity标签属性详解</a><br><a href="http://blog.csdn.net/winson_jason/article/details/8115846" target="_blank" rel="noopener">android之manifest.xml内provider详解</a><br><a id="more"></a></p>
+</blockquote>
+<h3 id="coreApp"><a href="#coreApp" class="headerlink" title="coreApp"></a><code>coreApp</code></h3><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">manifest</span></span></span></span><br><span class="line"><span class="xml">    ···</span></span><br><span class="line"><span class="xml">    coreApp="true"</span></span><br><span class="line"><span class="xml">    ···</span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>在manifest中增加该属性，其实并不是代表该APP具有系统权限，而是把该类app归类为核心APP，核心app其实也是最小<code>Android framework</code>系统。</li>
+</ul>
+<h3 id="android-supportsRtl"><a href="#android-supportsRtl" class="headerlink" title="android:supportsRtl"></a><code>android:supportsRtl</code></h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">application</span></span><br><span class="line">	···</span><br><span class="line">    android:supportsRtl=<span class="string">"true"</span></span><br><span class="line">    ··· &gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>声明你的application是否愿意支持从右到左(原来RTL就是<code>right-to-left</code>的缩写…)的布局。如果设置为true，targetSdkVersion设置为17或更高，各种RTL的API将被激活，系统使用您的应用程序可以显示RTL布局。如果targetSdkVersion设置为16或更低的设置为false，RTL的API将被忽略或没有影响您的应用程序将具有相同的行为无论对用户现场的选择相关的布局方向（你的布局会从左至右）。此属性的默认值是false。</li>
+<li>Android 4.1(Jelly Bean)在 TextView 和 EditText 元素里对<code>双向文字顺序</code>提供了有限的功能支持，允许应用程序在编辑和显示字符的时候，能够同时支持从左到右（LTR）以及从右到左（RTL）的排列格式。</li>
+</ul>
+<h3 id="android-configChanges"><a href="#android-configChanges" class="headerlink" title="android:configChanges"></a><code>android:configChanges</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    ···</span></span><br><span class="line"><span class="tag">    <span class="attr">android:configChanges</span>=<span class="string">"keyboard|keyboardHidden|navigation"</span></span></span><br><span class="line"><span class="tag">    ··· &gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>android中的组件Activity在manifest.xml文件中可以指定参数<code>android:ConfigChanges</code>，用于捕获手机状态的改变。</li>
+<li>在Activity中添加了<code>android:configChanges</code>属性，在当所指定属性(<code>Configuration Changes</code>)发生改变时，通知程序调用<code>onConfigurationChanged()</code>函数。</li>
+<li>设置方法：将下列字段用<code>|</code>符号分隔开，例如：<code>locale|navigation|orientation</code> <blockquote>
+<p><code>mcc</code> 移动国家号码，由三位数字组成，每个国家都有自己独立的MCC，可以识别手机用户所属国家<br><code>mnc</code> 移动网号，在一个国家或者地区中，用于区分手机用户的服务商<br><code>locale</code> 所在地区发生变化<br><code>touchscreen</code> 触摸屏已经改变。（这不应该常发生）<br><code>keyboard</code> 键盘模式发生变化，例如：用户接入外部键盘输入<br><code>keyboardHidden</code> 用户打开手机硬件键盘<br><code>navigation</code> 导航型发生了变化。（这不应该常发生）<br><code>orientation</code> 设备旋转，横向显示和竖向显示模式切换<br><code>fontScale</code> 全局字体大小缩放发生改变</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="android-priority"><a href="#android-priority" class="headerlink" title="android:priority"></a><code>android:priority</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">intent-filter</span></span></span><br><span class="line"><span class="tag">	···</span></span><br><span class="line"><span class="tag">	<span class="attr">android:priority</span>=<span class="string">"3"</span></span></span><br><span class="line"><span class="tag">	··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Android:priority执行优先级，默认为0，值越大优先级越高。<ul>
+<li>优先级的概念用于描述控件的 intent的filter的类型。这个属性只对activity和 receivers是有意义的。</li>
+<li>隐式调用activity的情况下：如果多个activity满足响应的条件，系统只会触发 priority高的那个activity。</li>
+<li>有序广播发出的情况下：如果多个receiver满足响应的条件，系统会优先触发prioriyt搞的那个receiver。</li>
+<li>priority必须是整数，默认是0,范围是[-1000, 1000]</li>
+</ul>
+</li>
+</ul>
+<h3 id="Android-clearTaskOnLaunch"><a href="#Android-clearTaskOnLaunch" class="headerlink" title="Android:clearTaskOnLaunch"></a><code>Android:clearTaskOnLaunch</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">	···</span></span><br><span class="line"><span class="tag">    <span class="attr">android:clearTaskOnLaunch</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">	··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>假设有A,B两个Activity，在AndroidManifest.xml中将A Activity的设置了<code>android:clearTaskOnLaunch=&quot;true&quot;</code><br>然后A中的操作启动了B，进入了B：<br>（1）如果此时用户按了Home键回到主屏幕上，然后又点击了主屏幕上的A的icon图标启动应用。那么此时不是进入B，而是进入了A<br>（2）如果用户按了屏幕下方的”最近任务列表“键，调出最近任务列表中，出现的是B，用户点击，此时又进入的是B<br>以上就是设置了<code>android:clearTaskOnLaunch=&quot;true&quot;</code>后的Activity运行的细微差别。属性<code>android:clearTaskOnLaunch</code>，顾名思义，就是说，当设置此属性为true时候，每一次启动此Activity后，将清空以此Activity为根的Task</li>
+</ul>
+<h3 id="android-exported"><a href="#android-exported" class="headerlink" title="android:exported"></a><code>android:exported</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">	···</span></span><br><span class="line"><span class="tag">	<span class="attr">android:exported</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">	··· /&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>android:exported 是Android中的四大组件<code>Activity</code>，<code>Service</code>，<code>Provider</code>，<code>Receiver</code>四大组件中都会有的一个属性<br>总体来说它的主要作用是：是否支持其它应用调用当前组件。<br>默认值：如果包含有intent-filter默认值为true;没有intent-filter默认值为false</li>
+</ul>
+<h3 id="excludeFromRecents"><a href="#excludeFromRecents" class="headerlink" title="excludeFromRecents"></a><code>excludeFromRecents</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    ···</span></span><br><span class="line"><span class="tag">    <span class="attr">android:excludeFromRecents</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">	··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>android:excludeFromRecents=&quot;true&quot;</code>，设置为true后，当用户按了<code>最近任务列表</code>时候，该Task不会出现在最近任务列表中，可达到隐藏应用的目的</li>
+</ul>
+<h3 id="android-windowSoftInputMode"><a href="#android-windowSoftInputMode" class="headerlink" title="android:windowSoftInputMode"></a><code>android:windowSoftInputMode</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span> </span></span><br><span class="line"><span class="tag">	···</span></span><br><span class="line"><span class="tag">    <span class="attr">android:windowSoftInputMode</span>=<span class="string">"stateVisible"</span></span></span><br><span class="line"><span class="tag">    ··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>activity主窗口与软键盘的交互模式，可以用来避免输入法面板遮挡问题，Android1.5后的一个新特性。<br>这个属性能影响两件事情：<br>【一】当有焦点产生时，软键盘是隐藏还是显示<br>【二】是否减少活动主窗口大小以便腾出空间放软键盘<br>它的设置必须是下面列表中的一个值，或一个<code>state…</code>值加一个<code>adjust…</code>值的组合。在任一组设置多个值——多个”state…”values，例如&amp;mdash有未定义的结果。各个值之间用”|”分开。例如:<br><code>&lt;activity Android:windowSoftInputMode=&quot;stateVisible|adjustResize&quot;. . . &gt;</code><br>在这设置的值(除<code>stateUnspecified</code>和<code>adjustUnspecified</code>以外)将覆盖在主题中设置的值<br>各值的含义：<blockquote>
+<p>【A】<code>stateUnspecified</code>：软键盘的状态并没有指定，系统将选择一个合适的状态或依赖于主题的设置<br>【B】<code>stateUnchanged</code>：当这个activity出现时，软键盘将一直保持在上一个activity里的状态，无论是隐藏还是显示<br>【C】<code>stateHidden</code>：用户选择activity时，软键盘总是被隐藏<br>【D】<code>stateAlwaysHidden</code>：当该Activity主窗口获取焦点时，软键盘也总是被隐藏的<br>【E】<code>stateVisible</code>：软键盘通常是可见的<br>【F】<code>stateAlwaysVisible</code>：用户选择activity时，软键盘总是显示的状态<br>【G】<code>adjustUnspecified</code>：默认设置，通常由系统自行决定是隐藏还是显示<br>【H】<code>adjustResize</code>：该Activity总是调整屏幕的大小以便留出软键盘的空间<br>【I】<code>adjustPan</code>：当前窗口的内容将自动移动以便当前焦点从不被键盘覆盖和用户能总是看到输入内容的部分</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="android-noHistory"><a href="#android-noHistory" class="headerlink" title="android:noHistory"></a><code>android:noHistory</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    ···</span></span><br><span class="line"><span class="tag">    <span class="attr">android:noHistory</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">	··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>noHistory：如果设置true，当离开activity并不可见时，此activity会从栈中移除并不留下记录</li>
+<li>默认值为false</li>
+</ul>
+<h3 id="android-enabled"><a href="#android-enabled" class="headerlink" title="android:enabled"></a><code>android:enabled</code></h3><figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity-<span class="keyword">alias</span></span><br><span class="line">    ···</span><br><span class="line">    <span class="title">android</span>:<span class="title">enabled</span>=<span class="string">"false"</span> </span><br><span class="line">    ··· &gt;</span><br><span class="line">&lt;/activity-<span class="keyword">alias</span>&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Android 系统能否实例化应用程序中的各组件  — <code>true</code>表示可以，<code>false</code>表示不允许。 如果此值设为<code>true</code>，则由每个组件的 enabled 属性确定自身的启用或禁用。 如果此值设为<code>false</code>，则覆盖组件的设置值；所有组件都将被禁用</li>
+<li>默认值是true</li>
+</ul>
+<h3 id="android-targetActivity"><a href="#android-targetActivity" class="headerlink" title="android:targetActivity"></a><code>android:targetActivity</code></h3><figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity-<span class="keyword">alias</span></span><br><span class="line">    ···</span><br><span class="line">    <span class="title">android</span>:<span class="title">targetActivity</span>=<span class="string">".users.RestrictedProfileActivity"</span> </span><br><span class="line">    ··· &gt;</span><br><span class="line">&lt;/activity-<span class="keyword">alias</span>&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这个属性用于设置通过别名所能够激活的那个Activity的名字。这个名字必须跟它前面的<code>&lt;activity&gt;</code>元素的name属性匹配。</li>
+</ul>
+<h3 id="android-finishOnCloseSystemDialogs"><a href="#android-finishOnCloseSystemDialogs" class="headerlink" title="android:finishOnCloseSystemDialogs"></a><code>android:finishOnCloseSystemDialogs</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    ···</span></span><br><span class="line"><span class="tag">    <span class="attr">android:finishOnCloseSystemDialogs</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">    ··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>当<code>关闭系统窗口</code>请求出现时是否销毁Activity，true为销毁</li>
+</ul>
+<h3 id="android-launchMode"><a href="#android-launchMode" class="headerlink" title="android:launchMode"></a><code>android:launchMode</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    ···</span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTop"</span></span></span><br><span class="line"><span class="tag">    ··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>launchMode在多个Activity跳转的过程中扮演着重要的角色，称之为启动模式。有如下四种：<br><code>standard</code>：不管有没有已存在的实例，都生成新的实例<br><code>singleTop</code>：如果发现有对应的Activity实例正位于栈顶，则重复利用，不再生成新的实例<br><code>singleTask</code>：如果发现有对应的Activity实例，则使此Activity实例之上的其他Activity实例统统出栈，使此Activity实例成为栈顶对象，显示到幕前<br><code>singleInstance</code>：比较复杂，详见延伸阅读<br>延伸阅读：<a href="http://blog.csdn.net/liuhe688/article/details/6754323/" target="_blank" rel="noopener">Activity的四种launchMode</a></li>
+</ul>
+<h3 id="android-killAfterRestore"><a href="#android-killAfterRestore" class="headerlink" title="android:killAfterRestore"></a><code>android:killAfterRestore</code></h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">application</span></span><br><span class="line">    ···</span><br><span class="line">    android:killAfterRestore=<span class="string">"false"</span></span><br><span class="line">    ··· &gt;</span><br><span class="line">&lt;/<span class="built_in">application</span>&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在执行全系统的恢复操作时，配置恢复后相关的应用程序是否要被终止。 单个包的恢复操作不会导致程序被关闭。 全系统的恢复操作一般只会发生一次，即第一次配置手机时。 第三方应用程序通常不需要用到本属性</li>
+<li>默认值是<code>true</code>，表示全系统恢复过程中，应用程序在处理完数据后将被关闭</li>
+</ul>
+<h3 id="android-process"><a href="#android-process" class="headerlink" title="android:process"></a><code>android:process</code></h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">application</span></span><br><span class="line">    ···</span><br><span class="line">    android:process=<span class="string">"system"</span></span><br><span class="line">    ··· &gt;</span><br><span class="line">&lt;/<span class="built_in">application</span>&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过在声明文件中设置<code>android:process</code>属性,我们可以让组件（例如Activity, Service等）和应用(Application)创建并运行于我们指定的进程中</li>
+</ul>
+<h3 id="android-allowClearUserData"><a href="#android-allowClearUserData" class="headerlink" title="android:allowClearUserData"></a><code>android:allowClearUserData</code></h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">application</span> </span><br><span class="line">    ···</span><br><span class="line">    android:allowClearUserData=<span class="string">"false"</span></span><br><span class="line">    ··· &gt;</span><br><span class="line">&lt;/<span class="built_in">application</span>&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>是否给以用户删除用户数据的权限</li>
+<li>如果为true应用管理者就拥有清除数据的权限；false没有</li>
+<li>默认为true</li>
+</ul>
+<h3 id="android-backupAgent"><a href="#android-backupAgent" class="headerlink" title="android:backupAgent"></a><code>android:backupAgent</code></h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">application</span></span><br><span class="line">    ···</span><br><span class="line">    android:backupAgent=<span class="string">"SettingsBackupAgent"</span></span><br><span class="line">    ··· &gt;</span><br><span class="line">&lt;/<span class="built_in">application</span>&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>实现应用的备份代理的类名，BackupAgent的子类。这个属性的名称因该是全限定类名(如，<code>com.example.project.MyBackupAgent</code>)。但是，如果名称的首字母被设置为点号，也可以为类名(如，<code>.MyBackupAgent</code>)， 他将被追加到在<code>&lt; manifest /&gt;</code>元素中定义的包名后</li>
+<li>没有默认值</li>
+</ul>
+<h3 id="android-multiprocess"><a href="#android-multiprocess" class="headerlink" title="android:multiprocess"></a><code>android:multiprocess</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span></span></span><br><span class="line"><span class="tag">    ···&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">provider</span></span></span><br><span class="line"><span class="tag">        ···</span></span><br><span class="line"><span class="tag">        <span class="attr">android:multiprocess</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">        ··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>该属性表示Activity的实例是否可以运行在启动它的组件所在的应用程序进程中。如果可以，则为true，否则为false</li>
+<li>默认值是false</li>
+</ul>
+<h3 id="android-authorities"><a href="#android-authorities" class="headerlink" title="android:authorities"></a><code>android:authorities</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span></span></span><br><span class="line"><span class="tag">    ···&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">provider</span></span></span><br><span class="line"><span class="tag">        ···</span></span><br><span class="line"><span class="tag">        <span class="attr">android:authorities</span>=<span class="string">"settings"</span></span></span><br><span class="line"><span class="tag">        ··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>标识内容提供器范围内的数据URI的授权列表，有多个授权时，要用分号来分离每个授权</li>
+</ul>
+<h3 id="android-writePermission"><a href="#android-writePermission" class="headerlink" title="android:writePermission"></a><code>android:writePermission</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span></span></span><br><span class="line"><span class="tag">    ···&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">provider</span></span></span><br><span class="line"><span class="tag">        ···</span></span><br><span class="line"><span class="tag">        <span class="attr">android:writePermission</span>=<span class="string">"android.permission.WRITE_SETTINGS"</span></span></span><br><span class="line"><span class="tag">        ··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>这个属性用于设置修改内容提供器的数据时，客户端所必须要有的权限</li>
+</ul>
+<h3 id="android-singleUser"><a href="#android-singleUser" class="headerlink" title="android:singleUser"></a><code>android:singleUser</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span></span></span><br><span class="line"><span class="tag">    ···&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">provider</span></span></span><br><span class="line"><span class="tag">        ···</span></span><br><span class="line"><span class="tag">        <span class="attr">android:singleUser</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        ··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>表示单用户，所有用户使用的Activity是同一个,和singletop,singletask的区别是，无论如何启动，他总是一个</li>
+</ul>
+<h3 id="android-initOrder"><a href="#android-initOrder" class="headerlink" title="android:initOrder"></a><code>android:initOrder</code></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span></span></span><br><span class="line"><span class="tag">    ···&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">provider</span></span></span><br><span class="line"><span class="tag">        ···</span></span><br><span class="line"><span class="tag">        <span class="attr">android:initOrder</span>=<span class="string">"100"</span></span></span><br><span class="line"><span class="tag">        ··· &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>这个属性用于定义内容提供器应该被实例化的顺序，这个顺序是相对与相同进程所拥有的其他内容提供器的。当内容提供器间有相互的依赖时，就需要设置这个属性，以确保它们能够按照其依赖的顺序被创建。这个属性值是一个简单的整数，大的数字要被优先初始化</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2017/08/18/AndroidMainfest详解/" title="AndroidMainfest详解">https://cj5785.com/2017/08/18/AndroidMainfest详解/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AndroidMainfest/" rel="tag"># AndroidMainfest</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/06/数据结构与算法之排序/" rel="next" title="数据结构与算法之排序">
+                <i class="fa fa-chevron-left"></i> 数据结构与算法之排序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/03/java基础类库/" rel="prev" title="Java基础类库">
+                Java基础类库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#coreApp"><span class="nav-number">1.</span> <span class="nav-text">coreApp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-supportsRtl"><span class="nav-number">2.</span> <span class="nav-text">android:supportsRtl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-configChanges"><span class="nav-number">3.</span> <span class="nav-text">android:configChanges</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-priority"><span class="nav-number">4.</span> <span class="nav-text">android:priority</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-clearTaskOnLaunch"><span class="nav-number">5.</span> <span class="nav-text">Android:clearTaskOnLaunch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-exported"><span class="nav-number">6.</span> <span class="nav-text">android:exported</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#excludeFromRecents"><span class="nav-number">7.</span> <span class="nav-text">excludeFromRecents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-windowSoftInputMode"><span class="nav-number">8.</span> <span class="nav-text">android:windowSoftInputMode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-noHistory"><span class="nav-number">9.</span> <span class="nav-text">android:noHistory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-enabled"><span class="nav-number">10.</span> <span class="nav-text">android:enabled</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-targetActivity"><span class="nav-number">11.</span> <span class="nav-text">android:targetActivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-finishOnCloseSystemDialogs"><span class="nav-number">12.</span> <span class="nav-text">android:finishOnCloseSystemDialogs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-launchMode"><span class="nav-number">13.</span> <span class="nav-text">android:launchMode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-killAfterRestore"><span class="nav-number">14.</span> <span class="nav-text">android:killAfterRestore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-process"><span class="nav-number">15.</span> <span class="nav-text">android:process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-allowClearUserData"><span class="nav-number">16.</span> <span class="nav-text">android:allowClearUserData</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-backupAgent"><span class="nav-number">17.</span> <span class="nav-text">android:backupAgent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-multiprocess"><span class="nav-number">18.</span> <span class="nav-text">android:multiprocess</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-authorities"><span class="nav-number">19.</span> <span class="nav-text">android:authorities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-writePermission"><span class="nav-number">20.</span> <span class="nav-text">android:writePermission</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-singleUser"><span class="nav-number">21.</span> <span class="nav-text">android:singleUser</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-initOrder"><span class="nav-number">22.</span> <span class="nav-text">android:initOrder</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2017/08/18/AndroidMainfest详解/';
+          this.page.identifier = '2017/08/18/AndroidMainfest详解/';
+          this.page.title = 'AndroidMainfest详解';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/favicon.png?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="高级UI,自定义,动画框架,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="有的时候会需要做一些自定义的动画效果，在会反复用到的动画效果可以考虑做成动画框架，方便使用，做成框架的话就需要考虑很多的问题，最典型的问题就是属性和方法必须要是可配置的，这里就来聊一聊自定义动画框架的做法">
+<meta name="keywords" content="高级UI,自定义,动画框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级UI之自定义动画框架">
+<meta property="og:url" content="https://cj5785.com/2018/08/27/高级UI之自定义动画框架/index.html">
+<meta property="og:site_name" content="Chen&#39;s Blog">
+<meta property="og:description" content="有的时候会需要做一些自定义的动画效果，在会反复用到的动画效果可以考虑做成动画框架，方便使用，做成框架的话就需要考虑很多的问题，最典型的问题就是属性和方法必须要是可配置的，这里就来聊一聊自定义动画框架的做法">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%E6%A1%86%E6%9E%B6-addView.gif">
+<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%E6%A1%86%E6%9E%B6-inflater.gif">
+<meta property="og:updated_time" content="2018-09-11T07:16:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高级UI之自定义动画框架">
+<meta name="twitter:description" content="有的时候会需要做一些自定义的动画效果，在会反复用到的动画效果可以考虑做成动画框架，方便使用，做成框架的话就需要考虑很多的问题，最典型的问题就是属性和方法必须要是可配置的，这里就来聊一聊自定义动画框架的做法">
+<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%E6%A1%86%E6%9E%B6-addView.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://cj5785.com/2018/08/27/高级UI之自定义动画框架/">
+
+
+
+
+
+  <title>高级UI之自定义动画框架 | Chen's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-120458328-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?000362f8037ce07b894f095953027cac";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Read The Fucking Source Code!</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cj5785.com/2018/08/27/高级UI之自定义动画框架/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">高级UI之自定义动画框架</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-27T20:49:13+08:00">
+                2018-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/高级UI/" itemprop="url" rel="index">
+                    <span itemprop="name">高级UI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/27/高级UI之自定义动画框架/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/08/27/高级UI之自定义动画框架/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>有的时候会需要做一些自定义的动画效果，在会反复用到的动画效果可以考虑做成动画框架，方便使用，做成框架的话就需要考虑很多的问题，最典型的问题就是属性和方法必须要是可配置的，这里就来聊一聊自定义动画框架的做法<br><a id="more"></a></p>
+<h3 id="重难点分析"><a href="#重难点分析" class="headerlink" title="重难点分析"></a>重难点分析</h3><p>在自定义动画框架里面，最难的一个问题就是怎么样获得属性，如果直接写自定义的属性，那么编译时候就会报错了，那么自然就想到了在外层包裹自定义的属性，通过处理自定义的属性来得到，这样便是android源代码一些控件的解决办法，其实就是一招偷梁换柱，在处理的时候，如果是自定义的属性，就自己处理，如果不是自定义的属性，就交由系统处理，然后在addView上再做手脚，另外从xml的解析入手，可以自定义LayoutInflater，然后重写onCreateView()，在里面就可以完成偷梁换柱，故这里有两种方法可以完成</p>
+<h3 id="在addView时候拦截做法"><a href="#在addView时候拦截做法" class="headerlink" title="在addView时候拦截做法"></a>在addView时候拦截做法</h3><p>这里做一个滑动的自定义动画<br>在滑动的View里面，需要实现滑动时候和重置的工作，这里有一个接口，及实现接口的方法来做<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DiscrollvableInterface</span> </span>&#123;</span><br><span class="line">    <span class="comment">//当滑动的时候调用该方法，用来控制里面的控件执行相应的动画</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onDiscrollve</span><span class="params">(<span class="keyword">float</span> ratio)</span></span>;</span><br><span class="line">    <span class="comment">//重置view的属性----恢复view的原来属性</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onResetDiscrollve</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>实现上面的接口<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiscrollvableView</span> <span class="keyword">extends</span> <span class="title">FrameLayout</span> <span class="keyword">implements</span> <span class="title">DiscrollvableInterface</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TRANSLATION_FROM_TOP = <span class="number">0x01</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TRANSLATION_FROM_BOTTOM = <span class="number">0x02</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TRANSLATION_FROM_LEFT = <span class="number">0x04</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TRANSLATION_FROM_RIGHT = <span class="number">0x08</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//颜色估值器</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ArgbEvaluator sArgbEvaluator = <span class="keyword">new</span> ArgbEvaluator();</span><br><span class="line">    <span class="comment">//自定义属性的一些接收的变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mDiscrollveFromBgColor;<span class="comment">//背景颜色变化开始值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mDiscrollveToBgColor;<span class="comment">//背景颜色变化结束值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> mDiscrollveAlpha;<span class="comment">//是否需要透明度动画</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mDisCrollveTranslation;<span class="comment">//平移值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> mDiscrollveScaleX;<span class="comment">//是否需要x轴方向缩放</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> mDiscrollveScaleY;<span class="comment">//是否需要y轴方向缩放</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mHeight;<span class="comment">//本view的高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mWidth;<span class="comment">//宽度</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setmDiscrollveFromBgColor</span><span class="params">(<span class="keyword">int</span> mDiscrollveFromBgColor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mDiscrollveFromBgColor = mDiscrollveFromBgColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setmDiscrollveToBgColor</span><span class="params">(<span class="keyword">int</span> mDiscrollveToBgColor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mDiscrollveToBgColor = mDiscrollveToBgColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setmDiscrollveAlpha</span><span class="params">(<span class="keyword">boolean</span> mDiscrollveAlpha)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mDiscrollveAlpha = mDiscrollveAlpha;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setmDisCrollveTranslation</span><span class="params">(<span class="keyword">int</span> mDisCrollveTranslation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mDisCrollveTranslation = mDisCrollveTranslation;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setmDiscrollveScaleX</span><span class="params">(<span class="keyword">boolean</span> mDiscrollveScaleX)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mDiscrollveScaleX = mDiscrollveScaleX;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setmDiscrollveScaleY</span><span class="params">(<span class="keyword">boolean</span> mDiscrollveScaleY)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mDiscrollveScaleY = mDiscrollveScaleY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line">        mWidth = w;</span><br><span class="line">        mHeight = h;</span><br><span class="line">        onResetDiscrollve();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiscrollvableView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiscrollvableView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDiscrollve</span><span class="params">(<span class="keyword">float</span> ratio)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ratio:0~1</span></span><br><span class="line">        <span class="comment">//控制自身的动画属性</span></span><br><span class="line">        <span class="keyword">if</span> (mDiscrollveAlpha) &#123;</span><br><span class="line">            setAlpha(ratio);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mDiscrollveScaleX) &#123;</span><br><span class="line">            setScaleX(ratio);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mDiscrollveScaleY) &#123;</span><br><span class="line">            setScaleY(ratio);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//判断到底是哪一种值：fromTop,fromBottom,fromLeft,fromRight</span></span><br><span class="line">        <span class="keyword">if</span> (isDiscrollTranslationFrom(TRANSLATION_FROM_BOTTOM)) &#123;</span><br><span class="line">            setTranslationY(mHeight * (<span class="number">1</span> - ratio));<span class="comment">//mHeight--&gt;0(代表原来的位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isDiscrollTranslationFrom(TRANSLATION_FROM_TOP)) &#123;</span><br><span class="line">            setTranslationY(-mHeight * (<span class="number">1</span> - ratio));<span class="comment">//-mHeight--&gt;0(代表原来的位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isDiscrollTranslationFrom(TRANSLATION_FROM_LEFT)) &#123;</span><br><span class="line">            setTranslationX(-mWidth * (<span class="number">1</span> - ratio));<span class="comment">//-width--&gt;0(代表原来的位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isDiscrollTranslationFrom(TRANSLATION_FROM_RIGHT)) &#123;</span><br><span class="line">            setTranslationX(mWidth * (<span class="number">1</span> - ratio));<span class="comment">//width--&gt;0(代表原来的位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//颜色渐变动画</span></span><br><span class="line">        <span class="keyword">if</span> (mDiscrollveFromBgColor != -<span class="number">1</span> &amp;&amp; mDiscrollveToBgColor != -<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">//ratio=0.5 color=中间颜色</span></span><br><span class="line">            setBackgroundColor((Integer) sArgbEvaluator.evaluate(ratio, mDiscrollveFromBgColor, mDiscrollveToBgColor));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isDiscrollTranslationFrom</span><span class="params">(<span class="keyword">int</span> translationMask)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mDisCrollveTranslation == -<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//fromLeft|fromBottom &amp; fromBottom = fromBottom</span></span><br><span class="line">        <span class="keyword">return</span> (mDisCrollveTranslation &amp; translationMask) == translationMask;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResetDiscrollve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//控制自身的动画属性</span></span><br><span class="line">        <span class="keyword">if</span> (mDiscrollveAlpha) &#123;</span><br><span class="line">            setAlpha(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mDiscrollveScaleX) &#123;</span><br><span class="line">            setScaleX(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mDiscrollveScaleY) &#123;</span><br><span class="line">            setScaleY(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//判断到底是哪一种值：fromTop,fromBottom,fromLeft,fromRight</span></span><br><span class="line">        <span class="keyword">if</span> (isDiscrollTranslationFrom(TRANSLATION_FROM_BOTTOM)) &#123;</span><br><span class="line">            setTranslationY(mHeight);<span class="comment">//mHeight--&gt;0(代表原来的位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isDiscrollTranslationFrom(TRANSLATION_FROM_TOP)) &#123;</span><br><span class="line">            setTranslationY(-mHeight);<span class="comment">//-mHeight--&gt;0(代表原来的位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isDiscrollTranslationFrom(TRANSLATION_FROM_LEFT)) &#123;</span><br><span class="line">            setTranslationX(-mWidth);<span class="comment">//-width--&gt;0(代表原来的位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isDiscrollTranslationFrom(TRANSLATION_FROM_RIGHT)) &#123;</span><br><span class="line">            setTranslationX(mWidth);<span class="comment">//width--&gt;0(代表原来的位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么便完成了对于滑动效果的控制，为了便于控制，自定义View继承ScrollView<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiscrollView</span> <span class="keyword">extends</span> <span class="title">ScrollView</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> DiscrollViewContent mContent;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiscrollView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onFinishInflate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onFinishInflate();</span><br><span class="line">        View content = getChildAt(<span class="number">0</span>);</span><br><span class="line">        mContent = (DiscrollViewContent) content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line">        View first = mContent.getChildAt(<span class="number">0</span>);</span><br><span class="line">        first.getLayoutParams().height = getHeight();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onScrollChanged</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> oldl, <span class="keyword">int</span> oldt)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onScrollChanged(l, t, oldl, oldt);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> scrollViewHeight = getHeight();</span><br><span class="line">        <span class="comment">//监听滑动----接口----&gt;控制DiscrollViewContent的属性</span></span><br><span class="line">        <span class="comment">//遍历MyLinearLayout里面所有子控件(MyViewGroup)</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mContent.getChildCount(); i++) &#123;</span><br><span class="line">            View child = mContent.getChildAt(i);</span><br><span class="line">            <span class="keyword">if</span> (!(child <span class="keyword">instanceof</span> DiscrollvableInterface)) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//ratio:0~1</span></span><br><span class="line">            DiscrollvableInterface discrollvableInterface = (DiscrollvableInterface) child;</span><br><span class="line">            <span class="comment">//1.child离scrollview顶部的高度</span></span><br><span class="line">            <span class="keyword">int</span> discrollvableTop = child.getTop();</span><br><span class="line">            <span class="keyword">int</span> discrollvableHeight = child.getHeight();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//2.得到scrollview滑出去的高度</span></span><br><span class="line">            <span class="comment">//3.得到child离屏幕顶部的高度</span></span><br><span class="line">            <span class="keyword">int</span> discrollvableAbsoluteTop = discrollvableTop - t;</span><br><span class="line">            <span class="comment">//什么时候执行动画？当child滑进屏幕的时候</span></span><br><span class="line">            <span class="keyword">if</span> (discrollvableAbsoluteTop &lt;= scrollViewHeight) &#123;</span><br><span class="line">                <span class="keyword">int</span> visibleGap = scrollViewHeight - discrollvableAbsoluteTop;</span><br><span class="line">                <span class="comment">//确保ratio是在0~1，超过了1 也设置为1</span></span><br><span class="line">                discrollvableInterface.onDiscrollve(clamp(visibleGap / (<span class="keyword">float</span>) discrollvableHeight, <span class="number">1f</span>, <span class="number">0f</span>));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;<span class="comment">//否则，就恢复到原来的位置</span></span><br><span class="line">                discrollvableInterface.onResetDiscrollve();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">float</span> <span class="title">clamp</span><span class="params">(<span class="keyword">float</span> value, <span class="keyword">float</span> max, <span class="keyword">float</span> min)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Math.max(Math.min(value, max), min);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>设置属性，偷梁换柱<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiscrollViewContent</span> <span class="keyword">extends</span> <span class="title">LinearLayout</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiscrollViewContent</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">        setOrientation(VERTICAL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> LayoutParams <span class="title">generateLayoutParams</span><span class="params">(AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 得到xml里面穿过来的参数</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MyLayoutParams(getContext(), attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(View child, <span class="keyword">int</span> index, android.view.ViewGroup.LayoutParams params)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//从child里面拿到我自定义的属性，传到discrollvableView里面</span></span><br><span class="line">        MyLayoutParams p = (MyLayoutParams) params;</span><br><span class="line">        <span class="keyword">if</span> (!isDiscrollvable(p)) &#123;<span class="comment">//判断该view是否穿了自定义属性值，不是就不需要执行动画，不包一层FrameLayout</span></span><br><span class="line">            <span class="keyword">super</span>.addView(child, index, params);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//在addView里面插一脚，往child外面包裹一层FrameLayout</span></span><br><span class="line">            DiscrollvableView discrollvableView = <span class="keyword">new</span> DiscrollvableView(getContext());</span><br><span class="line">            discrollvableView.setmDiscrollveAlpha(p.mDiscrollveAlpha);</span><br><span class="line">            discrollvableView.setmDisCrollveTranslation(p.mDisCrollveTranslation);</span><br><span class="line">            discrollvableView.setmDiscrollveScaleX(p.mDiscrollveScaleX);</span><br><span class="line">            discrollvableView.setmDiscrollveScaleY(p.mDiscrollveScaleY);</span><br><span class="line">            discrollvableView.setmDiscrollveFromBgColor(p.mDiscrollveFromBgColor);</span><br><span class="line">            discrollvableView.setmDiscrollveToBgColor(p.mDiscrollveToBgColor);</span><br><span class="line">            discrollvableView.addView(child);</span><br><span class="line">            <span class="keyword">super</span>.addView(discrollvableView, index, params);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isDiscrollvable</span><span class="params">(MyLayoutParams p)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> p.mDiscrollveAlpha || p.mDiscrollveScaleX</span><br><span class="line">                || p.mDiscrollveScaleY || p.mDisCrollveTranslation != -<span class="number">1</span></span><br><span class="line">                || (p.mDiscrollveFromBgColor != -<span class="number">1</span> &amp;&amp; p.mDiscrollveToBgColor != -<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyLayoutParams</span> <span class="keyword">extends</span> <span class="title">LinearLayout</span>.<span class="title">LayoutParams</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> mDiscrollveFromBgColor;<span class="comment">//背景颜色变化开始值</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> mDiscrollveToBgColor;<span class="comment">//背景颜色变化结束值</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">boolean</span> mDiscrollveAlpha;<span class="comment">//是否需要透明度动画</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> mDisCrollveTranslation;<span class="comment">//平移值</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">boolean</span> mDiscrollveScaleX;<span class="comment">//是否需要x轴方向缩放</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">boolean</span> mDiscrollveScaleY;<span class="comment">//是否需要y轴方向缩放</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">MyLayoutParams</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(context, attrs);</span><br><span class="line">            <span class="comment">// 从child里面拿到我自定义的属性</span></span><br><span class="line">            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscrollView_LayoutParams);</span><br><span class="line">            mDiscrollveAlpha = a.getBoolean(R.styleable.DiscrollView_LayoutParams_discrollve_alpha, <span class="keyword">false</span>);</span><br><span class="line">            mDiscrollveScaleX = a.getBoolean(R.styleable.DiscrollView_LayoutParams_discrollve_scaleX, <span class="keyword">false</span>);</span><br><span class="line">            mDiscrollveScaleY = a.getBoolean(R.styleable.DiscrollView_LayoutParams_discrollve_scaleY, <span class="keyword">false</span>);</span><br><span class="line">            mDisCrollveTranslation = a.getInt(R.styleable.DiscrollView_LayoutParams_discrollve_translation, -<span class="number">1</span>);</span><br><span class="line">            mDiscrollveFromBgColor = a.getColor(R.styleable.DiscrollView_LayoutParams_discrollve_fromBgColor, -<span class="number">1</span>);</span><br><span class="line">            mDiscrollveToBgColor = a.getColor(R.styleable.DiscrollView_LayoutParams_discrollve_toBgColor, -<span class="number">1</span>);</span><br><span class="line">            a.recycle();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后是一些自定义属性<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"DiscrollView_LayoutParams"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"discrollve_alpha"</span> <span class="attr">format</span>=<span class="string">"boolean"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"discrollve_scaleX"</span> <span class="attr">format</span>=<span class="string">"boolean"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"discrollve_scaleY"</span> <span class="attr">format</span>=<span class="string">"boolean"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"discrollve_fromBgColor"</span> <span class="attr">format</span>=<span class="string">"color"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"discrollve_toBgColor"</span> <span class="attr">format</span>=<span class="string">"color"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"discrollve_translation"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"discrollve_translation"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flag</span> <span class="attr">name</span>=<span class="string">"fromTop"</span> <span class="attr">value</span>=<span class="string">"0x01"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flag</span> <span class="attr">name</span>=<span class="string">"fromBottom"</span> <span class="attr">value</span>=<span class="string">"0x02"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flag</span> <span class="attr">name</span>=<span class="string">"fromLeft"</span> <span class="attr">value</span>=<span class="string">"0x04"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flag</span> <span class="attr">name</span>=<span class="string">"fromRight"</span> <span class="attr">value</span>=<span class="string">"0x08"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">attr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>布局<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">com.cj5785.customanimationaddview.DiscrollView</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:custom</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">com.cj5785.customanimationaddview.DiscrollViewContent</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"560dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">"@android:color/white"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"测试文字使用情况"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textSize</span>=<span class="string">"25sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">View</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">"@android:color/darker_gray"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_alpha</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"89dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"80dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:src</span>=<span class="string">"@drawable/duck"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_alpha</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_translation</span>=<span class="string">"fromLeft|fromBottom"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">View</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_fromBgColor</span>=<span class="string">"#ffff00"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_toBgColor</span>=<span class="string">"#88EE66"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"150dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"106dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_gravity</span>=<span class="string">"right"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:src</span>=<span class="string">"@drawable/camera"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_translation</span>=<span class="string">"fromRight"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"第二段文字使用测试"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textSize</span>=<span class="string">"28sp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_alpha</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_translation</span>=<span class="string">"fromBottom"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_margin</span>=<span class="string">"20dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:src</span>=<span class="string">"@drawable/sun"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_scaleX</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_scaleY</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_margin</span>=<span class="string">"20dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:src</span>=<span class="string">"@drawable/balloon"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">custom:discrollve_translation</span>=<span class="string">"fromLeft|fromBottom"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">com.cj5785.customanimationaddview.DiscrollViewContent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">com.cj5785.customanimationaddview.DiscrollView</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>效果如下<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%E6%A1%86%E6%9E%B6-addView.gif" alt=""></p>
+<h3 id="自定义LayoutInflater"><a href="#自定义LayoutInflater" class="headerlink" title="自定义LayoutInflater"></a>自定义LayoutInflater</h3><p>这里实现一个仿小红书的视差动画效果<br>首先定义一个根布局，然后实例化其自定义控件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">RelativeLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:background</span>=<span class="string">"@android:color/white"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">com.cj5785.customanimationlayoutinflater.ParallaxContainer</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/parallax_container"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/iv_man"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"66dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"202dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_alignParentBottom</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_centerHorizontal</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_marginBottom</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:background</span>=<span class="string">"@drawable/intro_item_manrun_1"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>实例化自定义控件，在最后一个登陆界面，由于与前面的不同，使用切换Fragment的方式，需要使用到适配器<br>适配器<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParallaxAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;ParallaxFragment&gt; fragmentList;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ParallaxAdapter</span><span class="params">(FragmentManager fm, List&lt;ParallaxFragment&gt; fragmentList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(fm);</span><br><span class="line">        <span class="keyword">this</span>.fragmentList = fragmentList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fragmentList.get(position);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fragmentList.size();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>自定义Fragment，其主要的偷梁换柱工作就是在这里完成的，返回我们处理以后的View<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParallaxFragment</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;View&gt; parallaxViews = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        Bundle bundle = getArguments();</span><br><span class="line">        <span class="keyword">int</span> layoutId = bundle.getInt(<span class="string">"layoutId"</span>);</span><br><span class="line">        <span class="comment">//正常情况下在这里获得view，然后返回，我们就在这里偷梁换柱</span></span><br><span class="line"><span class="comment">//        View view = inflater.inflate(layoutId, container);</span></span><br><span class="line">        <span class="comment">//使用自定义的渲染器渲染</span></span><br><span class="line">        ParallaxLayoutInflater layoutInflater = <span class="keyword">new</span> ParallaxLayoutInflater(inflater, getActivity(), <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> layoutInflater.inflate(layoutId, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;View&gt; <span class="title">getParallaxViews</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> parallaxViews;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>动画引导层<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//引导页的最外层布局</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParallaxContainer</span> <span class="keyword">extends</span> <span class="title">FrameLayout</span> <span class="keyword">implements</span> <span class="title">OnPageChangeListener</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;ParallaxFragment&gt; fragmentList;</span><br><span class="line">    <span class="keyword">private</span> ParallaxAdapter adapter;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> containerWidth;</span><br><span class="line">    <span class="keyword">private</span> ImageView iv_man;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ParallaxContainer</span><span class="params">(@NonNull Context context, @Nullable AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//指定引导页的所有页面布局文件</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">(<span class="keyword">int</span>... ids)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//初始化framentList，在调用处直接调用setUp()</span></span><br><span class="line">        fragmentList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ids.length; i++) &#123;</span><br><span class="line">            ParallaxFragment fragment = <span class="keyword">new</span> ParallaxFragment();</span><br><span class="line">            Bundle bundle = <span class="keyword">new</span> Bundle();</span><br><span class="line">            <span class="comment">//Fragment中需要加载的布局文件id</span></span><br><span class="line">            bundle.putInt(<span class="string">"layoutId"</span>, ids[i]);</span><br><span class="line">            fragment.setArguments(bundle);</span><br><span class="line">            fragmentList.add(fragment);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//设置ViewPager</span></span><br><span class="line">        ViewPager viewPager = <span class="keyword">new</span> ViewPager(getContext());</span><br><span class="line">        viewPager.setLayoutParams(<span class="keyword">new</span> LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));</span><br><span class="line">        viewPager.setId(R.id.parallax_pager);</span><br><span class="line">        adapter = <span class="keyword">new</span> ParallaxAdapter(((MainActivity) getContext()).getSupportFragmentManager(), fragmentList);</span><br><span class="line">        viewPager.setAdapter(adapter);</span><br><span class="line">        addView(viewPager, <span class="number">0</span>);</span><br><span class="line">        <span class="comment">//设置监听</span></span><br><span class="line">        viewPager.addOnPageChangeListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageScrolled</span><span class="params">(<span class="keyword">int</span> position, <span class="keyword">float</span> positionOffset, <span class="keyword">int</span> positionOffsetPixels)</span> </span>&#123;</span><br><span class="line">        containerWidth = getWidth();</span><br><span class="line">        <span class="comment">//在翻页的过程中，不断根据视图的标签中对应的动画参数，改变视图的位置或者透明度</span></span><br><span class="line">        <span class="comment">//获取到进入的页面</span></span><br><span class="line">        ParallaxFragment inFragment = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            inFragment = fragmentList.get(position - <span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//获取到退出的页面</span></span><br><span class="line">        ParallaxFragment outFragment = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            outFragment = fragmentList.get(position);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (inFragment != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//获取Fragment上所有的视图，实现动画效果</span></span><br><span class="line">            List&lt;View&gt; inViews = inFragment.getParallaxViews();</span><br><span class="line">            <span class="keyword">if</span> (inViews != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (View view : inViews) &#123;</span><br><span class="line">                    <span class="comment">//获取标签，从标签上获取所有的动画参数</span></span><br><span class="line">                    ParallaxViewTag tag = (ParallaxViewTag) view.getTag(R.id.parallax_view_tag);</span><br><span class="line">                    <span class="keyword">if</span> (tag == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">//translationY改变view的偏移位置，translationY=100，代表view在其原始位置向下移动100</span></span><br><span class="line">                    <span class="comment">//仔细观察进入的fragment中view从远处过来，不断向下移动，最终停在原始位置</span></span><br><span class="line">                    view.setTranslationX((containerWidth - positionOffsetPixels) * tag.xIn);</span><br><span class="line">                    view.setTranslationY((containerWidth - positionOffsetPixels) * tag.yIn);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (outFragment != <span class="keyword">null</span>) &#123;</span><br><span class="line">            List&lt;View&gt; outViews = outFragment.getParallaxViews();</span><br><span class="line">            <span class="keyword">if</span> (outViews != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (View view : outViews) &#123;</span><br><span class="line">                    ParallaxViewTag tag = (ParallaxViewTag) view.getTag(R.id.parallax_view_tag);</span><br><span class="line">                    <span class="keyword">if</span> (tag == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">//仔细观察退出的fragment中view从原始位置开始向上移动，translationY应为负数</span></span><br><span class="line">                    view.setTranslationX((-positionOffsetPixels) * tag.xOut);</span><br><span class="line">                    view.setTranslationY((-positionOffsetPixels) * tag.yOut);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageSelected</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (position == adapter.getCount() - <span class="number">1</span>) &#123;</span><br><span class="line">            iv_man.setVisibility(INVISIBLE);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            iv_man.setVisibility(VISIBLE);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageScrollStateChanged</span><span class="params">(<span class="keyword">int</span> state)</span> </span>&#123;</span><br><span class="line">        AnimationDrawable animation = (AnimationDrawable) iv_man.getBackground();</span><br><span class="line">        <span class="keyword">switch</span> (state) &#123;</span><br><span class="line">            <span class="keyword">case</span> ViewPager.SCROLL_STATE_DRAGGING:</span><br><span class="line">                animation.start();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> ViewPager.SCROLL_STATE_IDLE:</span><br><span class="line">                animation.stop();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setIv_man</span><span class="params">(ImageView iv_man)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.iv_man = iv_man;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>拦截系统处理xml<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParallaxLayoutInflater</span> <span class="keyword">extends</span> <span class="title">LayoutInflater</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"ParallaxLayoutInflater"</span>;</span><br><span class="line">    <span class="keyword">private</span> ParallaxFragment parallaxFragment;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">ParallaxLayoutInflater</span><span class="params">(LayoutInflater original, Context newContext, ParallaxFragment parallaxFragment)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(original, newContext);</span><br><span class="line">        <span class="keyword">this</span>.parallaxFragment = parallaxFragment;</span><br><span class="line">        <span class="comment">//源代码中存在：</span></span><br><span class="line">        <span class="comment">//View view;</span></span><br><span class="line">        <span class="comment">//if (mFactory2 != null) &#123;</span></span><br><span class="line">        <span class="comment">//  view = mFactory2.onCreateView(parent, name, context, attrs);</span></span><br><span class="line">        <span class="comment">//&#125; else if (mFactory != null) &#123;</span></span><br><span class="line">        <span class="comment">//  view = mFactory.onCreateView(name, context, attrs);</span></span><br><span class="line">        <span class="comment">//&#125; else &#123;</span></span><br><span class="line">        <span class="comment">//  view = null;</span></span><br><span class="line">        <span class="comment">//&#125;</span></span><br><span class="line">        <span class="comment">//if (view == null &amp;&amp; mPrivateFactory != null) &#123;</span></span><br><span class="line">        <span class="comment">//  view = mPrivateFactory.onCreateView(parent, name, context, attrs);</span></span><br><span class="line">        <span class="comment">//&#125;</span></span><br><span class="line">        <span class="comment">//也就是说只要实现Factory，那么就不会调用后面的方法</span></span><br><span class="line">        setFactory(<span class="keyword">new</span> ParallaxFactory(<span class="keyword">this</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> LayoutInflater <span class="title">cloneInContext</span><span class="params">(Context newContext)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//实际用于创建LayoutInflater的方法</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ParallaxLayoutInflater(<span class="keyword">this</span>, newContext, parallaxFragment);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//这个框架最核心的地方就是在这里设置Factory，从而进行拦截</span></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">ParallaxFactory</span> <span class="keyword">implements</span> <span class="title">LayoutInflater</span>.<span class="title">Factory</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> LayoutInflater inflater;</span><br><span class="line">        <span class="comment">//系统提供的视图分为android.widget.xxx和android.view.xxx</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> String[] prefixs = &#123;</span><br><span class="line">                <span class="string">"android.widget."</span>,</span><br><span class="line">                <span class="string">"android.view."</span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ParallaxFactory</span><span class="params">(LayoutInflater inflater)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.inflater = inflater;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(String name, Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//实例化view</span></span><br><span class="line">            View view = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (view == <span class="keyword">null</span>) &#123;</span><br><span class="line">				view = createViewOrFailQuietly(name,context,attrs);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (view != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//获取自定义属性，并将自定义标签值绑定到view上面</span></span><br><span class="line">                getCustomAttrs(context, attrs, view);</span><br><span class="line">                parallaxFragment.getParallaxViews().add(view);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> view;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getCustomAttrs</span><span class="params">(Context context, AttributeSet attrs, View view)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//所有自定义的属性</span></span><br><span class="line">            <span class="keyword">int</span>[] attrIds = &#123;</span><br><span class="line">                    R.attr.a_in,</span><br><span class="line">                    R.attr.a_out,</span><br><span class="line">                    R.attr.x_in,</span><br><span class="line">                    R.attr.x_out,</span><br><span class="line">                    R.attr.y_in,</span><br><span class="line">                    R.attr.y_out</span><br><span class="line">            &#125;;</span><br><span class="line">			<span class="comment">//获取</span></span><br><span class="line">            TypedArray typedArray = context.obtainStyledAttributes(attrs, attrIds);</span><br><span class="line">            <span class="keyword">if</span> (typedArray != <span class="keyword">null</span> &amp;&amp; typedArray.length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">//获取自定义属性的值</span></span><br><span class="line">                Log.d(TAG, <span class="string">"getCustomAttrs"</span>);</span><br><span class="line">                ParallaxViewTag tag = <span class="keyword">new</span> ParallaxViewTag();</span><br><span class="line">                tag.alphaIn = typedArray.getFloat(<span class="number">0</span>, <span class="number">0f</span>);</span><br><span class="line">                tag.alphaOut = typedArray.getFloat(<span class="number">1</span>, <span class="number">0f</span>);</span><br><span class="line">                tag.xIn = typedArray.getFloat(<span class="number">2</span>, <span class="number">0f</span>);</span><br><span class="line">                tag.xOut = typedArray.getFloat(<span class="number">3</span>, <span class="number">0f</span>);</span><br><span class="line">                tag.yIn = typedArray.getFloat(<span class="number">4</span>, <span class="number">0f</span>);</span><br><span class="line">                tag.yOut = typedArray.getFloat(<span class="number">5</span>, <span class="number">0f</span>);</span><br><span class="line">                view.setTag(R.id.parallax_view_tag, tag);</span><br><span class="line">            &#125;</span><br><span class="line">            typedArray.recycle();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> View <span class="title">createViewOrFailQuietly</span><span class="params">(String name, String prefix, Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="comment">//通过系统的inflater创建视图，读取系统的属性</span></span><br><span class="line">                <span class="keyword">return</span> inflater.createView(name, prefix, attrs);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> View <span class="title">createViewOrFailQuietly</span><span class="params">(String name, Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//通过系统inflater创建视图</span></span><br><span class="line">			<span class="comment">//1.自定义控件标签名称带点，所以创建时不需要前缀</span></span><br><span class="line">            <span class="keyword">if</span> (name.contains(<span class="string">"."</span>)) &#123;</span><br><span class="line">                <span class="keyword">return</span> createViewOrFailQuietly(name, <span class="keyword">null</span>, context, attrs);</span><br><span class="line">            &#125;</span><br><span class="line">			<span class="comment">//2.系统视图需要加上前缀</span></span><br><span class="line">			                <span class="keyword">for</span> (String prefix : prefixs) &#123;</span><br><span class="line">                    View view = createViewOrFailQuietly(name, prefix, context, attrs);</span><br><span class="line">                    <span class="keyword">if</span> (view != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">return</span> view;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>参数控制<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//视差动画播放时参数的控制</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParallaxViewTag</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> index;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">float</span> xIn;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">float</span> xOut;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">float</span> yIn;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">float</span> yOut;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">float</span> alphaIn;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">float</span> alphaOut;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"ParallaxViewTag [index="</span> + index + <span class="string">", xIn="</span> + xIn + <span class="string">", xOut="</span> + xOut + <span class="string">", yIn="</span> + yIn</span><br><span class="line">                + <span class="string">", yOut="</span> + yOut + <span class="string">", alphaIn="</span> + alphaIn + <span class="string">", alphaOut="</span> + alphaOut + <span class="string">"]"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>同时完成人行走的帧动画<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;animation-list xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    android:oneshot=<span class="string">"false"</span>&gt;</span><br><span class="line">    &lt;item</span><br><span class="line">        android:drawable=<span class="string">"@drawable/intro_item_manrun_1"</span></span><br><span class="line">        android:duration=<span class="string">"200"</span> /&gt;</span><br><span class="line">    &lt;item</span><br><span class="line">        android:drawable=<span class="string">"@drawable/intro_item_manrun_2"</span></span><br><span class="line">        android:duration=<span class="string">"200"</span> /&gt;</span><br><span class="line">&lt;/animation-list&gt;</span><br></pre></td></tr></table></figure></p>
+<p>自定义属性<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"a_in"</span> <span class="attr">format</span>=<span class="string">"float"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"a_out"</span> <span class="attr">format</span>=<span class="string">"float"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"x_in"</span> <span class="attr">format</span>=<span class="string">"float"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"x_out"</span> <span class="attr">format</span>=<span class="string">"float"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"y_in"</span> <span class="attr">format</span>=<span class="string">"float"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"y_out"</span> <span class="attr">format</span>=<span class="string">"float"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>ids<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"parallax_pager"</span> <span class="attr">type</span>=<span class="string">"id"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"parallax_view_tag"</span> <span class="attr">type</span>=<span class="string">"id"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>实现效果如下图所示<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E9%AB%98%E7%BA%A7UI%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%E6%A1%86%E6%9E%B6-inflater.gif" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="chen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="chen 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    chen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cj5785.com/2018/08/27/高级UI之自定义动画框架/" title="高级UI之自定义动画框架">https://cj5785.com/2018/08/27/高级UI之自定义动画框架/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/高级UI/" rel="tag"># 高级UI</a>
+          
+            <a href="/tags/自定义/" rel="tag"># 自定义</a>
+          
+            <a href="/tags/动画框架/" rel="tag"># 动画框架</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/26/高级UI之SVG/" rel="next" title="高级UI之SVG">
+                <i class="fa fa-chevron-left"></i> 高级UI之SVG
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/28/高级UI之事件传递/" rel="prev" title="高级UI之事件传递">
+                高级UI之事件传递 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="chen">
+            
+              <p class="site-author-name" itemprop="name">chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">200</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">276</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/cj5785" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chenjietop@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/6084158189" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://wpa.qq.com/msgrd?v=3&uin=892886193&site=qq&menu=yes" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/cv/chenjie" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="" title="虚位以待" target="_blank">虚位以待</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#重难点分析"><span class="nav-number">1.</span> <span class="nav-text">重难点分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在addView时候拦截做法"><span class="nav-number">2.</span> <span class="nav-text">在addView时候拦截做法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义LayoutInflater"><span class="nav-number">3.</span> <span class="nav-text">自定义LayoutInflater</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chen</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> & <a href="https://pages.coding.me">Coding Pages</a></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://cj5785.disqus.com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://cj5785.com/2018/08/27/高级UI之自定义动画框架/';
+          this.page.identifier = '2018/08/27/高级UI之自定义动画框架/';
+          this.page.title = '高级UI之自定义动画框架';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://cj5785.disqus.com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "default";
+      
+          flOptions.boxForm = "vertical";
+      
+          flOptions.position = "topRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Linkedin,Mailto,Reddit, Delicious,StumbleUpon,Pinterest,Facebook,GooglePlus,Slashdot, Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine, Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
