@@ -85,12 +85,12 @@
 <meta property="og:site_name" content="Chen&#39;s Blog">
 <meta property="og:description" content="Android的新技术在不断更迭，各种bug修复也如火如荼，增量更新，插件化开发，热修复等等，数不胜数，这一节，就来盘点盘点热修复的来龙去脉">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif">
-<meta property="og:updated_time" content="2018-09-11T07:06:30.000Z">
+<meta property="og:image" content="http://img.cj5785.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif">
+<meta property="og:updated_time" content="2019-01-18T15:34:42.459Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="性能优化之热修复">
 <meta name="twitter:description" content="Android的新技术在不断更迭，各种bug修复也如火如荼，增量更新，插件化开发，热修复等等，数不胜数，这一节，就来盘点盘点热修复的来龙去脉">
-<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif">
+<meta name="twitter:image" content="http://img.cj5785.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif">
 
 
 
@@ -445,7 +445,7 @@
 <p>到这里，我们的测试就搭建完毕了，此时我们执行除法运算的时候，会直接crash掉，修改源代码，编译生成<code>.class</code>文件<br>这里我简单地修改一下除法里面的b的值，将其修改为2，在编译项目，记得不要运行，不然就覆盖了原来的apk了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HotFixTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">div</span><span class="params">(Context context)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line">        <span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">        Toast.makeText(context, a + <span class="string">" / "</span> + b + <span class="string">" = "</span> + (a / b), Toast.LENGTH_SHORT).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>编译完成以后，在当前项目的<code>build</code>-&gt;<code>intermediates</code>-&gt;<code>classes</code>-&gt;<code>debug</code>-&gt;<code>{包名}</code>下面会有生成的class文件，将有问题的class文件复制出来，记得连同文件夹包名文件夹一起，例如我的包名是<code>com.cj5785.hotfixtest</code>，那么我复制出来的文件夹结构图如下<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">└─dex</span><br><span class="line">	└─com</span><br><span class="line">	    └─cj5785</span><br><span class="line">	        └─hotfixtest</span><br><span class="line">	                HotFixTest.<span class="built_in">class</span></span><br></pre></td></tr></table></figure></p>
 <p>使用sdk里面的一个工具将这个文件打包成dex文件，这个文件夹里面可以有多个class文件，也可以有多个目录，但是其相对位置一定要正确<br>这个工具在<code>build-tool</code> -&gt; <code>{版本号}</code>下面，<code>dx.bat</code>就是我们要使用的工具<br>然后在命令函中输入参数，由于我这里直接把这个工具所在路径加到环境变量中了，这里就直接使用了<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dx --dex --output=E:\temp\classes2.dex E:\temp\dex</span><br></pre></td></tr></table></figure></p>
-<p><code>--output</code>的参数就是输出目录，后面接的就是我们刚才复制出来的文件根目录<br>根据我们上面写的代码，这里我们将生成的<code>classes2.dex</code>文件放入根目录，启动软件进行验证<br>以下是我的验证效果，说明这这种方案的可行性还是有的<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif" alt=""></p>
+<p><code>--output</code>的参数就是输出目录，后面接的就是我们刚才复制出来的文件根目录<br>根据我们上面写的代码，这里我们将生成的<code>classes2.dex</code>文件放入根目录，启动软件进行验证<br>以下是我的验证效果，说明这这种方案的可行性还是有的<br><img src="http://img.cj5785.com/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E7%83%AD%E4%BF%AE%E5%A4%8D-%E4%BF%AE%E5%A4%8D%E6%95%88%E6%9E%9C%E5%9B%BE.gif" alt=""></p>
 
       
     </div>

@@ -85,14 +85,14 @@
 <meta property="og:site_name" content="Chen&#39;s Blog">
 <meta property="og:description" content="深入了解多态的实现原理，有助于提高对于多态的认识">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A801.png">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A802.png">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A803.png">
-<meta property="og:updated_time" content="2018-07-20T11:32:42.000Z">
+<meta property="og:image" content="http://img.cj5785.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A801.png">
+<meta property="og:image" content="http://img.cj5785.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A802.png">
+<meta property="og:image" content="http://img.cj5785.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A803.png">
+<meta property="og:updated_time" content="2019-01-18T15:26:03.821Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++之多态的实现原理">
 <meta name="twitter:description" content="深入了解多态的实现原理，有助于提高对于多态的认识">
-<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A801.png">
+<meta name="twitter:image" content="http://img.cj5785.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A801.png">
 
 
 
@@ -432,7 +432,7 @@
 <li>虚函数表是一个存储类成员函数指针的数据结构</li>
 <li>虚函数表是由编译器自动生成与维护的</li>
 <li>virtual成员函数会被编译器放入虚函数表中</li>
-<li>存在虚函数时，每个对象中都有一个指向虚函数表的指针(vptr指针)<br><img src="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A801.png" alt=""><br><img src="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A802.png" alt=""><br><img src="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A803.png" alt=""><br>说明：</li>
+<li>存在虚函数时，每个对象中都有一个指向虚函数表的指针(vptr指针)<br><img src="http://img.cj5785.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A801.png" alt=""><br><img src="http://img.cj5785.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A802.png" alt=""><br><img src="http://img.cj5785.com/C++%E4%B9%8B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E5%87%BD%E6%95%B0%E8%A1%A803.png" alt=""><br>说明：</li>
 <li>通过虚函数表指针VPTR调用重写函数是在程序运行时进行的，因此需要通过寻址操作才能确定真正应该调用的函数。而普通成员函数是在编译时就确定了调用的函数。在效率上，虚函数的效率要低很多。</li>
 <li>出于效率考虑，没有必要将所有成员函数都声明为虚函数</li>
 </ul>

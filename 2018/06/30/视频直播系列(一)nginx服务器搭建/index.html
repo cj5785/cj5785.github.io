@@ -85,13 +85,13 @@
 <meta property="og:site_name" content="Chen&#39;s Blog">
 <meta property="og:description" content="本文讲解了nginx流媒体服务器的搭建，nginx稳定，高效低消耗">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-%E7%9B%B4%E6%92%AD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-nginx%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%E5%9B%BE.png">
-<meta property="og:updated_time" content="2018-09-11T07:04:32.000Z">
+<meta property="og:image" content="http://img.cj5785.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-%E7%9B%B4%E6%92%AD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://img.cj5785.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-nginx%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%E5%9B%BE.png">
+<meta property="og:updated_time" content="2019-01-18T15:35:48.347Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="视频直播系列(一):nginx服务器搭建">
 <meta name="twitter:description" content="本文讲解了nginx流媒体服务器的搭建，nginx稳定，高效低消耗">
-<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-%E7%9B%B4%E6%92%AD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta name="twitter:image" content="http://img.cj5785.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-%E7%9B%B4%E6%92%AD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
 
 
 
@@ -436,7 +436,7 @@
 <p>Nginx 安装非常的简单，配置文件 非常简洁（还能够支持perl语法），Bugs非常少的服务器: Nginx 启动特别容易，并且几乎可以做到7*24不间断运行，即使运行数个月也不需要重新启动。你还能够在 不间断服务的情况下进行软件版本的升级。</p>
 </blockquote>
 <p>以上内容来源于nginx中文网：<a href="http://www.nginx.cn" target="_blank" rel="noopener">nginx中文站</a></p>
-<h3 id="直播的架构设计图示"><a href="#直播的架构设计图示" class="headerlink" title="直播的架构设计图示"></a>直播的架构设计图示</h3><p><img src="http://p9sdgjlfg.bkt.clouddn.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-%E7%9B%B4%E6%92%AD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt=""></p>
+<h3 id="直播的架构设计图示"><a href="#直播的架构设计图示" class="headerlink" title="直播的架构设计图示"></a>直播的架构设计图示</h3><p><img src="http://img.cj5785.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-%E7%9B%B4%E6%92%AD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt=""></p>
 <h3 id="nginx搭建步骤"><a href="#nginx搭建步骤" class="headerlink" title="nginx搭建步骤"></a>nginx搭建步骤</h3><ol>
 <li><p>安装编译依赖</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libpcre3-dev libpcre3 libssl-dev build-essential</span><br></pre></td></tr></table></figure>
@@ -490,7 +490,7 @@
 <li>开启nginx查看是否可以访问<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service nginx start</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>输入IP地址和端口号，查看是否可以访问<br>出现如下图表示启动成功<br><img src="http://p9sdgjlfg.bkt.clouddn.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-nginx%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%E5%9B%BE.png" alt=""></p>
+<p>输入IP地址和端口号，查看是否可以访问<br>出现如下图表示启动成功<br><img src="http://img.cj5785.com/%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E7%B3%BB%E5%88%97-nginx%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%E5%9B%BE.png" alt=""></p>
 <ol start="11">
 <li>安装FFmpeg<br>上传FFmpeg，解压，检查配置<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --<span class="built_in">disable</span>-yasm</span><br></pre></td></tr></table></figure>
 </li>

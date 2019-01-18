@@ -85,14 +85,14 @@
 <meta property="og:site_name" content="Chen&#39;s Blog">
 <meta property="og:description" content="常量在程序中不可变化的量，也就不可赋值常用两种定义方式，#define和const另外还有一个字符串常量">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-ASCII.gif">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-float%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-double%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
-<meta property="og:updated_time" content="2018-06-11T08:05:50.000Z">
+<meta property="og:image" content="http://img.cj5785.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-ASCII.gif">
+<meta property="og:image" content="http://img.cj5785.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-float%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://img.cj5785.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-double%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:updated_time" content="2019-01-18T15:27:53.024Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语言之数据类型">
 <meta name="twitter:description" content="常量在程序中不可变化的量，也就不可赋值常用两种定义方式，#define和const另外还有一个字符串常量">
-<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-ASCII.gif">
+<meta name="twitter:image" content="http://img.cj5785.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-ASCII.gif">
 
 
 
@@ -483,7 +483,7 @@
 <li>long结尾一般添加l或者L以示区分（和int区分）e.g.:<br>9l,9L,9ll,9LL,9u,9ull,9ULL</li>
 </ul>
 <h4 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h4><p>当把一个大的整数赋值给小的整数，叫整数溢出<br>此时会导致高位被抛弃，截断的数据赋值给小的整数</p>
-<h3 id="char类型"><a href="#char类型" class="headerlink" title="char类型"></a>char类型</h3><h4 id="char变量"><a href="#char变量" class="headerlink" title="char变量"></a>char变量</h4><p>char是字符型<br>char占据一个字节的内存<br>char -128~+127（7F）<br>unsigned char 0~255（FF）<br>char就是一个字节（BYTE）<br>如果将char当作一个整数输出的话，就是该字符的ASCII码<br><img src="http://p9sdgjlfg.bkt.clouddn.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-ASCII.gif" alt="ASCII表"></p>
+<h3 id="char类型"><a href="#char类型" class="headerlink" title="char类型"></a>char类型</h3><h4 id="char变量"><a href="#char变量" class="headerlink" title="char变量"></a>char变量</h4><p>char是字符型<br>char占据一个字节的内存<br>char -128~+127（7F）<br>unsigned char 0~255（FF）<br>char就是一个字节（BYTE）<br>如果将char当作一个整数输出的话，就是该字符的ASCII码<br><img src="http://img.cj5785.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-ASCII.gif" alt="ASCII表"></p>
 <h4 id="printf输出char"><a href="#printf输出char" class="headerlink" title="printf输出char"></a>printf输出char</h4><p>%c 代表输出一个字符</p>
 <h4 id="常见转义字符"><a href="#常见转义字符" class="headerlink" title="常见转义字符"></a>常见转义字符</h4><table>
 <thead>
@@ -552,11 +552,11 @@
 </tr>
 <tr>
 <td style="text-align:center">float</td>
-<td style="text-align:left">单精度浮点值。单精度是这样的格式，1位符号，8位指数，23位小数。<img src="http://p9sdgjlfg.bkt.clouddn.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-float%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="img"></td>
+<td style="text-align:left">单精度浮点值。单精度是这样的格式，1位符号，8位指数，23位小数。<img src="http://img.cj5785.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-float%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="img"></td>
 </tr>
 <tr>
 <td style="text-align:center">double</td>
-<td style="text-align:left">双精度浮点值。双精度是1位符号，11位指数，52位小数。<img src="http://p9sdgjlfg.bkt.clouddn.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-double%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="img"></td>
+<td style="text-align:left">双精度浮点值。双精度是1位符号，11位指数，52位小数。<img src="http://img.cj5785.com/C%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-double%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="img"></td>
 </tr>
 <tr>
 <td style="text-align:center">void</td>

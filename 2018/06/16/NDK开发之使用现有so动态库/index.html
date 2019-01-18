@@ -85,12 +85,12 @@
 <meta property="og:site_name" content="Chen&#39;s Blog">
 <meta property="og:description" content="前面将的都是如何使用C/C++文件生成so动态库，那么在使用别人的so动态库的时候应该怎么做呢？这篇文章就是使用一个变声功能的动态库，完成对于以有so动态库的说明。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg">
-<meta property="og:updated_time" content="2018-09-11T07:00:04.000Z">
+<meta property="og:image" content="http://img.cj5785.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg">
+<meta property="og:updated_time" content="2019-01-18T15:32:21.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NDK开发之使用现有so动态库">
 <meta name="twitter:description" content="前面将的都是如何使用C/C++文件生成so动态库，那么在使用别人的so动态库的时候应该怎么做呢？这篇文章就是使用一个变声功能的动态库，完成对于以有so动态库的说明。">
-<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg">
+<meta name="twitter:image" content="http://img.cj5785.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg">
 
 
 
@@ -465,7 +465,7 @@
 <li><p>另外，由于用到了STL库，需要在配置里说明，在jni下新建<code>Application.mk</code>文件，写入以下配置</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">APP_STL := gnustl_static</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>至此，项目修改完毕，便可以生成apk了。运行界面如下：<br><img src="http://p9sdgjlfg.bkt.clouddn.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg" alt=""></p>
+<li><p>至此，项目修改完毕，便可以生成apk了。运行界面如下：<br><img src="http://img.cj5785.com/NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89so%E5%8A%A8%E6%80%81%E5%BA%93-%E8%BF%90%E8%A1%8C%E6%92%AD%E6%94%BE.jpg" alt=""></p>
 </li>
 </ul>
 <h3 id="仿QQ变声效果实现"><a href="#仿QQ变声效果实现" class="headerlink" title="仿QQ变声效果实现"></a>仿QQ变声效果实现</h3><p>在大致了解fmod以后，就可以做一些基于fmod的项目了，正好QQ有一个变声的功能，这里就使用fmod去实现</p>

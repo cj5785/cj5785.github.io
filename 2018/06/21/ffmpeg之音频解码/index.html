@@ -85,12 +85,12 @@
 <meta property="og:site_name" content="Chen&#39;s Blog">
 <meta property="og:description" content="在之前的文章已经初步对视频解码有个初步的认识了，接下来来看一看音频解码">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
-<meta property="og:updated_time" content="2018-09-11T07:01:40.000Z">
+<meta property="og:image" content="http://img.cj5785.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+<meta property="og:updated_time" content="2019-01-18T15:30:45.117Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ffmpeg之音频解码">
 <meta name="twitter:description" content="在之前的文章已经初步对视频解码有个初步的认识了，接下来来看一看音频解码">
-<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+<meta name="twitter:image" content="http://img.cj5785.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
 
 
 
@@ -419,7 +419,7 @@
 
       
         <p>在之前的文章已经初步对视频解码有个初步的认识了，接下来来看一看音频解码<br><a id="more"></a></p>
-<h3 id="音频解码步骤"><a href="#音频解码步骤" class="headerlink" title="音频解码步骤"></a>音频解码步骤</h3><p>音频解码与视频解码一样，有者固有的步骤，只要按照步骤来，就能顺利的解码音频<br><img src="http://p9sdgjlfg.bkt.clouddn.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt=""><br>以上是ffmpeg的解码流程图，可以看到，无论是音频还是视频，其步骤都是一样的，差别在于在视频处理和音频处理的方法不一样</p>
+<h3 id="音频解码步骤"><a href="#音频解码步骤" class="headerlink" title="音频解码步骤"></a>音频解码步骤</h3><p>音频解码与视频解码一样，有者固有的步骤，只要按照步骤来，就能顺利的解码音频<br><img src="http://img.cj5785.com/ffmpeg%E4%B9%8B%E8%A7%86%E9%A2%91%E8%A7%A3%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt=""><br>以上是ffmpeg的解码流程图，可以看到，无论是音频还是视频，其步骤都是一样的，差别在于在视频处理和音频处理的方法不一样</p>
 <h3 id="音频解码步骤-1"><a href="#音频解码步骤-1" class="headerlink" title="音频解码步骤"></a>音频解码步骤</h3><p>由于音频解码步骤与视频类似，这里就直接使用之前测试ffmpeg生成是否可用的demo进行改进</p>
 <ul>
 <li>注册组件<code>av_register_all()</code></li>

@@ -85,12 +85,12 @@
 <meta property="og:site_name" content="Chen&#39;s Blog">
 <meta property="og:description" content="C++中的class从面向对象理论出发，将变量(属性)和函数(方法)集中定义在一起，用于描述现实世界中的类。从计算机的角度，程序依然由数据段和代码段构成。那么C++编译器如何完成面向对象理论到计算机程序的转化的呢？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E6%8E%A2%E7%A9%B6-%E7%BC%96%E8%AF%91%E5%99%A8%E5%A4%84%E7%90%86.png">
-<meta property="og:updated_time" content="2018-07-16T06:47:56.000Z">
+<meta property="og:image" content="http://img.cj5785.com/C++%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E6%8E%A2%E7%A9%B6-%E7%BC%96%E8%AF%91%E5%99%A8%E5%A4%84%E7%90%86.png">
+<meta property="og:updated_time" content="2019-01-18T15:26:29.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++之面向对象模型探究">
 <meta name="twitter:description" content="C++中的class从面向对象理论出发，将变量(属性)和函数(方法)集中定义在一起，用于描述现实世界中的类。从计算机的角度，程序依然由数据段和代码段构成。那么C++编译器如何完成面向对象理论到计算机程序的转化的呢？">
-<meta name="twitter:image" content="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E6%8E%A2%E7%A9%B6-%E7%BC%96%E8%AF%91%E5%99%A8%E5%A4%84%E7%90%86.png">
+<meta name="twitter:image" content="http://img.cj5785.com/C++%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E6%8E%A2%E7%A9%B6-%E7%BC%96%E8%AF%91%E5%99%A8%E5%A4%84%E7%90%86.png">
 
 
 
@@ -428,7 +428,7 @@
 <li>成员函数：存储于代码段中。<br>问题出来了：很多对象公用一块代码？代码是如何区分具体对象的那？</li>
 </ul>
 <ol start="2">
-<li>C++编译器对普通成员函数的内部处理<br>C++会添加一个指向自身的指针，用以明确是哪个对象调用<br><img src="http://p9sdgjlfg.bkt.clouddn.com/C++%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E6%8E%A2%E7%A9%B6-%E7%BC%96%E8%AF%91%E5%99%A8%E5%A4%84%E7%90%86.png" alt=""><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Test <span class="title">t</span><span class="params">(<span class="number">1</span>,<span class="number">2</span>)</span></span>; <span class="comment">//--&gt;Test(this, 1, 2);--&gt;Test(&amp;t, 1, 2);</span></span><br></pre></td></tr></table></figure>
+<li>C++编译器对普通成员函数的内部处理<br>C++会添加一个指向自身的指针，用以明确是哪个对象调用<br><img src="http://img.cj5785.com/C++%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E6%8E%A2%E7%A9%B6-%E7%BC%96%E8%AF%91%E5%99%A8%E5%A4%84%E7%90%86.png" alt=""><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Test <span class="title">t</span><span class="params">(<span class="number">1</span>,<span class="number">2</span>)</span></span>; <span class="comment">//--&gt;Test(this, 1, 2);--&gt;Test(&amp;t, 1, 2);</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>结论：</p>
